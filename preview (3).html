@@ -1,0 +1,3794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Controle Logístico | Recebimento & Expedição</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --blue:#1769e0;
+    --blue-dark:#0c2f63;
+    --blue-light:#eaf3ff;
+
+    --green:#159447;
+    --green-light:#eaf9f0;
+
+    --orange:#f2a900;
+    --purple:#7652d9;
+
+    --bg:#f4f7fb;
+    --white:#ffffff;
+
+    --text:#172b4d;
+    --text-soft:#667892;
+    --text-light:#8a99ad;
+
+    --border:#e3eaf2;
+
+    --sidebar-width:270px;
+
+    --shadow:
+        0 8px 30px rgba(30,55,90,.08);
+
+    --shadow-hover:
+        0 15px 40px rgba(30,55,90,.13);
+
+}
+
+html,
+body{
+
+    width:100%;
+    height:100%;
+
+}
+
+body{
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    overflow:hidden;
+
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+
+    width:var(--sidebar-width);
+    height:100vh;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0d2f61 0%,
+            #123d7b 100%
+        );
+
+    color:white;
+
+    display:flex;
+    flex-direction:column;
+
+    position:relative;
+
+    z-index:50;
+
+    box-shadow:
+        5px 0 25px rgba(10,40,80,.12);
+
+}
+
+.sidebar::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    right:0;
+
+    width:1px;
+    height:100%;
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(255,255,255,.25),
+            transparent
+        );
+
+}
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+
+    height:105px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 25px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.10);
+
+}
+
+.logo-symbol{
+
+    width:48px;
+    height:48px;
+
+    border-radius:13px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        rgba(255,255,255,.12);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
+    margin-right:13px;
+
+    font-size:25px;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.12);
+
+}
+
+.logo-content{
+
+    line-height:1.2;
+
+}
+
+.logo-content strong{
+
+    display:block;
+
+    font-size:16px;
+
+    font-weight:800;
+
+    letter-spacing:.2px;
+
+}
+
+.logo-content span{
+
+    display:block;
+
+    font-size:9px;
+
+    margin-top:4px;
+
+    color:
+        rgba(255,255,255,.60);
+
+    letter-spacing:1.2px;
+
+    text-transform:uppercase;
+
+}
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.navigation{
+
+    padding:25px 14px;
+
+}
+
+.navigation-label{
+
+    font-size:9px;
+
+    color:
+        rgba(255,255,255,.40);
+
+    text-transform:uppercase;
+
+    letter-spacing:1.5px;
+
+    font-weight:700;
+
+    margin:
+        0 12px 12px;
+
+}
+
+.nav-item{
+
+    width:100%;
+    height:55px;
+
+    border-radius:9px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 15px;
+
+    margin-bottom:6px;
+
+    cursor:pointer;
+
+    color:
+        rgba(255,255,255,.68);
+
+    transition:
+        all .25s ease;
+
+    position:relative;
+
+}
+
+.nav-item:hover{
+
+    background:
+        rgba(255,255,255,.08);
+
+    color:white;
+
+}
+
+.nav-item.active{
+
+    background:
+        linear-gradient(
+            90deg,
+            #1769e0,
+            #2878eb
+        );
+
+    color:white;
+
+    box-shadow:
+        0 8px 22px rgba(0,0,0,.14);
+
+}
+
+.nav-icon{
+
+    width:35px;
+
+    font-size:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+
+}
+
+.nav-text{
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+.nav-indicator{
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    margin-left:auto;
+
+    background:
+        rgba(255,255,255,.18);
+
+}
+
+.nav-item.active .nav-indicator{
+
+    background:#fff;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,.7);
+
+}
+
+/* =========================================================
+   SIDEBAR FOOTER
+========================================================= */
+
+.sidebar-bottom{
+
+    margin-top:auto;
+
+    padding:18px;
+
+}
+
+.system-card{
+
+    padding:15px;
+
+    border-radius:11px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+}
+
+.system-row{
+
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    font-size:9px;
+
+    color:
+        rgba(255,255,255,.55);
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.status-dot{
+
+    width:7px;
+    height:7px;
+
+    background:#31e281;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 10px #31e281;
+
+    animation:
+        statusPulse 2s infinite;
+
+}
+
+.system-status{
+
+    margin-top:7px;
+
+    font-size:10px;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+.developed{
+
+    text-align:center;
+
+    margin-top:15px;
+
+    color:
+        rgba(255,255,255,.42);
+
+    font-size:9px;
+
+    line-height:1.5;
+
+}
+
+.developed strong{
+
+    color:
+        rgba(255,255,255,.82);
+
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+
+    flex:1;
+
+    min-width:0;
+
+    height:100vh;
+
+    overflow:auto;
+
+    background:var(--bg);
+
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+
+    height:82px;
+
+    background:#fff;
+
+    border-bottom:
+        1px solid var(--border);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        0 35px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:30;
+
+}
+
+.topbar-title{
+
+    display:flex;
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.menu-mobile{
+
+    display:none;
+
+    width:38px;
+    height:38px;
+
+    border:1px solid var(--border);
+
+    border-radius:8px;
+
+    background:white;
+
+}
+
+.topbar-title small{
+
+    display:block;
+
+    font-size:9px;
+
+    color:var(--blue);
+
+    text-transform:uppercase;
+
+    letter-spacing:1.6px;
+
+    font-weight:700;
+
+    margin-bottom:4px;
+
+}
+
+.topbar-title h1{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.topbar-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+}
+
+.datetime{
+
+    text-align:right;
+
+}
+
+.time{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.date{
+
+    font-size:9px;
+
+    color:var(--text-soft);
+
+    margin-top:3px;
+
+    text-transform:capitalize;
+
+}
+
+.profile{
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding-left:20px;
+
+    border-left:
+        1px solid var(--border);
+
+}
+
+.profile-avatar{
+
+    width:37px;
+    height:37px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dfeeff,
+            #f3f7fc
+        );
+
+    color:var(--blue);
+
+    font-size:17px;
+
+}
+
+.profile-info strong{
+
+    display:block;
+
+    font-size:10px;
+
+}
+
+.profile-info span{
+
+    display:block;
+
+    font-size:8px;
+
+    color:var(--text-light);
+
+    margin-top:2px;
+
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content{
+
+    padding:
+        30px 35px 60px;
+
+    max-width:1800px;
+
+    margin:auto;
+
+}
+
+.page{
+
+    display:none;
+
+    animation:
+        pageEnter .35s ease;
+
+}
+
+.page.active{
+
+    display:block;
+
+}
+
+/* =========================================================
+   PAGE INTRO
+========================================================= */
+
+.page-intro{
+
+    margin-bottom:23px;
+
+}
+
+.page-intro .eyebrow{
+
+    color:var(--blue);
+
+    font-size:9px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.5px;
+
+    margin-bottom:7px;
+
+}
+
+.page-intro h2{
+
+    font-size:27px;
+
+    font-weight:750;
+
+    letter-spacing:-.5px;
+
+}
+
+.page-intro p{
+
+    font-size:12px;
+
+    color:var(--text-soft);
+
+    margin-top:7px;
+
+}
+
+/* =========================================================
+   KPI GRID
+========================================================= */
+
+.kpi-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:17px;
+
+    margin-bottom:25px;
+
+}
+
+.kpi{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:13px;
+
+    min-height:145px;
+
+    padding:21px;
+
+    box-shadow:var(--shadow);
+
+    transition:
+        all .25s ease;
+
+}
+
+.kpi:hover{
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        var(--shadow-hover);
+
+}
+
+.kpi-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.kpi-name{
+
+    font-size:10px;
+
+    color:var(--text-soft);
+
+    font-weight:600;
+
+}
+
+.kpi-icon{
+
+    width:42px;
+    height:42px;
+
+    border-radius:11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+
+}
+
+.kpi.blue .kpi-icon{
+
+    background:#e8f2ff;
+    color:var(--blue);
+
+}
+
+.kpi.green .kpi-icon{
+
+    background:#e7f8ee;
+    color:var(--green);
+
+}
+
+.kpi.orange .kpi-icon{
+
+    background:#fff5d9;
+    color:var(--orange);
+
+}
+
+.kpi.purple .kpi-icon{
+
+    background:#f0eaff;
+    color:var(--purple);
+
+}
+
+.kpi-value{
+
+    font-size:28px;
+
+    font-weight:750;
+
+    margin-top:17px;
+
+    letter-spacing:-1px;
+
+}
+
+.kpi-sub{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    font-size:9px;
+
+    color:var(--text-light);
+
+    margin-top:8px;
+
+}
+
+.kpi-sub .positive{
+
+    color:var(--green);
+
+    font-weight:700;
+
+}
+
+/* =========================================================
+   OPERATION GRID
+========================================================= */
+
+.operation-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:20px;
+
+}
+
+/* =========================================================
+   OPERATION CARD
+========================================================= */
+
+.operation-card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:14px;
+
+    box-shadow:var(--shadow);
+
+    overflow:hidden;
+
+}
+
+.operation-header{
+
+    height:75px;
+
+    padding:
+        0 21px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    border-bottom:
+        1px solid var(--border);
+
+}
+
+.operation-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+}
+
+.operation-icon{
+
+    width:40px;
+    height:40px;
+
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+
+}
+
+.receiving-card .operation-icon{
+
+    background:#eaf3ff;
+
+    color:var(--blue);
+
+}
+
+.shipping-card .operation-icon{
+
+    background:#eaf9f0;
+
+    color:var(--green);
+
+}
+
+.operation-title-text strong{
+
+    display:block;
+
+    font-size:13px;
+
+}
+
+.operation-title-text span{
+
+    display:block;
+
+    font-size:9px;
+
+    color:var(--text-light);
+
+    margin-top:4px;
+
+}
+
+.operation-badge{
+
+    font-size:8px;
+
+    padding:
+        6px 9px;
+
+    border-radius:20px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+}
+
+.receiving-card .operation-badge{
+
+    color:var(--blue);
+
+    background:#edf5ff;
+
+}
+
+.shipping-card .operation-badge{
+
+    color:var(--green);
+
+    background:#edf9f2;
+
+}
+
+/* =========================================================
+   DOCK SCENE
+========================================================= */
+
+.dock-scene{
+
+    height:350px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #dff0ff 0%,
+            #eaf5ff 51%,
+            #cfd9e2 52%,
+            #e4e9ed 100%
+        );
+
+}
+
+/* SKY */
+
+.sky-cloud{
+
+    position:absolute;
+
+    width:120px;
+    height:20px;
+
+    background:
+        rgba(255,255,255,.72);
+
+    border-radius:50px;
+
+    filter:blur(1px);
+
+}
+
+.cloud-one{
+
+    top:45px;
+    left:10%;
+
+}
+
+.cloud-two{
+
+    top:75px;
+    right:15%;
+
+    width:90px;
+
+}
+
+/* WAREHOUSE */
+
+.warehouse{
+
+    position:absolute;
+
+    right:45px;
+
+    top:48px;
+
+    width:290px;
+
+    height:220px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #d4dde4,
+            #eef2f5
+        );
+
+    border:
+        1px solid #b9c6d0;
+
+    box-shadow:
+        inset 0 10px 30px rgba(255,255,255,.4);
+
+}
+
+/* warehouse roof */
+
+.warehouse::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-11px;
+
+    left:-7px;
+
+    width:304px;
+
+    height:11px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #9eb0bd,
+            #c4d0d8
+        );
+
+    border:
+        1px solid #879ba9;
+
+}
+
+/* dock positioning */
+
+.receiving-card .warehouse{
+
+    right:40px;
+
+}
+
+.shipping-card .warehouse{
+
+    left:40px;
+    right:auto;
+
+}
+
+/* dock */
+
+.dock{
+
+    position:absolute;
+
+    bottom:0;
+
+    width:105px;
+
+    height:145px;
+
+    background:
+        #1c2b37;
+
+    border:
+        5px solid #445664;
+
+    box-shadow:
+        0 0 0 1px #0f1820,
+        0 12px 30px rgba(0,0,0,.15);
+
+}
+
+.receiving-card .dock{
+
+    left:30px;
+
+}
+
+.shipping-card .dock{
+
+    right:30px;
+
+}
+
+.dock-number{
+
+    position:absolute;
+
+    top:-28px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        #263c4c;
+
+    color:white;
+
+    padding:
+        5px 10px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    border-radius:4px;
+
+}
+
+.dock-light{
+
+    position:absolute;
+
+    top:-14px;
+
+    right:-7px;
+
+    width:12px;
+    height:7px;
+
+    background:#ffbf00;
+
+    box-shadow:
+        0 0 10px #ffbf00;
+
+}
+
+/* warehouse vertical panels */
+
+.warehouse-panel{
+
+    position:absolute;
+
+    top:0;
+
+    width:1px;
+
+    height:100%;
+
+    background:
+        rgba(100,120,135,.18);
+
+}
+
+.panel-one{
+
+    left:30%;
+
+}
+
+.panel-two{
+
+    left:60%;
+
+}
+
+.panel-three{
+
+    left:80%;
+
+}
+
+/* =========================================================
+   FLOOR
+========================================================= */
+
+.floor{
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:0;
+
+    height:95px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #b9c4cb,
+            #8f9ca5
+        );
+
+}
+
+.floor-road{
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:45px;
+
+    height:3px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #fff 0 45px,
+            transparent 45px 90px
+        );
+
+    opacity:.8;
+
+}
+
+/* dock yellow markings */
+
+.dock-mark{
+
+    position:absolute;
+
+    bottom:41px;
+
+    width:130px;
+
+    height:5px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #f6c000 0 12px,
+            transparent 12px 24px
+        );
+
+    z-index:2;
+
+}
+
+.receiving-card .dock-mark{
+
+    right:110px;
+
+}
+
+.shipping-card .dock-mark{
+
+    left:110px;
+
+}
+
+/* =========================================================
+   TRUCK BASE
+========================================================= */
+
+.truck{
+
+    position:absolute;
+
+    bottom:44px;
+
+    width:245px;
+
+    height:108px;
+
+    z-index:8;
+
+}
+
+/* =========================================================
+   RECEIVING TRUCK
+   CAB AT RIGHT
+   MOVES RIGHT = FORWARD
+========================================================= */
+
+.receiving-truck{
+
+    left:-280px;
+
+    animation:
+        receivingLoop 10s
+        cubic-bezier(.38,.01,.15,1)
+        infinite;
+
+}
+
+/* =========================================================
+   SHIPPING TRUCK
+   CAB AT LEFT
+   MOVES LEFT = FORWARD
+========================================================= */
+
+.shipping-truck{
+
+    right:-280px;
+
+    animation:
+        shippingLoop 10s
+        cubic-bezier(.38,.01,.15,1)
+        infinite;
+
+}
+
+/* =========================================================
+   TRAILER
+========================================================= */
+
+.trailer{
+
+    position:absolute;
+
+    bottom:20px;
+
+    width:165px;
+    height:72px;
+
+    border:
+        1px solid #9daab3;
+
+    border-radius:3px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #e8edf1
+        );
+
+    box-shadow:
+        0 7px 15px rgba(0,0,0,.15);
+
+}
+
+.receiving-truck .trailer{
+
+    left:0;
+
+}
+
+.shipping-truck .trailer{
+
+    right:0;
+
+}
+
+/* trailer top */
+
+.trailer::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:4px;
+
+    background:
+        #d6dfe6;
+
+}
+
+/* logo on trailer */
+
+.trailer-logo{
+
+    position:absolute;
+
+    top:27px;
+
+    left:50%;
+
+    transform:
+        translateX(-50%);
+
+    font-size:9px;
+
+    font-weight:800;
+
+    color:#8a9aa7;
+
+    letter-spacing:1.5px;
+
+}
+
+/* =========================================================
+   CAB
+========================================================= */
+
+.cab{
+
+    position:absolute;
+
+    bottom:20px;
+
+    width:78px;
+    height:66px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1769e0,
+            #0e4ca7
+        );
+
+    border:
+        1px solid #0a3c85;
+
+    border-radius:8px 11px 5px 5px;
+
+    box-shadow:
+        0 8px 14px rgba(10,50,110,.22);
+
+}
+
+/* RECEIVING CAB RIGHT */
+
+.receiving-truck .cab{
+
+    right:0;
+
+}
+
+/* SHIPPING CAB LEFT */
+
+.shipping-truck .cab{
+
+    left:0;
+
+    border-radius:
+        11px 8px 5px 5px;
+
+}
+
+/* windshield */
+
+.windshield{
+
+    position:absolute;
+
+    top:10px;
+
+    width:49px;
+    height:25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #bfe6ff,
+            #5c9dcc
+        );
+
+    border:
+        2px solid rgba(255,255,255,.5);
+
+}
+
+/* receiving windshield */
+
+.receiving-truck .windshield{
+
+    right:10px;
+
+    transform:
+        skew(-7deg);
+
+}
+
+/* shipping windshield */
+
+.shipping-truck .windshield{
+
+    left:10px;
+
+    transform:
+        skew(7deg);
+
+}
+
+/* front bumper */
+
+.bumper{
+
+    position:absolute;
+
+    bottom:5px;
+
+    width:11px;
+    height:17px;
+
+    background:#d6e0e6;
+
+    border-radius:3px;
+
+}
+
+/* receiving front right */
+
+.receiving-truck .bumper{
+
+    right:-5px;
+
+}
+
+/* shipping front left */
+
+.shipping-truck .bumper{
+
+    left:-5px;
+
+}
+
+/* headlights */
+
+.headlight{
+
+    position:absolute;
+
+    bottom:22px;
+
+    width:8px;
+    height:10px;
+
+    background:#fff7ce;
+
+    box-shadow:
+        0 0 12px #fff;
+
+    border-radius:2px;
+
+}
+
+.receiving-truck .headlight{
+
+    right:-3px;
+
+}
+
+.shipping-truck .headlight{
+
+    left:-3px;
+
+}
+
+/* =========================================================
+   WHEELS
+========================================================= */
+
+.wheel{
+
+    position:absolute;
+
+    bottom:4px;
+
+    width:28px;
+    height:28px;
+
+    background:
+        radial-gradient(
+            circle,
+            #7c8991 0 20%,
+            #222b31 21% 42%,
+            #0e1418 43% 100%
+        );
+
+    border:
+        2px solid #11191e;
+
+    border-radius:50%;
+
+    animation:
+        wheelRotate .7s linear infinite;
+
+}
+
+/* receiving */
+
+.receiving-truck .wheel-a{
+
+    left:23px;
+
+}
+
+.receiving-truck .wheel-b{
+
+    left:135px;
+
+}
+
+.receiving-truck .wheel-c{
+
+    right:9px;
+
+}
+
+/* shipping */
+
+.shipping-truck .wheel-a{
+
+    right:23px;
+
+}
+
+.shipping-truck .wheel-b{
+
+    right:135px;
+
+}
+
+.shipping-truck .wheel-c{
+
+    left:9px;
+
+}
+
+/* =========================================================
+   SCENE STATUS
+========================================================= */
+
+.scene-status{
+
+    position:absolute;
+
+    left:18px;
+
+    bottom:15px;
+
+    z-index:15;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:
+        7px 10px;
+
+    border-radius:20px;
+
+    background:
+        rgba(255,255,255,.88);
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.08);
+
+    font-size:8px;
+
+    font-weight:700;
+
+    color:#65778a;
+
+}
+
+.scene-status-dot{
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:var(--blue);
+
+    box-shadow:
+        0 0 8px rgba(23,105,224,.5);
+
+}
+
+.shipping-card .scene-status-dot{
+
+    background:var(--green);
+
+    box-shadow:
+        0 0 8px rgba(21,148,71,.5);
+
+}
+
+/* =========================================================
+   OPERATION FOOTER
+========================================================= */
+
+.operation-footer{
+
+    height:57px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        0 20px;
+
+    border-top:
+        1px solid var(--border);
+
+}
+
+.footer-label{
+
+    font-size:9px;
+
+    color:var(--text-light);
+
+}
+
+.footer-value{
+
+    font-size:10px;
+
+    font-weight:700;
+
+    color:var(--text-soft);
+
+}
+
+/* =========================================================
+   EXTRA PANELS
+========================================================= */
+
+.bottom-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:17px;
+
+    margin-top:20px;
+
+}
+
+.info-card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
+}
+
+.info-label{
+
+    font-size:9px;
+
+    color:var(--text-soft);
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.info-number{
+
+    font-size:24px;
+
+    font-weight:750;
+
+    margin-top:12px;
+
+}
+
+.progress{
+
+    height:5px;
+
+    border-radius:5px;
+
+    background:#edf1f5;
+
+    overflow:hidden;
+
+    margin-top:13px;
+
+}
+
+.progress-bar{
+
+    height:100%;
+
+    border-radius:5px;
+
+    width:0;
+
+    transition:width 1s ease;
+
+}
+
+.progress-blue{
+
+    background:
+        linear-gradient(
+            90deg,
+            #1769e0,
+            #5d9df2
+        );
+
+}
+
+.progress-green{
+
+    background:
+        linear-gradient(
+            90deg,
+            #159447,
+            #56c77d
+        );
+
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-box{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:14px;
+
+    min-height:280px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    box-shadow:var(--shadow);
+
+}
+
+.empty-icon{
+
+    width:65px;
+    height:65px;
+
+    border-radius:17px;
+
+    margin:0 auto 15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+
+    background:#eaf3ff;
+
+    color:var(--blue);
+
+}
+
+.empty-box h3{
+
+    font-size:16px;
+
+}
+
+.empty-box p{
+
+    font-size:11px;
+
+    color:var(--text-soft);
+
+    margin-top:7px;
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:1150px){
+
+    .kpi-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+    .operation-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:800px){
+
+    :root{
+
+        --sidebar-width:76px;
+
+    }
+
+    .logo{
+
+        justify-content:center;
+
+        padding:0;
+
+    }
+
+    .logo-content{
+
+        display:none;
+
+    }
+
+    .logo-symbol{
+
+        margin:0;
+
+    }
+
+    .navigation-label,
+    .nav-text,
+    .nav-indicator,
+    .system-card,
+    .developed{
+
+        display:none;
+
+    }
+
+    .nav-item{
+
+        justify-content:center;
+
+        padding:0;
+
+    }
+
+    .nav-icon{
+
+        width:auto;
+
+    }
+
+    .content{
+
+        padding:
+            22px 18px 40px;
+
+    }
+
+    .topbar{
+
+        padding:
+            0 18px;
+
+    }
+
+    .topbar-right .profile-info{
+
+        display:none;
+
+    }
+
+    .datetime{
+
+        display:none;
+
+    }
+
+    .bottom-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:560px){
+
+    .kpi-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .page-intro h2{
+
+        font-size:22px;
+
+    }
+
+    .operation-header{
+
+        padding:
+            0 14px;
+
+    }
+
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+/*
+   RECEBIMENTO
+
+   0%     caminhão fora
+   18%    aproximando
+   34%    entrando
+   46%    encostando
+   65%    parado na doca
+   80%    saindo
+   100%   fora
+
+   O CAB ESTÁ À DIREITA.
+   Portanto o movimento para a direita
+   representa o caminhão andando PARA FRENTE.
+*/
+
+@keyframes receivingLoop{
+
+    0%{
+
+        left:-280px;
+
+    }
+
+    18%{
+
+        left:-110px;
+
+    }
+
+    34%{
+
+        left:40px;
+
+    }
+
+    46%{
+
+        left:145px;
+
+    }
+
+    65%{
+
+        left:145px;
+
+    }
+
+    76%{
+
+        left:40px;
+
+    }
+
+    90%{
+
+        left:-110px;
+
+    }
+
+    100%{
+
+        left:-280px;
+
+    }
+
+}
+
+/*
+   EXPEDIÇÃO
+
+   CAB ESTÁ À ESQUERDA.
+
+   Caminhão começa encostado na doca,
+   sai andando para a esquerda,
+   portanto sai DE FRENTE.
+*/
+
+@keyframes shippingLoop{
+
+    0%{
+
+        right:145px;
+
+    }
+
+    20%{
+
+        right:145px;
+
+    }
+
+    35%{
+
+        right:55px;
+
+    }
+
+    52%{
+
+        right:-40px;
+
+    }
+
+    70%{
+
+        right:-150px;
+
+    }
+
+    85%{
+
+        right:-280px;
+
+    }
+
+    100%{
+
+        right:145px;
+
+    }
+
+}
+
+@keyframes wheelRotate{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+@keyframes statusPulse{
+
+    0%,
+    100%{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        opacity:.45;
+
+        transform:scale(.8);
+
+    }
+
+}
+
+@keyframes pageEnter{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(7px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- =====================================================
+     SIDEBAR
+====================================================== -->
+
+<aside class="sidebar">
+
+
+    <div class="logo">
+
+        <div class="logo-symbol">
+            🚛
+        </div>
+
+        <div class="logo-content">
+
+            <strong>
+                CONTROLE LOGÍSTICO
+            </strong>
+
+            <span>
+                Recebimento & Expedição
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+
+        <div class="navigation-label">
+            Operação
+        </div>
+
+
+        <div class="nav-item active"
+             data-page="dashboard">
+
+            <div class="nav-icon">
+                ▦
+            </div>
+
+            <div class="nav-text">
+                Dashboard
+            </div>
+
+            <div class="nav-indicator"></div>
+
+        </div>
+
+
+        <div class="nav-item"
+             data-page="recebimento">
+
+            <div class="nav-icon">
+                ⇩
+            </div>
+
+            <div class="nav-text">
+                Recebimento
+            </div>
+
+            <div class="nav-indicator"></div>
+
+        </div>
+
+
+        <div class="nav-item"
+             data-page="expedicao">
+
+            <div class="nav-icon">
+                ⇧
+            </div>
+
+            <div class="nav-text">
+                Expedição
+            </div>
+
+            <div class="nav-indicator"></div>
+
+        </div>
+
+
+        <div class="navigation-label"
+             style="margin-top:28px">
+
+            Administração
+
+        </div>
+
+
+        <div class="nav-item"
+             data-page="usuarios">
+
+            <div class="nav-icon">
+                👥
+            </div>
+
+            <div class="nav-text">
+                Usuários
+            </div>
+
+            <div class="nav-indicator"></div>
+
+        </div>
+
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+
+        <div class="system-card">
+
+            <div class="system-row">
+
+                <span class="status-dot"></span>
+
+                Sistema operacional
+
+            </div>
+
+            <div class="system-status">
+
+                ONLINE
+
+            </div>
+
+        </div>
+
+
+        <div class="developed">
+
+            Desenvolvido por<br>
+
+            <strong>
+                Pablo Martins Lopes
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+
+    <div class="topbar-title">
+
+
+        <button class="menu-mobile">
+            ☰
+        </button>
+
+
+        <div>
+
+            <small>
+                OPERATION CONTROL
+            </small>
+
+            <h1 id="topTitle">
+                Painel de Controle
+            </h1>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="topbar-right">
+
+
+        <div class="datetime">
+
+            <div class="time"
+                 id="clock">
+
+                --:--:--
+
+            </div>
+
+            <div class="date"
+                 id="date">
+
+                --
+
+            </div>
+
+        </div>
+
+
+        <div class="profile">
+
+            <div class="profile-avatar">
+                👤
+            </div>
+
+            <div class="profile-info">
+
+                <strong>
+                    Administrador
+                </strong>
+
+                <span>
+                    Controle Logístico
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</header>
+
+
+<div class="content">
+
+
+<!-- =====================================================
+     DASHBOARD
+====================================================== -->
+
+<section
+    class="page active"
+    id="dashboard">
+
+
+    <div class="page-intro">
+
+        <div class="eyebrow">
+            Visão geral
+        </div>
+
+        <h2>
+            Centro de Controle Logístico
+        </h2>
+
+        <p>
+            Acompanhe em tempo real as operações
+            de recebimento e expedição.
+        </p>
+
+    </div>
+
+
+    <!-- KPIs -->
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi blue">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Recebimentos Hoje
+                </div>
+
+                <div class="kpi-icon">
+                    ⇩
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Total de operações
+            </div>
+
+        </div>
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Expedições Hoje
+                </div>
+
+                <div class="kpi-icon">
+                    ⇧
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Total de operações
+            </div>
+
+        </div>
+
+
+        <div class="kpi orange">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Tempo Médio Recebimento
+                </div>
+
+                <div class="kpi-icon">
+                    ◷
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                --:--
+            </div>
+
+            <div class="kpi-sub">
+                Aguardando dados
+            </div>
+
+        </div>
+
+
+        <div class="kpi purple">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Tempo Médio Expedição
+                </div>
+
+                <div class="kpi-icon">
+                    ◷
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                --:--
+            </div>
+
+            <div class="kpi-sub">
+                Aguardando dados
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- OPERAÇÕES -->
+
+    <div class="operation-grid">
+
+
+        <!-- =============================================
+             RECEBIMENTO
+        ============================================== -->
+
+        <div class="operation-card receiving-card">
+
+
+            <div class="operation-header">
+
+
+                <div class="operation-title">
+
+
+                    <div class="operation-icon">
+                        ⇩
+                    </div>
+
+
+                    <div class="operation-title-text">
+
+                        <strong>
+                            Recebimento
+                        </strong>
+
+                        <span>
+                            Acompanhe a chegada de mercadorias
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="operation-badge">
+                    AGUARDANDO OPERAÇÃO
+                </div>
+
+
+            </div>
+
+
+            <div class="dock-scene">
+
+
+                <div class="sky-cloud cloud-one"></div>
+
+                <div class="sky-cloud cloud-two"></div>
+
+
+                <!-- ARMAZÉM -->
+
+                <div class="warehouse">
+
+
+                    <div class="warehouse-panel panel-one"></div>
+
+                    <div class="warehouse-panel panel-two"></div>
+
+                    <div class="warehouse-panel panel-three"></div>
+
+
+                    <div class="dock">
+
+
+                        <div class="dock-number">
+                            DOCA 01
+                        </div>
+
+
+                        <div class="dock-light"></div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- MARCAÇÃO -->
+
+                <div class="dock-mark"></div>
+
+
+                <!-- CAMINHÃO -->
+
+                <div class="truck receiving-truck">
+
+
+                    <div class="trailer">
+
+                        <div class="trailer-logo">
+                            LOGISTICS
+                        </div>
+
+                    </div>
+
+
+                    <div class="cab">
+
+                        <div class="windshield"></div>
+
+                        <div class="headlight"></div>
+
+                        <div class="bumper"></div>
+
+                    </div>
+
+
+                    <div class="wheel wheel-a"></div>
+
+                    <div class="wheel wheel-b"></div>
+
+                    <div class="wheel wheel-c"></div>
+
+
+                </div>
+
+
+                <!-- PISO -->
+
+                <div class="floor">
+
+                    <div class="floor-road"></div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="scene-status">
+
+                    <span class="scene-status-dot"></span>
+
+                    Aguardando operações de recebimento...
+
+                </div>
+
+
+            </div>
+
+
+            <div class="operation-footer">
+
+                <div class="footer-label">
+                    Status da operação
+                </div>
+
+                <div class="footer-value">
+                    STANDBY
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =============================================
+             EXPEDIÇÃO
+        ============================================== -->
+
+        <div class="operation-card shipping-card">
+
+
+            <div class="operation-header">
+
+
+                <div class="operation-title">
+
+
+                    <div class="operation-icon">
+                        ⇧
+                    </div>
+
+
+                    <div class="operation-title-text">
+
+                        <strong>
+                            Expedição
+                        </strong>
+
+                        <span>
+                            Acompanhe a saída de mercadorias
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="operation-badge">
+                    AGUARDANDO OPERAÇÃO
+                </div>
+
+
+            </div>
+
+
+            <div class="dock-scene">
+
+
+                <div class="sky-cloud cloud-one"></div>
+
+                <div class="sky-cloud cloud-two"></div>
+
+
+                <!-- ARMAZÉM -->
+
+                <div class="warehouse">
+
+
+                    <div class="warehouse-panel panel-one"></div>
+
+                    <div class="warehouse-panel panel-two"></div>
+
+                    <div class="warehouse-panel panel-three"></div>
+
+
+                    <div class="dock">
+
+
+                        <div class="dock-number">
+                            DOCA 02
+                        </div>
+
+
+                        <div class="dock-light"></div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- MARCAÇÃO -->
+
+                <div class="dock-mark"></div>
+
+
+                <!-- CAMINHÃO -->
+
+                <div class="truck shipping-truck">
+
+
+                    <div class="trailer">
+
+                        <div class="trailer-logo">
+                            LOGISTICS
+                        </div>
+
+                    </div>
+
+
+                    <div class="cab">
+
+                        <div class="windshield"></div>
+
+                        <div class="headlight"></div>
+
+                        <div class="bumper"></div>
+
+                    </div>
+
+
+                    <div class="wheel wheel-a"></div>
+
+                    <div class="wheel wheel-b"></div>
+
+                    <div class="wheel wheel-c"></div>
+
+
+                </div>
+
+
+                <!-- PISO -->
+
+                <div class="floor">
+
+                    <div class="floor-road"></div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="scene-status">
+
+                    <span class="scene-status-dot"></span>
+
+                    Aguardando operações de expedição...
+
+                </div>
+
+
+            </div>
+
+
+            <div class="operation-footer">
+
+                <div class="footer-label">
+                    Status da operação
+                </div>
+
+                <div class="footer-value">
+                    STANDBY
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- INFORMAÇÕES -->
+
+    <div class="bottom-grid">
+
+
+        <div class="info-card">
+
+            <div class="info-label">
+                Ocupação de docas
+            </div>
+
+            <div class="info-number">
+                0%
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar progress-blue"
+                    style="width:0%">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-label">
+                Eficiência operacional
+            </div>
+
+            <div class="info-number">
+                --%
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar progress-green"
+                    style="width:0%">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-label">
+                Status do sistema
+            </div>
+
+            <div
+                class="info-number"
+                style="color:var(--green)">
+
+                ONLINE
+
+            </div>
+
+            <div class="kpi-sub">
+
+                Sistema pronto para integração
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     RECEBIMENTO
+====================================================== -->
+
+<section
+    class="page"
+    id="recebimento">
+
+
+    <div class="page-intro">
+
+        <div class="eyebrow">
+            Inbound Operations
+        </div>
+
+        <h2>
+            Controle de Recebimento
+        </h2>
+
+        <p>
+            Gestão de chegada, docagem,
+            descarga e tempo médio operacional.
+        </p>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi blue">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Veículos recebidos
+                </div>
+
+                <div class="kpi-icon">
+                    ⇩
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Hoje
+            </div>
+
+        </div>
+
+
+        <div class="kpi orange">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Tempo médio
+                </div>
+
+                <div class="kpi-icon">
+                    ◷
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                --:--
+            </div>
+
+            <div class="kpi-sub">
+                Aguardando dados
+            </div>
+
+        </div>
+
+
+        <div class="kpi blue">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Veículos em doca
+                </div>
+
+                <div class="kpi-icon">
+                    ▣
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Operações ativas
+            </div>
+
+        </div>
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Performance
+                </div>
+
+                <div class="kpi-icon">
+                    ◈
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                --%
+            </div>
+
+            <div class="kpi-sub">
+                Sem dados
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="empty-box">
+
+        <div>
+
+            <div class="empty-icon">
+                ⇩
+            </div>
+
+            <h3>
+                Aguardando dados de recebimento
+            </h3>
+
+            <p>
+                A integração operacional será adicionada
+                nesta etapa do projeto.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     EXPEDIÇÃO
+====================================================== -->
+
+<section
+    class="page"
+    id="expedicao">
+
+
+    <div class="page-intro">
+
+        <div class="eyebrow"
+             style="color:var(--green)">
+
+            Outbound Operations
+
+        </div>
+
+        <h2>
+            Controle de Expedição
+        </h2>
+
+        <p>
+            Gestão de carregamento, saída,
+            docas e tempo médio operacional.
+        </p>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Veículos expedidos
+                </div>
+
+                <div class="kpi-icon">
+                    ⇧
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Hoje
+            </div>
+
+        </div>
+
+
+        <div class="kpi orange">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Tempo médio
+                </div>
+
+                <div class="kpi-icon">
+                    ◷
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                --:--
+            </div>
+
+            <div class="kpi-sub">
+                Aguardando dados
+            </div>
+
+        </div>
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Em carregamento
+                </div>
+
+                <div class="kpi-icon">
+                    ▣
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Operações ativas
+            </div>
+
+        </div>
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Performance
+                </div>
+
+                <div class="kpi-icon">
+                    ◈
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                --%
+            </div>
+
+            <div class="kpi-sub">
+                Sem dados
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="empty-box">
+
+        <div>
+
+            <div
+                class="empty-icon"
+                style="
+                    background:#eaf9f0;
+                    color:var(--green);
+                ">
+
+                ⇧
+
+            </div>
+
+            <h3>
+                Aguardando dados de expedição
+            </h3>
+
+            <p>
+                A integração operacional será adicionada
+                nesta etapa do projeto.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     USUÁRIOS
+====================================================== -->
+
+<section
+    class="page"
+    id="usuarios">
+
+
+    <div class="page-intro">
+
+        <div class="eyebrow">
+            Administração
+        </div>
+
+        <h2>
+            Gestão de Usuários
+        </h2>
+
+        <p>
+            Controle de acessos, perfis e permissões
+            do sistema logístico.
+        </p>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi blue">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Usuários cadastrados
+                </div>
+
+                <div class="kpi-icon">
+                    👥
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Nenhum cadastro
+            </div>
+
+        </div>
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Usuários online
+                </div>
+
+                <div class="kpi-icon">
+                    ●
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Sessões ativas
+            </div>
+
+        </div>
+
+
+        <div class="kpi purple">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Administradores
+                </div>
+
+                <div class="kpi-icon">
+                    ◆
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Sem dados
+            </div>
+
+        </div>
+
+
+        <div class="kpi green">
+
+            <div class="kpi-top">
+
+                <div class="kpi-name">
+                    Sistema
+                </div>
+
+                <div class="kpi-icon">
+                    ✓
+                </div>
+
+            </div>
+
+            <div
+                class="kpi-value"
+                style="color:var(--green)">
+
+                ONLINE
+
+            </div>
+
+            <div class="kpi-sub">
+                Módulo disponível
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="empty-box">
+
+        <div>
+
+            <div
+                class="empty-icon"
+                style="
+                    background:#f0eaff;
+                    color:var(--purple);
+                ">
+
+                👥
+
+            </div>
+
+            <h3>
+                Gestão de usuários
+            </h3>
+
+            <p>
+                O cadastro e controle de permissões
+                será integrado posteriormente.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   NAVEGAÇÃO
+========================================================= */
+
+const navItems =
+    document.querySelectorAll(".nav-item");
+
+const pages =
+    document.querySelectorAll(".page");
+
+const topTitle =
+    document.getElementById("topTitle");
+
+
+const titles = {
+
+    dashboard:
+        "Painel de Controle",
+
+    recebimento:
+        "Controle de Recebimento",
+
+    expedicao:
+        "Controle de Expedição",
+
+    usuarios:
+        "Gestão de Usuários"
+
+};
+
+
+navItems.forEach(item => {
+
+    item.addEventListener(
+        "click",
+        function(){
+
+            const page =
+                this.dataset.page;
+
+
+            navItems.forEach(nav => {
+
+                nav.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+            this.classList.add(
+                "active"
+            );
+
+
+            pages.forEach(section => {
+
+                section.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+            const selectedPage =
+                document.getElementById(
+                    page
+                );
+
+
+            if(selectedPage){
+
+                selectedPage.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            topTitle.textContent =
+                titles[page] ||
+                "Painel de Controle";
+
+        }
+    );
+
+});
+
+
+/* =========================================================
+   RELÓGIO
+========================================================= */
+
+function updateClock(){
+
+    const now =
+        new Date();
+
+
+    const time =
+        now.toLocaleTimeString(
+            "pt-BR",
+            {
+                hour:"2-digit",
+                minute:"2-digit",
+                second:"2-digit"
+            }
+        );
+
+
+    const date =
+        now.toLocaleDateString(
+            "pt-BR",
+            {
+                weekday:"long",
+                day:"2-digit",
+                month:"long",
+                year:"numeric"
+            }
+        );
+
+
+    document.getElementById(
+        "clock"
+    ).textContent = time;
+
+
+    document.getElementById(
+        "date"
+    ).textContent = date;
+
+}
+
+
+updateClock();
+
+
+setInterval(
+    updateClock,
+    1000
+);
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+const mobileButton =
+    document.querySelector(
+        ".menu-mobile"
+    );
+
+
+if(mobileButton){
+
+    mobileButton.addEventListener(
+        "click",
+        () => {
+
+            document
+                .querySelector(".sidebar")
+                .classList.toggle(
+                    "mobile-open"
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FUTURA ESTRUTURA DE DADOS
+=========================================================
+
+   RECEBIMENTO
+
+   {
+       id,
+       placa,
+       transportadora,
+       motorista,
+       doca,
+       chegada,
+       inicio_descarga,
+       fim_descarga,
+       tempo_espera,
+       tempo_operacao,
+       status
+   }
+
+
+   EXPEDIÇÃO
+
+   {
+       id,
+       placa,
+       transportadora,
+       doca,
+       inicio_carregamento,
+       fim_carregamento,
+       tempo_carregamento,
+       saida,
+       status
+   }
+
+
+   FUTURAMENTE:
+
+   Supabase
+   REST API
+   WebSocket
+   CSV
+   Banco SQL
+
+========================================================= */
+
+</script>
+
+</body>
+
+</html>
