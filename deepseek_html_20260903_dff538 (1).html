@@ -1,0 +1,60 @@
+<!-- sidebar.html -->
+<aside class="sidebar">
+  <div class="sidebar-glow"></div>
+  <div class="brand"><img class="brand-logo" src="logo.png" alt="Warehouse Vision"></div>
+  <div class="section-label">Operação</div>
+  <nav class="nav">
+    <a href="index.html" style="text-decoration:none;color:inherit;">
+      <button class="active" data-page="dashboard" style="width:100%;">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm10 7h6v-9h-6v9ZM4 20h6v-3H4v3Zm10-12h6V4h-6v4Z"/></svg></span>
+        <span class="nav-copy">Visão geral<small>Resumo executivo</small></span>
+        <span class="nav-code">01</span>
+      </button>
+    </a>
+    <details class="receiving-nav" id="receivingMenu" open>
+      <summary class="nav-receiving-summary">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg></span>
+        <span class="nav-copy">Recebimento<small>Inbound control</small></span>
+        <span class="nav-chevron">⌄</span>
+      </summary>
+      <div class="subnav receive-subnav">
+        <a href="previsao-recebimento.html"><span>Previsão de Agenda</span><small>Programação futura</small></a>
+        <a href="agenda.html"><span>Agenda</span><small>Programação de docas</small></a>
+        <a href="cargas-em-andamento.html"><span>Cargas em Descarga</span><small>Em preparação</small></a>
+        <a href="cargas-recebidas.html"><span>Cargas Já Recebidas</span><small>Inbound control</small></a>
+        <a href="cargas-pos-recebimento.html"><span>Cargas já Finalizadas</span><small>Base CARGAS GERADAS</small></a>
+        <a href="docas.html"><span>Controle de Docas</span><small>Disponibilidade e alocação</small></a>
+      </div>
+    </details>
+    <details class="wv-expedition-nav">
+      <summary>
+        <span class="nav-icon">↑</span>
+        <span class="nav-copy">Expedição<small>Outbound control</small></span>
+        <span class="nav-chevron">⌄</span>
+      </summary>
+      <div class="subnav">
+        <a href="ruptura.html"><span>Ruptura</span><small>Painel complementar</small></a>
+      </div>
+    </details>
+    <a href="user.html" style="text-decoration:none;color:inherit;">
+      <button type="button" class="users-nav" style="width:100%;">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1m6-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-1v6m3-3h-6"/></svg></span>
+        <span class="nav-copy">Usuários<small>Access governance</small></span>
+        <span class="nav-tag">ADMIN</span>
+      </button>
+    </a>
+  </nav>
+  <div class="sidebar-spacer" style="flex:1;min-height:15px;"></div>
+  <div class="side-footer">
+    <div class="side-status"><span class="presence-dot"></span><div><strong>Sistema operacional</strong><small>Sincronização ativa</small></div><span class="status-pulse"></span></div>
+    <div class="user">
+      <div class="avatar">OP</div>
+      <div class="user-copy"><b style="font-size:11px;color:#dce7f5">Operador WMS</b><span>Centro de distribuição</span></div>
+    </div>
+    <button class="logout-btn" id="logoutBtn" type="button" onclick="logoutWms()">
+      <span class="logout-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5m5-4 4-3-4-3m4 3H9"/></svg></span>
+      <span>Deslogar do sistema</span>
+      <span class="logout-kbd">SHIFT&nbsp; Q</span>
+    </button>
+  </div>
+</aside>
