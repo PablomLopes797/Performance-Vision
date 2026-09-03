@@ -1,57 +1,93 @@
-<aside class="sidebar">
-  <div class="sidebar-glow"></div>
-  <div class="brand"><img class="brand-logo" src="logo.png" alt="Warehouse Vision"></div>
-  <div class="section-label">Operação</div>
-  <nav class="nav">
-    <a href="index.html" class="nav-item" data-page="dashboard" id="navDashboard">
-      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Zm10 7h6v-9h-6v9ZM4 20h6v-3H4v3Zm10-12h6V4h-6v4Z"/></svg></span>
-      <span class="nav-copy">Visão geral<small>Resumo executivo</small></span>
-      <span class="nav-code">01</span>
+<div class="wv-sidebar-backdrop" data-wv-close aria-hidden="true"></div>
+<button class="wv-mobile-toggle" type="button" aria-label="Abrir menu" aria-controls="wv-sidebar" aria-expanded="false" data-wv-toggle>
+  <span></span><span></span><span></span>
+</button>
+<aside class="wv-sidebar" id="wv-sidebar" aria-label="Navegação principal">
+  <div class="wv-sidebar__glow" aria-hidden="true"></div>
+  <div class="wv-sidebar__header">
+    <a class="wv-brand" href="index.html" aria-label="Warehouse Vision, página inicial">
+      <span class="wv-brand__mark" aria-hidden="true">W</span>
+      <span class="wv-brand__copy"><strong>WAREHOUSE</strong><small>VISION · WMS CONTROL</small></span>
+      <span class="wv-brand__live"><i></i> LIVE</span>
+    </a>
+    <button class="wv-collapse" type="button" aria-label="Recolher menu" aria-pressed="false" data-wv-collapse>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19M4 5v14"/></svg>
+    </button>
+  </div>
+
+  <div class="wv-sidebar__context">
+    <span class="wv-sidebar__context-dot"></span>
+    <span><b>Operação ao vivo</b><small>Dados operacionais sincronizados</small></span>
+  </div>
+
+  <nav class="wv-nav" aria-label="Módulos do WMS">
+    <a class="wv-nav__link" href="index.html" data-route="index.html" data-tooltip="Visão geral">
+      <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 8-6 8 6v9H4v-9Zm4 9v-5h8v5"/></svg></span>
+      <span class="wv-nav__copy"><strong>Visão geral</strong><small>Resumo executivo</small></span>
     </a>
 
-    <details class="receiving-nav" id="receivingMenu">
-      <summary class="nav-receiving-summary">
-        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg></span>
-        <span class="nav-copy">Recebimento<small>Inbound control</small></span>
-        <span class="nav-chevron">⌄</span>
+    <details class="wv-nav__group" data-nav-group>
+      <summary data-tooltip="Recebimento">
+        <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg></span>
+        <span class="wv-nav__copy"><strong>Recebimento</strong><small>Inbound control</small></span>
+        <span class="wv-nav__badge">LIVE</span><span class="wv-nav__chevron">⌄</span>
       </summary>
-      <div class="subnav receive-subnav">
-        <a href="previsao-recebimento.html"><span>Previsão de Agenda</span><small>Programação futura</small></a>
-        <a href="agenda.html"><span>Agenda</span><small>Programação de docas</small></a>
-        <a href="cargas-em-andamento.html"><span>Cargas em Descarga</span><small>Em preparação</small></a>
-        <a href="cargas-recebidas.html"><span>Cargas Já Recebidas</span><small>Inbound control</small></a>
-        <a href="cargas-pos-recebimento.html"><span>Cargas já Finalizadas</span><small>Base CARGAS GERADAS</small></a>
-        <a href="docas.html"><span>Controle de Docas</span><small>Disponibilidade e alocação</small></a>
+      <div class="wv-nav__subnav">
+        <a href="previsao-recebimento.html" data-route="previsao-recebimento.html"><span>Previsão de recebimento</span><small>Em preparação</small></a>
+        <a href="agenda.html" data-route="agenda.html"><span>Agenda</span><small>Programação de docas</small></a>
+        <a href="docas.html" data-route="docas.html"><span>Docas</span><small>Controle de docas</small></a>
+        <a href="cargas-em-andamento.html" data-route="cargas-em-andamento.html"><span>Cargas em andamento</span><small>Live loads</small></a>
+        <a href="cargas-recebidas.html" data-route="cargas-recebidas.html"><span>Cargas recebidas</span><small>Inbound control</small></a>
+        <a href="cargas-pos-recebimento.html" data-route="cargas-pos-recebimento.html"><span>Cargas pós recebimento</span><small>Base CARGAS GERADAS</small></a>
       </div>
     </details>
 
-    <details class="wv-expedition-nav">
-      <summary>
-        <span class="nav-icon">↑</span>
-        <span class="nav-copy">Expedição<small>Outbound control</small></span>
-        <span class="nav-chevron">⌄</span>
+    <details class="wv-nav__group" data-nav-group>
+      <summary data-tooltip="Expedição">
+        <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9m0 0-4 4m4-4 4 4M5 5h14"/></svg></span>
+        <span class="wv-nav__copy"><strong>Expedição</strong><small>Outbound control</small></span><span class="wv-nav__chevron">⌄</span>
       </summary>
-      <div class="subnav">
-        <a href="ruptura.html"><span>Ruptura</span><small>Painel complementar</small></a>
+      <div class="wv-nav__subnav"><a href="ruptura.html" data-route="ruptura.html"><span>Ruptura</span><small>Painel complementar</small></a></div>
+    </details>
+
+    <details class="wv-nav__group" data-nav-group>
+      <summary data-tooltip="Ocupação">
+        <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5h16v14H4Zm4-3v-4m4 4V8m4 8v-7"/></svg></span>
+        <span class="wv-nav__copy"><strong>Ocupação</strong><small>Capacity intelligence</small></span><span class="wv-nav__chevron">⌄</span>
+      </summary>
+      <div class="wv-nav__subnav">
+        <a href="ocupacao.html" data-route="ocupacao.html"><span>Painel de ocupação</span><small>Visão diária</small></a>
+        <a href="update.html" data-route="update.html"><span>Alimentar · Update</span><small>Atualizar OCUPAÇÃO</small></a>
       </div>
     </details>
 
-    <a href="user.html" class="nav-item" id="usersNav">
-      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1m6-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-1v6m3-3h-6"/></svg></span>
-      <span class="nav-copy">Usuários<small>Access governance</small></span>
-      <span class="nav-tag">ADMIN</span>
+    <div class="wv-nav__label">Inteligência operacional</div>
+    <a class="wv-nav__link" href="bases.html" data-route="bases.html" data-tooltip="Bases">
+      <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v6H4V5Zm10 0h6v6h-6V5ZM4 15h6v4H4v-4Zm10 0h6v4h-6v-4Z"/></svg></span>
+      <span class="wv-nav__copy"><strong>BASES</strong><small>Data hub operacional</small></span>
+    </a>
+    <a class="wv-nav__link" href="index.html#estoque" data-route="index.html#estoque" data-tooltip="Estoque">
+      <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v4H4V5Zm0 6h16v4H4v-4Zm0 6h16v2H4v-2Z"/></svg></span>
+      <span class="wv-nav__copy"><strong>Estoque</strong><small>Inventory intelligence</small></span>
+    </a>
+    <a class="wv-nav__link" href="index.html#indicadores" data-route="index.html#indicadores" data-tooltip="Indicadores">
+      <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9h3v10H5Zm5 0V5h3v14h-3Zm5 0v-7h3v7h-3Z"/></svg></span>
+      <span class="wv-nav__copy"><strong>Indicadores</strong><small>Business intelligence</small></span>
+    </a>
+    <a class="wv-nav__link" href="user.html" data-route="user.html" data-tooltip="Usuários">
+      <span class="wv-nav__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1m6-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-1v6m3-3h-6"/></svg></span>
+      <span class="wv-nav__copy"><strong>Usuários</strong><small>Access governance</small></span>
     </a>
   </nav>
 
-  <div class="sidebar-spacer"></div>
-
-  <div class="side-footer">
-    <div class="side-status"><span class="presence-dot"></span><div><strong>Sistema operacional</strong><small>Sincronização ativa</small></div><span class="status-pulse"></span></div>
-    <div class="user"><div class="avatar">OP</div><div class="user-copy"><b style="font-size:11px;color:#dce7f5">Operador WMS</b><span>Centro de distribuição</span></div></div>
-    <button class="logout-btn" id="logoutBtn" type="button">
-      <span class="logout-icon"><svg viewBox="0 0 24 24"><path d="M10 5H5v14h5m5-4 4-3-4-3m4 3H9"/></svg></span>
-      <span>Deslogar do sistema</span>
-      <span class="logout-kbd">SHIFT&nbsp; Q</span>
+  <div class="wv-sidebar__footer">
+    <div class="wv-user">
+      <span class="wv-user__avatar" data-wv-avatar>WM</span>
+      <span class="wv-user__copy"><strong data-wv-user>Usuário WMS</strong><small data-wv-level>Operacional</small></span>
+    </div>
+    <button class="wv-logout" type="button" id="wv-sidebar-logout" data-wv-logout>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5m5-4 4-3-4-3m4 3H9"/></svg><span>Sair com segurança</span>
     </button>
+    <div class="wv-sidebar__signature"><b>Desenvolvido por Pablo Martins Lopes</b><span>Warehouse Vision · WMS control</span></div>
   </div>
 </aside>
