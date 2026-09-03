@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Warehouse Vision | Warehouse Control</title>
 <style>
-/* ===== TODO O CSS ORIGINAL (mantido igual) ===== */
-/* ... (cole aqui todo o CSS que já estava no index.html) ... */
+:root{--bg:#f4f7fb;--surface:#fff;--ink:#182230;--muted:#728096;--line:#e7edf5;--navy:#0d1b2a;--blue:#246bfe;--cyan:#16b9c8;--green:#16a673;--amber:#f2a900;--red:#e05252;--shadow:0 16px 40px #1b31500e}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);display:flex;min-height:100vh}button,input{font:inherit}.sidebar{width:265px;background:linear-gradient(180deg,#101e31,#0b1626);color:#d7e0ee;padding:24px 15px;display:flex;flex-direction:column;gap:26px;position:fixed;inset:0 auto 0 0;z-index:5}.brand{display:flex;align-items:center;gap:12px;padding:4px 10px}.brand-mark{height:38px;width:38px;border-radius:12px;background:linear-gradient(135deg,#1e78ff,#27d2c1);display:grid;place-items:center;font-weight:900;color:#fff;box-shadow:0 8px 22px #1e78ff55}.brand b{font-size:17px;letter-spacing:.08em;color:#fff}.brand small{display:block;color:#8191a8;font-size:10px;margin-top:2px;letter-spacing:.11em}.section-label{padding:0 12px;color:#65758e;text-transform:uppercase;font-size:10px;font-weight:800;letter-spacing:.15em}.nav{display:flex;flex-direction:column;gap:5px}.nav button{border:0;background:transparent;color:#aab8cc;text-align:left;padding:12px 13px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:650}.nav button:hover,.nav button.active{background:#ffffff12;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--cyan)}.ico{width:21px;text-align:center;color:#84a0c6;font-size:16px}.nav button.active .ico{color:#46d6cd}.subnav{display:none;margin:-2px 0 7px 38px;border-left:1px solid #ffffff22;padding-left:9px}.subnav.open{display:flex;flex-direction:column;gap:2px}.subnav button{padding:8px 8px;font-size:11px;color:#91a1b7}.side-footer{margin-top:auto;border-top:1px solid #ffffff15;padding:16px 10px;color:#74849b;font-size:11px}.logout-btn{width:100%;margin-top:14px;border:1px solid #ffffff1c;background:#ffffff08;color:#9fb0c4;border-radius:8px;padding:9px 10px;font-size:10px;font-weight:800;letter-spacing:.04em;cursor:pointer;text-align:left;transition:.2s}.logout-btn:hover{background:#e0525220;border-color:#e0525266;color:#ffb0b0}.user{display:flex;gap:10px;align-items:center;margin-top:12px;color:#d9e3f0}.avatar{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#274a75;color:#fff;font-size:11px;font-weight:800}.main{margin-left:265px;width:calc(100% - 265px);min-width:0}.topbar{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px}.crumb{font-size:12px;color:var(--muted)}.crumb strong{color:var(--ink);font-size:14px;display:block;margin-top:4px}.top-actions{display:flex;align-items:center;gap:13px}.status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}.dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 0 4px #16a67316}.icon-btn{border:1px solid var(--line);background:#fff;width:36px;height:36px;border-radius:9px;cursor:pointer;color:#66768e}.content{padding:32px 34px;max-width:1600px}.hero{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.hero h1{font-size:28px;line-height:1.2;margin:7px 0;color:var(--navy);letter-spacing:-.04em}.hero p{margin:0;color:var(--muted);font-size:13px}.primary{border:0;background:var(--blue);color:white;border-radius:9px;padding:12px 17px;font-weight:750;font-size:12px;cursor:pointer;box-shadow:0 8px 18px #246bfe28}.primary:hover{filter:brightness(.95)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:23px}.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:var(--shadow)}.metric-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:700}.metric-icon{width:33px;height:33px;border-radius:9px;display:grid;place-items:center;font-size:15px}.blue{background:#246bfe12;color:var(--blue)}.teal{background:#16b9c812;color:#0996a4}.green{background:#16a67312;color:var(--green)}.amber{background:#f2a90016;color:#b47c00}.metric{font-size:26px;font-weight:800;letter-spacing:-.05em;margin:11px 0 5px;color:var(--navy)}.trend{font-size:10px;color:var(--green);font-weight:700}.muted{color:var(--muted);font-weight:500}.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:21px;min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.panel-title{font-size:14px;font-weight:800;color:var(--navy)}.panel-sub{font-size:11px;color:var(--muted);margin-top:4px}.select{border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 10px;color:var(--muted);font-size:11px}.chart{height:190px;display:flex;align-items:flex-end;gap:13px;padding:15px 7px 0;border-bottom:1px solid var(--line);background:linear-gradient(to top,#edf4ff 1px,transparent 1px);background-size:100% 46px}.bar-group{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px}.bar{width:70%;max-width:32px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#4d92ff,#246bfe);min-height:12px}.bar.alt{background:linear-gradient(180deg,#5cddd0,#16b9c8)}.bar-label{font-size:10px;color:var(--muted)}.legend{display:flex;gap:18px;margin-top:15px;color:var(--muted);font-size:11px}.legend span:before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--blue);margin-right:6px}.legend .l2:before{background:var(--cyan)}.progress-row{margin:18px 0}.progress-meta{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}.progress-meta span:last-child{font-weight:800;color:var(--navy)}.progress{height:7px;background:#edf1f7;border-radius:10px;overflow:hidden}.fill{height:100%;border-radius:10px;background:var(--blue)}.fill.cyan{background:var(--cyan)}.fill.green{background:var(--green)}.activity{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.activity:last-child{border:0}.activity i{width:9px;height:9px;border-radius:50%;margin-top:4px;background:var(--green);box-shadow:0 0 0 4px #16a67313}.activity b{display:block;font-size:11px}.activity small{color:var(--muted);font-size:10px}.module{display:none}.module.show{display:block}.module-head{margin-bottom:23px}.module-head h2{margin:5px 0 7px;font-size:24px;color:var(--navy);letter-spacing:-.04em}.module-head p{margin:0;color:var(--muted);font-size:13px}.base-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.batch-panel{margin-top:18px;background:linear-gradient(135deg,#f8fbff,#fff);border:1px solid #dce8f7;border-radius:14px;padding:21px}.batch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}.batch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px}.batch-row strong{font-size:11px;color:var(--navy)}.batch-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.batch-row button{border:1px solid #cfe0f7;background:#f5f9ff;color:var(--blue);border-radius:7px;padding:7px 10px;font-size:10px;font-weight:800;cursor:pointer}.batch-row.ok{border-color:#99dfc3;background:#f5fffa}.batch-row.ok button{color:var(--green);border-color:#b5e8d0;background:#effcf5}.batch-actions{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:18px}.batch-status{font-size:11px;color:var(--muted)}.validation{margin-top:16px;border-radius:10px;padding:13px;background:#f7f9fc;color:var(--muted);font-size:11px;line-height:1.55}.validation.ok{background:#effcf5;color:#137b57}.validation.warn{background:#fff8e7;color:#916b00}@media(max-width:700px){.batch-grid{grid-template-columns:1fr}}.base-card{border:1px solid var(--line);border-radius:12px;padding:17px;background:#fff;cursor:pointer;transition:.2s}.base-card:hover{border-color:#9ec0ff;transform:translateY(-2px);box-shadow:var(--shadow)}.base-card .tag{font-size:10px;color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.base-card h3{font-size:13px;margin:9px 0 6px;color:var(--navy)}.base-card p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}.upload-zone{border:1px dashed #aec4df;border-radius:12px;padding:22px;background:#f8fbff;margin-top:19px;display:flex;align-items:center;justify-content:space-between;gap:16px}.upload-zone strong{font-size:12px}.upload-zone small{color:var(--muted);display:block;font-size:10px;margin-top:5px}.table-wrap{overflow:auto;margin-top:18px}.data-table{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap}.data-table th{text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:#f8fafc;padding:12px}.data-table td{padding:13px 12px;border-top:1px solid var(--line)}.pill{padding:5px 8px;border-radius:20px;font-size:10px;font-weight:800;background:#eaf8f2;color:var(--green)}.pill.warn{background:#fff6df;color:#a97900}.login-overlay{position:fixed;inset:0;background:#071321;display:flex;align-items:center;justify-content:center;z-index:60;overflow:hidden;padding:24px}.login-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.82;filter:saturate(1.05) contrast(1.06)}.login-shade{position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,#1e78ff28,transparent 35%),linear-gradient(110deg,#071321a8 0%,#07132146 47%,#0713219a 100%)}.login-grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:55px 55px;opacity:.55;mask-image:linear-gradient(90deg,black,transparent 75%)}.login-content{position:relative;width:min(1120px,100%);display:grid;grid-template-columns:1fr 430px;gap:70px;align-items:center}.login-brand{color:#fff}.login-brand .brand-line{display:flex;align-items:center;gap:13px;margin-bottom:27px}.login-brand .brand-mark-large{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#277bff,#25cfbf);font-weight:900;font-size:22px;box-shadow:0 14px 36px #1e78ff55}.login-brand h1{font-size:46px;line-height:1.04;letter-spacing:-.06em;max-width:470px;margin:0 0 20px}.login-brand p{color:#aebdd1;font-size:14px;line-height:1.7;max-width:460px}.login-brand .login-caption{color:#5de0d4;text-transform:uppercase;letter-spacing:.17em;font-size:10px;font-weight:850}.login-features{display:flex;gap:18px;margin-top:34px}.login-feature{border-left:1px solid #ffffff2b;padding-left:12px}.login-feature strong{display:block;color:#fff;font-size:12px}.login-feature small{display:block;color:#8fa1b9;font-size:10px;margin-top:4px}.login-card{background:#fffffff4;border:1px solid #ffffff55;border-radius:20px;padding:31px;box-shadow:0 25px 90px #00000055;backdrop-filter:blur(3px)}.login-card h2{margin:0;color:var(--navy);font-size:23px;letter-spacing:-.04em}.login-card .login-subtitle{color:var(--muted);font-size:11px;margin:8px 0 25px}.login-field{margin-bottom:15px}.login-field label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#5e6f84;margin-bottom:7px}.login-input-wrap{position:relative}.login-input{width:100%;border:1px solid #dce5f0;background:#f9fbfd;border-radius:10px;padding:13px 14px;color:var(--navy);font-size:13px;outline:none;transition:.2s}.login-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px #246bfe12;background:#fff}.login-input.password{padding-right:45px}.password-toggle{position:absolute;right:8px;top:7px;border:0;background:transparent;color:#7b8ba0;padding:7px;cursor:pointer}.login-submit{width:100%;margin-top:8px;padding:14px;border:0;border-radius:10px;color:#fff;background:linear-gradient(100deg,#246bfe,#16b9c8);font-weight:850;font-size:12px;cursor:pointer;box-shadow:0 10px 24px #246bfe30}.login-submit:disabled{opacity:.65;cursor:wait}.login-error{display:none;margin-top:14px;padding:11px 12px;border-radius:9px;background:#fff0f0;color:#b33e3e;border:1px solid #ffd1d1;font-size:11px;line-height:1.45}.login-error.show{display:block}.login-meta{display:flex;justify-content:space-between;margin-top:20px;color:#8694a6;font-size:10px}.login-secure{display:flex;gap:6px;align-items:center}.login-secure:before{content:'●';color:var(--green)}.login-loading{display:none;text-align:center;color:var(--muted);font-size:10px;margin-top:12px}.login-loading.show{display:block}.login-overlay.hide{animation:loginOut .45s ease forwards;pointer-events:none}@keyframes loginOut{to{opacity:0;visibility:hidden;transform:scale(1.02)}}@media(max-width:800px){.login-content{grid-template-columns:1fr;gap:24px;max-width:450px}.login-brand h1{font-size:32px}.login-brand p,.login-features{display:none}.login-card{padding:25px}.login-brand .brand-line{margin-bottom:18px}}.app-signature{padding:8px 34px 22px;color:#94a2b5;font-size:10px;letter-spacing:.03em;text-align:right}.app-signature strong{color:#52647c;font-weight:800}.loading-overlay{position:fixed;inset:0;background:#071321b8;backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:30;padding:20px}.loading-overlay.show{display:flex}.loading-card{width:min(620px,100%);background:#fff;border-radius:18px;padding:25px;box-shadow:0 24px 80px #06142655}.loading-head{display:flex;align-items:flex-start;gap:14px}.loading-spinner{width:38px;height:38px;border:4px solid #dbe7fb;border-top-color:var(--blue);border-radius:50%;animation:spin .9s linear infinite;flex:0 0 auto}.loading-spinner.done{border-color:#b7ebd2;border-top-color:var(--green);animation:none}.loading-spinner.fail{border-color:#ffd2d2;border-top-color:var(--red);animation:none}.loading-title{font-size:16px;font-weight:850;color:var(--navy);margin:1px 0 5px}.loading-stage{font-size:11px;color:var(--muted);min-height:17px}.loading-pct{margin-left:auto;font-size:16px;font-weight:850;color:var(--blue)}.loading-track{height:9px;background:#edf2f8;border-radius:99px;overflow:hidden;margin:20px 0 13px}.loading-bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px;transition:width .25s ease}.loading-stats{display:flex;gap:20px;color:var(--muted);font-size:10px;margin-bottom:15px}.loading-stats b{color:var(--navy);font-size:12px;margin-right:3px}.loading-log{background:#0d1b2a;border-radius:10px;padding:12px;max-height:190px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.65}.log-line{display:flex;gap:8px;color:#b8c6d9}.log-line .log-time{color:#61748f;flex:0 0 auto}.log-line.success{color:#76e0b2}.log-line.warn{color:#ffd27a}.log-line.error{color:#ff9b9b}.loading-foot{display:flex;justify-content:space-between;align-items:center;margin-top:17px}.loading-note{color:var(--muted);font-size:10px}.loading-close{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}.toast{position:fixed;right:25px;bottom:25px;background:#142439;color:#fff;padding:14px 18px;border-radius:10px;box-shadow:0 12px 30px #0003;font-size:12px;display:none;z-index:40}.toast.show{display:block;animation:fade 4s forwards}@keyframes spin{to{transform:rotate(360deg)}}.sidebar{overflow:hidden;background:linear-gradient(180deg,#0a1728 0%,#0d1b2c 52%,#091523 100%);border-right:1px solid #ffffff0d;padding:22px 13px 16px;gap:19px}.sidebar-glow{position:absolute;width:230px;height:230px;right:-150px;top:100px;background:#246bfe33;filter:blur(65px);pointer-events:none;animation:sidebarGlow 7s ease-in-out infinite alternate}.brand{position:relative;padding:2px 9px 5px;gap:10px}.brand-mark{position:relative;height:39px;width:39px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#2b84ff,#1ec7bf);box-shadow:0 10px 28px #1e78ff42}.brand-mark span{position:relative;z-index:2}.brand-mark i{position:absolute;width:58px;height:8px;left:-10px;top:15px;background:#ffffff38;transform:rotate(-42deg);animation:markSweep 3.6s ease-in-out infinite}.brand-copy b{font-size:16px;letter-spacing:.12em}.brand-copy small{font-size:9px;letter-spacing:.16em}.live-chip{margin-left:auto;color:#6ce0d2;font-size:9px;font-weight:850;letter-spacing:.08em;border:1px solid #39cdb52b;border-radius:30px;padding:5px 7px;background:#39cdb50d}.live-chip i{display:inline-block;width:5px;height:5px;background:#5be1ca;border-radius:50%;margin-right:4px;box-shadow:0 0 0 3px #5be1ca18;animation:livePulse 1.8s infinite}.workspace-card{position:relative;margin:0 3px;padding:13px 13px 11px;border:1px solid #ffffff10;border-radius:13px;background:linear-gradient(135deg,#ffffff0d,#ffffff03);box-shadow:inset 0 1px #ffffff09}.workspace-top,.workspace-bottom{display:flex;align-items:center;justify-content:space-between}.workspace-top span{font-size:8px;letter-spacing:.13em;color:#7190b4;font-weight:850}.workspace-top b{font-size:11px;letter-spacing:2px;color:#66809f}.workspace-card strong{display:block;color:#f1f6ff;font-size:13px;margin-top:9px}.workspace-card small{display:block;color:#7d91a9;font-size:9px;margin-top:3px}.workspace-progress{height:4px;background:#ffffff0c;border-radius:8px;overflow:hidden;margin-top:12px}.workspace-progress span{display:block;width:78%;height:100%;border-radius:8px;background:linear-gradient(90deg,#2a7dff,#26c9bc);box-shadow:0 0 12px #26c9bc55}.workspace-bottom{margin-top:8px}.workspace-bottom b{color:#6ee0d1;font-size:10px}.section-label{padding:0 12px;color:#5f7795;font-size:9px;letter-spacing:.18em}.nav{gap:4px}.nav button{position:relative;min-height:47px;padding:8px 9px;border:1px solid transparent;border-radius:11px;gap:10px;color:#8fa2ba;overflow:hidden;transition:background .22s ease,border-color .22s ease,transform .18s ease,color .22s ease}.nav button:hover{background:#ffffff0a;border-color:#ffffff0b;color:#eaf2fc;transform:translateX(2px)}.nav button.active{background:linear-gradient(100deg,#246bfe22,#1cbeb915);border-color:#3b8cff2e;box-shadow:inset 3px 0 #3a91ff,0 7px 18px #00000012;color:#fff}.nav button.active:after{content:'';position:absolute;right:0;top:0;width:2px;height:100%;background:#44d6c8;box-shadow:0 0 14px #44d6c8}.nav-icon{width:20px;height:20px;display:grid;place-items:center;color:#6f8fb8;flex:0 0 auto;transition:color .22s ease,transform .22s ease}.nav-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav button:hover .nav-icon,.nav button.active .nav-icon{color:#4ed8ce;transform:translateY(-1px) scale(1.08)}.nav-copy{display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:750;line-height:1.1;text-align:left}.nav-copy small{font-size:9px;font-weight:500;color:#637b99;letter-spacing:.01em}.nav button.active .nav-copy small{color:#9bb4d3}.nav-code{margin-left:auto;font-size:8px;color:#58718f;letter-spacing:.1em}.nav-live{margin-left:auto;font-size:8px;letter-spacing:.08em;color:#63dbc9;border:1px solid #38cdb52b;border-radius:4px;padding:3px 4px;animation:liveTag 2.2s infinite}.nav-chevron{margin-left:auto;color:#6c83a0;font-size:15px;transition:transform .24s ease}.subnav.open{display:flex;flex-direction:column;gap:2px}.subnav.open + .nav-chevron{transform:rotate(180deg)}#basesToggle.is-open .nav-chevron{transform:rotate(180deg)}.subnav{margin:-1px 0 5px 29px;border-left:1px solid #ffffff1c;padding-left:10px;gap:2px}.subnav button{min-height:34px;padding:6px 8px;border-radius:8px;font-size:10px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}.subnav button small{font-size:8px;color:#627a98}.sidebar-spacer{flex:1;min-height:15px}.side-footer{margin:0 2px;padding:13px 4px 0;border-top:1px solid #ffffff12;color:#74849b}.side-status{display:flex;align-items:center;gap:8px;padding:0 5px 11px}.side-status strong{display:block;color:#adc0d6;font-size:10px}.side-status small{display:block;color:#607893;font-size:8px;margin-top:3px}.presence-dot{width:7px;height:7px;background:#48d1a6;border-radius:50%;box-shadow:0 0 0 4px #48d1a615}.status-pulse{margin-left:auto;width:22px;height:4px;border-radius:8px;background:linear-gradient(90deg,#48d1a6 40%,#ffffff18 40%);opacity:.85}.user{margin:0;padding:10px 6px;border-top:1px solid #ffffff09;gap:9px}.user-copy{display:flex;flex-direction:column;gap:3px;min-width:0}.user-copy span{font-size:9px;color:#6f849e}.avatar{width:30px;height:30px;background:linear-gradient(135deg,#325a8c,#1c3a60);box-shadow:inset 0 1px #ffffff18;transition:transform .2s ease}.user:hover .avatar{transform:rotate(-7deg) scale(1.05)}.logout-btn{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;border:1px solid #ffffff12;background:linear-gradient(100deg,#ffffff08,#ffffff03);color:#93a7bf;border-radius:9px;padding:9px 9px;font-size:10px;font-weight:800;letter-spacing:.02em;cursor:pointer;text-align:left;transition:background .22s ease,border-color .22s ease,transform .18s ease,color .22s ease}.logout-btn:hover{background:linear-gradient(100deg,#e0525230,#e052520d);border-color:#e0525260;color:#ffc2c2;transform:translateY(-1px)}.logout-icon{width:18px;height:18px;display:grid;place-items:center;color:#7f99b6;transition:transform .22s ease,color .22s ease}.logout-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.logout-btn:hover .logout-icon{color:#ff9898;transform:translateX(2px)}.logout-kbd{margin-left:auto;font-size:7px;color:#58708d;border:1px solid #ffffff12;border-radius:4px;padding:3px 4px}.logout-btn:active,.nav button:active{transform:scale(.97)}@keyframes sidebarGlow{from{transform:translateY(-20px);opacity:.45}to{transform:translateY(110px);opacity:.8}}@keyframes markSweep{0%,55%{transform:translateX(-55px)}75%,100%{transform:translateX(80px)}}@keyframes livePulse{0%,100%{opacity:.7}50%{opacity:1;box-shadow:0 0 0 5px #5be1ca22}}@keyframes liveTag{0%,100%{opacity:.75}50%{opacity:1;box-shadow:0 0 12px #38cdb51c}}@keyframes fade{0%,75%{opacity:1}100%{opacity:0}}@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.sidebar{width:220px}.main{margin-left:220px;width:calc(100% - 220px)}}@media(max-width:700px){.sidebar{width:70px;padding:20px 9px}.brand b,.brand small,.section-label,.nav button span:not(.ico),.side-footer{display:none}.brand{padding:0;justify-content:center}.nav button{justify-content:center}.main{margin-left:70px;width:calc(100% - 70px)}.topbar,.content{padding-left:18px;padding-right:18px}.cards{grid-template-columns:1fr 1fr}.hero{display:block}.hero .primary{margin-top:16px}.base-list{grid-template-columns:1fr}}
 </style>
 <style id="wv-logo-style">.brand-logo{display:block;width:186px;height:73px;object-fit:contain;filter:drop-shadow(0 8px 18px #1680ff38)}.logo-login{display:block;width:360px;max-width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 15px 28px #2585ff44)}@media(max-width:700px){.brand-logo{width:50px;height:45px}.logo-login{width:270px}}</style>
 <style id="wv-logo-size-override">.brand-logo{width:210px!important;height:86px!important;object-fit:contain}.logo-login{width:390px!important;max-width:100%}@media(max-width:700px){.brand-logo{width:58px!important;height:54px!important}.logo-login{width:280px!important}}</style>
@@ -15,42 +14,659 @@
 <div id="sidebar-container"></div>
 
 <main class="main" style="margin-left:265px; width:calc(100% - 265px); min-width:0;">
-  <!-- Conteúdo principal (topbar, módulos, etc.) permanece igual -->
+  <header class="topbar">
+    <div class="crumb">WAREHOUSE VISION / <strong id="pageName">Visão geral</strong></div>
+    <div class="top-actions">
+      <div class="status"><span class="dot"></span>Supabase conectado</div>
+      <button class="icon-btn" onclick="showToast('Central de notificações atualizada')">♧</button>
+      <button class="icon-btn" onclick="showToast('Preferências disponíveis em breve')">⚙</button>
+    </div>
+  </header>
+  <section class="content">
+    <!-- MÓDULO: DASHBOARD -->
+    <div id="dashboard" class="module show">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Performance operacional</div>
+          <h1>Bom dia, equipe.</h1>
+          <p>Acompanhe o pulso do seu centro de distribuição em tempo real.</p>
+        </div>
+        <button class="primary" onclick="showToast('Relatório executivo preparado')">＋ Novo acompanhamento</button>
+      </div>
+      <div class="cards">
+        <div class="card"><div class="metric-top">Cargas recebidas <div class="metric-icon blue">↓</div></div><div class="metric">1.284</div><div class="trend">↑ 12,8% <span class="muted">vs. período anterior</span></div></div>
+        <div class="card"><div class="metric-top">Cargas expedidas <div class="metric-icon teal">↑</div></div><div class="metric">968</div><div class="trend">↑ 8,4% <span class="muted">vs. período anterior</span></div></div>
+        <div class="card"><div class="metric-top">Ocupação do estoque <div class="metric-icon amber">▦</div></div><div class="metric">78,6%</div><div class="trend" style="color:var(--amber)">● Atenção <span class="muted">capacidade saudável</span></div></div>
+        <div class="card"><div class="metric-top">SLA operacional <div class="metric-icon green">✓</div></div><div class="metric">96,2%</div><div class="trend">↑ 2,1% <span class="muted">meta 95%</span></div></div>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <div class="panel-head"><div><div class="panel-title">Fluxo de cargas</div><div class="panel-sub">Movimentação consolidada nos últimos 7 dias</div></div><select class="select"><option>Últimos 7 dias</option><option>Últimos 30 dias</option></select></div>
+          <div class="chart">
+            <div class="bar-group"><div class="bar" style="height:52%"></div><span class="bar-label">Seg</span></div>
+            <div class="bar-group"><div class="bar alt" style="height:68%"></div><span class="bar-label">Ter</span></div>
+            <div class="bar-group"><div class="bar" style="height:74%"></div><span class="bar-label">Qua</span></div>
+            <div class="bar-group"><div class="bar alt" style="height:61%"></div><span class="bar-label">Qui</span></div>
+            <div class="bar-group"><div class="bar" style="height:87%"></div><span class="bar-label">Sex</span></div>
+            <div class="bar-group"><div class="bar alt" style="height:44%"></div><span class="bar-label">Sáb</span></div>
+            <div class="bar-group"><div class="bar" style="height:66%"></div><span class="bar-label">Hoje</span></div>
+          </div>
+          <div class="legend"><span>Recebimento</span><span class="l2">Expedição</span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><div class="panel-title">Saúde da operação</div><div class="panel-sub">Indicadores críticos do dia</div></div></div>
+          <div class="progress-row"><div class="progress-meta"><span>Conferência de cargas</span><span>94%</span></div><div class="progress"><div class="fill" style="width:94%"></div></div></div>
+          <div class="progress-row"><div class="progress-meta"><span>Paletes armazenados</span><span>81%</span></div><div class="progress"><div class="fill cyan" style="width:81%"></div></div></div>
+          <div class="progress-row"><div class="progress-meta"><span>Pedidos em expedição</span><span>72%</span></div><div class="progress"><div class="fill green" style="width:72%"></div></div></div>
+          <div class="progress-row"><div class="progress-meta"><span>Endereçamento</span><span>89%</span></div><div class="progress"><div class="fill" style="width:89%"></div></div></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-head"><div><div class="panel-title">Últimas movimentações</div><div class="panel-sub">Eventos recentes do centro de distribuição</div></div><button class="select" onclick="showToast('Histórico completo em breve')">Ver histórico</button></div>
+        <div class="activity"><i></i><div><b>Carga #48219 finalizou conferência</b><small>Há 8 minutos · Recebimento</small></div></div>
+        <div class="activity"><i style="background:var(--blue)"></i><div><b>Palete PLT-008421 direcionado ao endereço A-03-02</b><small>Há 22 minutos · Armazenagem</small></div></div>
+        <div class="activity"><i style="background:var(--amber)"></i><div><b>Carga #48198 aguardando doca de expedição</b><small>Há 41 minutos · Expedição</small></div></div>
+      </div>
+    </div>
+
+    <!-- MÓDULO: RECEBIMENTO -->
+    <div id="recebimento" class="module">
+      <div class="module-head"><div class="eyebrow">Inbound logistics</div><h2>Recebimento</h2><p>Controle de cargas, conferência e disponibilidade para armazenagem.</p></div>
+      <div class="cards">
+        <div class="card"><div class="metric-top">Aguardando conferência</div><div class="metric">42</div><div class="trend" style="color:var(--amber)">Fila operacional</div></div>
+        <div class="card"><div class="metric-top">Em conferência</div><div class="metric">18</div><div class="trend">Operação ativa</div></div>
+        <div class="card"><div class="metric-top">Finalizadas hoje</div><div class="metric">126</div><div class="trend">↑ 9,6%</div></div>
+        <div class="card"><div class="metric-top">Paletes a armazenar</div><div class="metric">284</div><div class="trend" style="color:var(--amber)">Requer atenção</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><div class="panel-title">Fila de recebimento</div><div class="panel-sub">Acompanhamento de cargas por status</div></div><button class="primary" onclick="go('bases-recebimento')">＋ Carregar bases</button></div>
+        <div class="table-wrap">
+          <table class="data-table"><thead><tr><th>Carga</th><th>Fornecedor / Origem</th><th>Chegada</th><th>Paletes</th><th>Status</th></tr></thead><tbody>
+            <tr><td><b>#48219</b></td><td>Distribuidora Central</td><td>08:42</td><td>24</td><td><span class="pill">Conferida</span></td></tr>
+            <tr><td><b>#48218</b></td><td>Indústria Nova Era</td><td>09:15</td><td>18</td><td><span class="pill warn">Em conferência</span></td></tr>
+            <tr><td><b>#48217</b></td><td>Fornecedor Horizonte</td><td>10:03</td><td>32</td><td><span class="pill warn">Aguardando</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO: EXPEDIÇÃO -->
+    <div id="expedicao" class="module">
+      <div class="module-head"><div class="eyebrow">Outbound logistics</div><h2>Expedição</h2><p>Gestão de cargas geradas, docas, separação e saída.</p></div>
+      <div class="panel">
+        <div class="panel-head"><div><div class="panel-title">Torre de controle da expedição</div><div class="panel-sub">Visibilidade das cargas prontas para despacho</div></div><button class="primary" onclick="go('bases-expedicao')">＋ Carregar base de paletes</button></div>
+        <div class="table-wrap">
+          <table class="data-table"><thead><tr><th>Carga</th><th>PLU</th><th>Nº PLT</th><th>Geração</th><th>Endereço</th><th>Status</th></tr></thead><tbody>
+            <tr><td>#77104</td><td>103842</td><td>PLT-00931</td><td>Hoje, 06:42</td><td>B-04-11</td><td><span class="pill">Pronto</span></td></tr>
+            <tr><td>#77103</td><td>103219</td><td>PLT-00929</td><td>Hoje, 06:18</td><td>B-02-03</td><td><span class="pill warn">Separação</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO: BASES RECEBIMENTO -->
+    <div id="bases-recebimento" class="module">
+      <div class="module-head"><div class="eyebrow">Data hub / inbound + outbound</div><h2>Carga integrada de bases</h2><p>Selecione todas as pastas primeiro. Depois processe, valide, mescle e envie tudo em uma única ação.</p></div>
+      <div class="batch-panel">
+        <div class="panel-head"><div><div class="panel-title">Importação consolidada</div><div class="panel-sub">O sistema mantém os dados em memória até a validação final.</div></div><span class="pill warn" id="batchCounter">0 de 4 selecionadas</span></div>
+        <div class="batch-grid" id="batchGrid"></div>
+        <div class="batch-actions"><span class="batch-status" id="batchStatus">Aguardando seleção das pastas.</span><button class="primary" id="processBatchBtn" type="button">Processar e validar tudo</button></div>
+        <div class="validation" id="validationBox">Selecione as quatro pastas para liberar o processamento integrado.</div>
+      </div>
+      <div class="base-list" id="receiveBases" style="margin-top:18px"></div>
+    </div>
+
+    <!-- MÓDULO: BASES EXPEDIÇÃO -->
+    <div id="bases-expedicao" class="module">
+      <div class="module-head"><div class="eyebrow">Data hub / outbound</div><h2>Bases de Expedição</h2><p>Importação e tratamento de paletes gerados para armazenagem e expedição.</p></div>
+      <div class="base-list"><div class="base-card" onclick="openFolder('paletes')"><div class="tag">Expedição · TXT</div><h3>Consulta Paletes à Armazenar</h3><p>Mapeia CARGA, SEQPRODUTO, SEQPALETERF, DTAHORGERACAO, ENDERECO, RUA e STATUS para CARGAS GERADAS.</p></div></div>
+    </div>
+
+    <!-- MÓDULO: ESTOQUE -->
+    <div id="estoque" class="module">
+      <div class="module-head"><div class="eyebrow">Inventory intelligence</div><h2>Estoque</h2><p>Visibilidade de ocupação, endereçamento e disponibilidade operacional.</p></div>
+      <div class="panel"><div class="panel-title">Mapa de ocupação</div><div class="panel-sub">Módulo preparado para integração com o inventário.</div><div class="upload-zone"><div><strong>Estrutura de endereços</strong><small>Conecte a base de estoque para visualizar o mapa.</small></div><button class="primary" onclick="showToast('Módulo de estoque preparado para expansão')">Configurar</button></div></div>
+    </div>
+
+    <!-- MÓDULO: INDICADORES -->
+    <div id="indicadores" class="module">
+      <div class="module-head"><div class="eyebrow">Business intelligence</div><h2>Indicadores</h2><p>Performance executiva e acompanhamento dos principais KPIs.</p></div>
+      <div class="panel"><div class="panel-title">Painel de indicadores</div><div class="panel-sub">Os indicadores serão calculados a partir das bases carregadas.</div></div>
+    </div>
+  </section>
+  <footer class="app-signature">Desenvolvido por <strong>Pablo Martins Lopes</strong></footer>
 </main>
 
-<!-- Overlays (loading, toast, login) permanecem iguais -->
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
+  <div class="loading-card">
+    <div class="loading-head">
+      <div class="loading-spinner" id="loadingSpinner"></div>
+      <div>
+        <div class="loading-title" id="loadingTitle">Processando operação</div>
+        <div class="loading-stage" id="loadingStage">Preparando dados...</div>
+      </div>
+      <div class="loading-pct" id="loadingPct">0%</div>
+    </div>
+    <div class="loading-track"><div class="loading-bar" id="loadingBar"></div></div>
+    <div class="loading-stats">
+      <span><b id="loadingFiles">0</b> arquivos</span>
+      <span><b id="loadingRows">0</b> registros</span>
+      <span><b id="loadingElapsed">0s</b> decorrido</span>
+    </div>
+    <div class="loading-log" id="loadingLog"></div>
+    <div class="loading-foot">
+      <span class="loading-note" id="loadingNote">Não feche esta janela enquanto a operação estiver em andamento.</span>
+      <button class="loading-close" id="loadingClose" type="button" hidden>Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <video class="login-video" autoplay muted loop playsinline poster=""><source src="Video.mp4" type="video/mp4">Seu navegador não suporta vídeo.</video>
+  <div class="login-shade"></div>
+  <div class="login-grid"></div>
+  <div class="login-content">
+    <div class="login-brand">
+      <div class="brand-line"><img class="logo-login" src="logo.png" alt="Warehouse Vision"></div>
+      <div class="login-caption">Warehouse Management System</div>
+      <h1>Inteligência operacional para decisões mais rápidas.</h1>
+      <p>Uma visão executiva e conectada do seu centro de distribuição, com controle ponta a ponta sobre recebimento, armazenagem e expedição.</p>
+      <div class="login-features">
+        <div class="login-feature"><strong>Controle centralizado</strong><small>Dados em tempo real</small></div>
+        <div class="login-feature"><strong>Alta rastreabilidade</strong><small>Operação auditável</small></div>
+        <div class="login-feature"><strong>Performance</strong><small>Indicadores executivos</small></div>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="login-caption" style="color:var(--blue)">Acesso operacional</div>
+      <h2>Entrar no WMS</h2>
+      <div class="login-subtitle">Informe suas credenciais para acessar a Warehouse Control.</div>
+      <form id="loginForm" autocomplete="off">
+        <div class="login-field">
+          <label for="loginUser">Usuário</label>
+          <div class="login-input-wrap"><input class="login-input" id="loginUser" name="USER" type="text" placeholder="Digite seu usuário" required></div>
+        </div>
+        <div class="login-field">
+          <label for="loginPassword">Senha</label>
+          <div class="login-input-wrap">
+            <input class="login-input password" id="loginPassword" name="PASSWORD" type="password" placeholder="Digite sua senha" required>
+            <button class="password-toggle" id="passwordToggle" type="button" aria-label="Mostrar senha">◉</button>
+          </div>
+        </div>
+        <button class="login-submit" id="loginSubmit" type="button">Acessar ambiente</button>
+        <div class="login-loading" id="loginLoading">Validando credenciais com segurança...</div>
+        <div class="login-error" id="loginError"></div>
+      </form>
+      <div class="login-meta"><span class="login-secure">Conexão protegida</span><span>Warehouse Vision v1.0</span></div>
+    </div>
+  </div>
+</div>
 
 <script>
-/* ===== Todo o JavaScript original (parsing, autenticação, loading, etc.) ===== */
-/* ... (mantenha as funções originais) ... */
+// ===================== CONFIGURAÇÃO =====================
+const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
 
-/* ===== FUNÇÃO DE INICIALIZAÇÃO DA SIDEBAR ===== */
+// ===================== DADOS =====================
+const receiveBases = [
+  ['recconf', 'Recebimento E Conferência De Cargas_v3', 'Enriquece cargas com matrícula, conferente, portaria, início e fim da conferência.'],
+  ['paletes', 'Consulta Paletes à Armazenar', 'Consulta paletes, endereços, ruas e status para armazenagem.'],
+  ['recv2', 'Dados Carga de Recebimento v_2', 'Base legada com termo formado pela combinação de data e hora.'],
+  ['recnew', 'Dados Carga de Recebimento New', 'Base principal: carga, PLU, produto, linha, caixas, valor, paletes, peso e termo.']
+];
+let currentBase = '';
+const datasets = { recnew: [], recconf: [], recv2: [], paletes: [] };
+const batchFiles = {};
+const batchReadPending = {};
+const batchReadErrors = [];
+let batchResult = { received: [], generated: [] };
+
+// ===================== ELEMENTOS DOM =====================
+const $ = (id) => document.getElementById(id);
+const loginForm = $('loginForm');
+const loginError = $('loginError');
+const loginLoading = $('loginLoading');
+const loginSubmit = $('loginSubmit');
+const loginOverlay = $('loginOverlay');
+const passwordInput = $('loginPassword');
+const passwordToggle = $('passwordToggle');
+
+// ===================== FUNÇÕES UTILITÁRIAS =====================
+function showToast(msg) {
+  const toast = $('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.remove('show');
+  void toast.offsetWidth;
+  toast.classList.add('show');
+}
+function sleep(ms = 0) { return new Promise(res => setTimeout(res, ms)); }
+function clean(v) { return String(v ?? '').replace(/^['"]|['"]$/g, '').trim(); }
+function dedupe(rows) {
+  const seen = new Set();
+  return rows.filter(r => {
+    const key = JSON.stringify(r);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+function keyCarga(v) { return clean(v).replace(/^0+/, '') || '0'; }
+
+// ===================== PARSING E TRANSFORMAÇÃO =====================
+function parseTXT(text, base) {
+  const lines = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  if (!lines.length) return [];
+  const sep = lines[0].includes(';') ? ';' : lines[0].includes('|') ? '|' : lines[0].includes('\t') ? '\t' : ',';
+  const expected = {
+    recnew: ['NROCARGA', 'SEQPRODUTO', 'DESCCOMPLETA'],
+    recconf: ['CARGA', 'COND_CONF', 'CONFERENTE'],
+    paletes: ['ENDERECO', 'STATUS', 'SEQPRODUTO'],
+    recv2: ['NROCARGA', 'SEQPRODUTO', 'DESCCOMPLETA']
+  }[base] || [];
+  const first = lines[0].split(sep).map(x => clean(x).toUpperCase());
+  const hasHeader = expected.some(k => first.includes(k));
+  const headers = hasHeader ? lines[0].split(sep).map(x => clean(x)) : ({
+    recnew: ['NROCARGA','DESCRICAO','SEQPRODUTO','DESCCOMPLETA','PLACAVEICULO','LINHA','TOTAL_CX','VALOR_ITEM','PALETES','PESO','DTAHORGERACAO','INIDESCARGA','EMIS_TERMO','EMPRESA'],
+    recconf: ['CARGA','DESCRICAO','COND_CONF','CONFERENTE','PORTARIA_DATA','PORTARIA_HORA','GEROUCARGA_DATA','GEROUCARGA_HORA','INICIOCONF_DATA','INICIOCONF_HORA','FINALCONF_DATA','FINALCONF_HORA','TERMOLIB_DATA','TERMOLIB_HORA','QTDE_CXS'],
+    paletes: ['ENDERECO','STATUS','SEQPRODUTO','CARGA','SEQPALETERF','DTAHORGERACAO','SEQENDERECO'],
+    recv2: ['NROCARGA','DESCRICAO','SEQPRODUTO','DESCCOMPLETA','PLACAVEICULO','LINHA','TOTAL_CX','PALETES','PESO','DTA_GERACAO','HORA_GERACAO','DTA_INIDESCARGA','HORA_INIDESCARGA','DTA_EMIS_TERMO','HORA_EMIS_TERMO']
+  }[base] || first);
+  const data = hasHeader ? lines.slice(1) : lines;
+  return data.map(line => {
+    const vals = line.split(sep);
+    return Object.fromEntries(headers.map((h, i) => [h, clean(vals[i] || '')]));
+  });
+}
+
+function transform(rows, base) {
+  if (base === 'recnew') return rows.map(r => ({'CARGA': r.NROCARGA,'PLU': r.SEQPRODUTO,'PRODUTO': r.DESCCOMPLETA,'LINHA': r.LINHA,'TT CX': r.TOTAL_CX,'VALOR': r.VALOR_ITEM,'PALETES': r.PALETES,'PESO': r.PESO,'TERMO': r.EMIS_TERMO}));
+  if (base === 'recconf') return rows.map(r => ({'CARGA': r.CARGA,'MATRICULA CONF': r.COND_CONF,'CONFERENTE': r.CONFERENTE,'PORTARIA': [r.PORTARIA_DATA, r.PORTARIA_HORA].filter(Boolean).join(' '),'INICIO CONF': [r.INICIOCONF_DATA, r.INICIOCONF_HORA].filter(Boolean).join(' '),'FIM CONF': [r.FINALCONF_DATA, r.FINALCONF_HORA].filter(Boolean).join(' ')}));
+  if (base === 'paletes') return rows.map(r => ({'CARGA': r.CARGA,'PLU': r.SEQPRODUTO,'Nº PLT': r.SEQPALETERF,'GERAÇÃO': r.DTAHORGERACAO,'ENDEREÇO': r.ENDERECO,'RUA': r.RUA || '','STATUS': r.STATUS}));
+  return rows.map(r => ({'CARGA': r.NROCARGA,'PLU': r.SEQPRODUTO,'PRODUTO': r.DESCCOMPLETA,'LINHA': r.LINHA,'TT CX': r.TOTAL_CX,'PALETES': r.PALETES,'PESO': r.PESO,'TERMO': [r.DTA_EMIS_TERMO, r.HORA_EMIS_TERMO].filter(Boolean).join(' ')}));
+}
+
+function mergeReceived() {
+  const conf = new Map(datasets.recconf.map(r => [keyCarga(r['CARGA']), r]));
+  return datasets.recnew.map(r => {
+    const c = conf.get(keyCarga(r['CARGA'])) || {};
+    return {...r,'MATRICULA CONF': c['MATRICULA CONF'] || '','CONFERENTE': c['CONFERENTE'] || '','PORTARIA': c['PORTARIA'] || '','INICIO CONF': c['INICIO CONF'] || '','FIM CONF': c['FIM CONF'] || ''};
+  });
+}
+
+// ===================== RENDERIZAÇÃO DAS BASES =====================
+function renderBases() {
+  const receiveBasesDiv = $('receiveBases');
+  if (receiveBasesDiv) {
+    receiveBasesDiv.innerHTML = receiveBases.map(x => `<div class="base-card" onclick="openFolder('${x[0]}')"><div class="tag">Recebimento · TXT</div><h3>${x[1]}</h3><p>${x[2]}</p></div>`).join('');
+  }
+  const batchGrid = $('batchGrid');
+  if (batchGrid) {
+    const all = [...receiveBases.filter(x => x[0] !== 'paletes'), ['paletes','Consulta Paletes à Armazenar','CARGAS GERADAS · paletes para armazenagem']];
+    batchGrid.innerHTML = all.map(x => `<div class="batch-row" id="batch-${x[0]}"><div><strong>${x[1]}</strong><small>${x[2]}</small></div><button type="button" onclick="document.getElementById('batch-input-${x[0]}').click()">Selecionar pasta</button><input id="batch-input-${x[0]}" type="file" webkitdirectory directory multiple accept=".txt" hidden></div>`).join('');
+    all.forEach(x => {
+      const input = document.getElementById(`batch-input-${x[0]}`);
+      if (input) input.addEventListener('change', e => registerBatchFiles(x[0], e.target.files));
+    });
+  }
+}
+
+// ===================== NAVEGAÇÃO =====================
+function go(page) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('show'));
+  const target = document.getElementById(page);
+  if (target) target.classList.add('show');
+  document.querySelectorAll('.nav-item[data-page]').forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
+  const names = {'dashboard':'Visão geral','recebimento':'Recebimento','expedicao':'Expedição','bases-recebimento':'Bases de Recebimento','bases-expedicao':'Bases de Expedição','estoque':'Estoque','indicadores':'Indicadores'};
+  const pageName = document.getElementById('pageName');
+  if (pageName) pageName.textContent = names[page] || page;
+}
+
+// ===================== UPLOAD INDIVIDUAL =====================
+function openFolder(base) {
+  currentBase = base;
+  const host = document.getElementById(base === 'paletes' ? 'bases-expedicao' : 'bases-recebimento');
+  if (!host) return;
+  let p = host.querySelector('.base-upload');
+  if (!p) {
+    p = document.createElement('div');
+    p.className = 'upload-zone base-upload';
+    p.innerHTML = `<div><strong class="upload-title">Selecione a pasta de arquivos TXT</strong><small>Todos os arquivos .txt serão lidos, consolidados e validados.</small></div><button class="primary select-folder" type="button">Selecionar pasta</button><input class="folder-input" type="file" webkitdirectory directory multiple accept=".txt" hidden><div class="panel base-preview" style="display:none;margin-top:18px;width:100%"></div>`;
+    host.appendChild(p);
+    p.querySelector('.select-folder').addEventListener('click', () => p.querySelector('.folder-input').click());
+    p.querySelector('.folder-input').addEventListener('change', handleFiles);
+  }
+  p.style.display = 'flex';
+  p.querySelector('.upload-title').textContent = 'Base selecionada: ' + (receiveBases.find(x => x[0] === base)?.[1] || 'Consulta Paletes à Armazenar');
+  p.querySelector('.folder-input').value = '';
+  window.activeUpload = p;
+  showToast('Selecione a pasta com os arquivos TXT');
+}
+
+async function handleFiles(e) {
+  const files = [...e.target.files].filter(f => f.name.toLowerCase().endsWith('.txt'));
+  if (!files.length) { showToast('Nenhum arquivo TXT encontrado'); return; }
+  let rows = [];
+  for (const file of files) {
+    const text = await file.text();
+    rows.push(...parseTXT(text, currentBase));
+  }
+  rows = dedupe(rows);
+  const result = transform(rows, currentBase);
+  datasets[currentBase] = result;
+  const finalRows = (currentBase === 'recnew' || currentBase === 'recconf') ? mergeReceived() : result;
+  renderPreview(finalRows, files.length);
+  const note = (currentBase === 'recconf' && datasets.recnew.length) ? ' Base de recebimento enriquecida pela carga.' : '';
+  showToast(`${files.length} arquivo(s) processado(s) com ${finalRows.length} registro(s).${note}`);
+}
+
+function renderPreview(rows, count) {
+  const p = (window.activeUpload && window.activeUpload.querySelector('.base-preview')) || document.getElementById('preview');
+  if (!p) return;
+  p.style.display = 'block';
+  if (!rows.length) { p.innerHTML = '<div class="panel-title">Nenhum registro identificado</div>'; return; }
+  const keys = Object.keys(rows[0]);
+  p.innerHTML = `<div class="panel-head"><div><div class="panel-title">Prévia do processamento</div><div class="panel-sub">${rows.length} registros consolidados de ${count} arquivo(s)</div></div><button class="primary" onclick="sendSupabase()">Enviar ao Supabase</button></div><div class="table-wrap"><table class="data-table"><thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead><tbody>${rows.slice(0,8).map(r => `<tr>${keys.map(k => `<td>${r[k] || '—'}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  window.lastRows = rows;
+}
+
+async function sendSupabase() {
+  const table = currentBase === 'paletes' ? 'CARGAS GERADAS' : 'CARGAS RECEBIDAS';
+  let payload = (currentBase === 'recnew' || currentBase === 'recconf') ? mergeReceived() : window.lastRows;
+  if (!payload?.length) return;
+  if ((currentBase === 'recnew' || currentBase === 'recconf') && !datasets.recnew.length) { showToast('Carregue primeiro a base Dados Carga de Recebimento New'); return; }
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(table)}`, {method:'POST', headers:{apikey:SUPABASE_ANON,Authorization:'Bearer '+SUPABASE_ANON,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'}, body:JSON.stringify(payload)});
+    if (!res.ok) throw new Error(await res.text());
+    showToast(`Dados enriquecidos enviados para ${table}`);
+  } catch (err) { showToast('Falha ao enviar: verifique RLS, colunas e chave de conflito no Supabase'); console.error(err); }
+}
+
+// ===================== LOTE (BATCH) =====================
+async function registerBatchFiles(base, files) {
+  const txt = [...files].filter(f => f.name.toLowerCase().endsWith('.txt'));
+  batchFiles[base] = [];
+  batchReadPending[base] = Promise.all(txt.map(async file => {
+    try { return { name: file.name, text: await file.text() }; }
+    catch (err) { batchReadErrors.push({ base, name: file.name, error: err.message || 'arquivo ilegível' }); return null; }
+  })).then(cached => {
+    batchFiles[base] = cached.filter(Boolean);
+    const row = document.getElementById('batch-' + base);
+    if (row) { row.classList.toggle('ok', batchFiles[base].length > 0); row.querySelector('button').textContent = batchFiles[base].length ? `${batchFiles[base].length} arquivo(s) pronto(s)` : 'Nenhum TXT válido'; }
+    updateBatchStatus();
+    if (batchReadErrors.length) showToast(batchReadErrors.length + ' arquivo(s) não puderam ser lidos e serão ignorados');
+  });
+  await batchReadPending[base];
+}
+
+function updateBatchStatus() {
+  const total = Object.keys(batchFiles).filter(k => batchFiles[k]?.length).length;
+  const counter = $('batchCounter');
+  if (counter) counter.textContent = `${total} de 4 selecionadas`;
+  const status = $('batchStatus');
+  if (status) status.textContent = total === 4 ? 'Todas as pastas selecionadas e copiadas. Pronto para processar.' : `${total} pasta(s) selecionada(s).`;
+  const box = $('validationBox');
+  if (box) { box.className = 'validation'; box.textContent = total === 4 ? 'Todas as bases estão prontas para validação integrada.' : 'Selecione as quatro pastas para liberar o processamento integrado.'; }
+}
+
+async function processBatch() {
+  const required = ['recconf', 'paletes', 'recv2', 'recnew'];
+  loadingOpen('Processando lote integrado');
+  loadingLog('Aguardando a cópia segura dos arquivos selecionados...');
+  try {
+    await Promise.all(Object.values(batchReadPending));
+    const missing = required.filter(k => !batchFiles[k]?.length);
+    if (missing.length) { loadingLog('Bases ausentes: ' + missing.join(', '), 'error'); loadingFinish(false, 'Seleção incompleta. Verifique as quatro pastas.'); showToast('Selecione todas as quatro pastas antes de processar'); return; }
+    const order = ['recnew','recconf','recv2','paletes'];
+    const totalFiles = order.reduce((n,k) => n + batchFiles[k].length, 0);
+    let fileNo = 0, totalRows = 0;
+    const fileIssues = [...batchReadErrors];
+    for (const base of order) {
+      let rows = [];
+      for (const file of batchFiles[base]) {
+        fileNo++;
+        loadingSet(Math.min(78, (fileNo/totalFiles)*65), `Lendo ${file.name} · ${base}`, fileNo, totalRows);
+        loadingLog(`Lendo ${file.name} (${base})`);
+        try { rows.push(...parseTXT(file.text, base)); totalRows = rows.length; }
+        catch (err) { fileIssues.push({ base, name: file.name, error: err.message || 'arquivo ilegível' }); loadingLog(`Arquivo ignorado: ${base} / ${file.name}: ${err.message || 'arquivo ilegível'}`, 'warn'); }
+        loadingSet(Math.min(78, (fileNo/totalFiles)*65), `Tratando ${base}`, fileNo, totalRows);
+        await sleep(25);
+      }
+      datasets[base] = transform(dedupe(rows), base);
+      loadingLog(`${base} tratado: ${datasets[base].length} registro(s).`, 'success');
+      await sleep(25);
+    }
+    loadingSet(82, 'Mesclando recebimento com a REC CONF V3', fileNo, totalRows);
+    batchResult = { received: mergeReceived(), generated: datasets.paletes };
+    loadingLog('Mesclagem por CARGA concluída: ' + batchResult.received.length + ' recebimento(s).', 'success');
+    loadingSet(90, 'Executando validações de integridade', fileNo, totalRows);
+    const problems = [];
+    if (!batchResult.received.length) problems.push('Nenhum registro válido de recebimento');
+    if (!batchResult.generated.length) problems.push('Nenhum palete válido');
+    const noMatch = batchResult.received.filter(r => !r['MATRICULA CONF'] && !r['CONFERENTE'] && !r['PORTARIA']).length;
+    if (noMatch) problems.push(noMatch + ' carga(s) sem correspondência na REC CONF V3');
+    if (fileIssues.length) problems.push(fileIssues.length + ' arquivo(s) ilegível(is) foram ignorados');
+    fileIssues.forEach(x => loadingLog('Aviso: ' + x.base + ' / ' + x.name, 'warn'));
+    if (!problems.length) loadingLog('Validação aprovada sem alertas.', 'success');
+    const box = $('validationBox');
+    if (box) { box.className = 'validation ' + (problems.length ? 'warn' : 'ok'); box.innerHTML = problems.length ? '<b>Validação concluída com alertas:</b><br>' + problems.join('<br>') : '<b>Validação aprovada.</b><br>' + batchResult.received.length + ' registros preparados para CARGAS RECEBIDAS e ' + batchResult.generated.length + ' registros preparados para CARGAS GERADAS.'; }
+    const status = $('batchStatus');
+    if (status) status.textContent = 'Processamento concluído. Revise a validação antes do envio.';
+    renderBatchPreview();
+    loadingSet(100, 'Validação concluída. Revise a prévia antes do envio.', fileNo, totalRows);
+    loadingFinish(!problems.length, problems.length ? 'Validação concluída com alertas.' : 'Validação aprovada e lote pronto para envio.');
+  } catch (err) { loadingLog('Erro inesperado no processamento: ' + err.message, 'error'); loadingFinish(false, 'Erro durante o processamento.'); }
+}
+
+function renderBatchPreview() {
+  const baseModule = document.querySelector('#bases-recebimento .batch-panel');
+  if (!baseModule) return;
+  let p = document.getElementById('batchPreview');
+  if (!p) { p = document.createElement('div'); p.id = 'batchPreview'; p.className = 'panel'; p.style.marginTop = '18px'; baseModule.after(p); }
+  p.innerHTML = `<div class="panel-head"><div><div class="panel-title">Lote validado e mesclado</div><div class="panel-sub">Prévia dos primeiros registros antes do envio definitivo</div></div><button class="primary" type="button" onclick="sendBatch()">Enviar lote completo ao Supabase</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Destino</th><th>Registros</th><th>Status</th><th>Regra aplicada</th></tr></thead><tbody><tr><td>CARGAS RECEBIDAS</td><td>${batchResult.received.length}</td><td><span class="pill">Pronto</span></td><td>New + enriquecimento por CARGA na REC CONF V3</td></tr><tr><td>CARGAS GERADAS</td><td>${batchResult.generated.length}</td><td><span class="pill">Pronto</span></td><td>Consulta Paletes à Armazenar</td></tr></tbody></table></div>`;
+}
+
+// ===================== ENVIO EM LOTE COM CHUNKING =====================
+const SUPABASE_CHUNK_SIZE = 500;
+const SUPABASE_MAX_RETRIES = 3;
+function chunkRows(rows, size = SUPABASE_CHUNK_SIZE) {
+  const chunks = [];
+  for (let i = 0; i < rows.length; i += size) chunks.push(rows.slice(i, i + size));
+  return chunks;
+}
+async function postSupabaseChunk(table, payload, headers, chunkNo, totalChunks) {
+  let lastError = '';
+  for (let attempt = 1; attempt <= SUPABASE_MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 55000);
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(table)}`, {method:'POST', headers, body: JSON.stringify(payload), signal: controller.signal});
+      if (!res.ok) throw new Error(await res.text());
+      clearTimeout(timer);
+      return;
+    } catch (err) {
+      clearTimeout(timer);
+      lastError = err.name === 'AbortError' ? 'tempo limite excedido' : err.message;
+      if (attempt < SUPABASE_MAX_RETRIES) {
+        loadingLog(`${table} lote ${chunkNo}/${totalChunks} falhou na tentativa ${attempt}. Retentando...`, 'warn');
+        await sleep(1200 * attempt);
+      } else {
+        throw new Error(`${table} lote ${chunkNo}/${totalChunks}: ${lastError}`);
+      }
+    }
+  }
+}
+async function sendBatch() {
+  if (!batchResult.received.length && !batchResult.generated.length) { showToast('Processe e valide o lote antes do envio'); return; }
+  const tables = [['CARGAS RECEBIDAS', batchResult.received], ['CARGAS GERADAS', batchResult.generated]].filter(x => x[1].length);
+  const allChunks = tables.flatMap(([table, rows]) => chunkRows(rows).map(payload => ({ table, payload })));
+  const totalRows = tables.reduce((n, x) => n + x[1].length, 0);
+  loadingOpen('Enviando lote completo ao Supabase');
+  loadingLog(`Estratégia: ${allChunks.length} lotes de até ${SUPABASE_CHUNK_SIZE} registros.`);
+  try {
+    const headers = { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' };
+    let sentRows = 0;
+    for (let i = 0; i < allChunks.length; i++) {
+      const item = allChunks[i];
+      const lote = i + 1;
+      loadingSet((i / allChunks.length) * 100, `Enviando lote ${lote} de ${allChunks.length} para ${item.table}`, lote - 1, sentRows);
+      loadingLog(`Enviando ${item.payload.length} registro(s) para ${item.table} · lote ${lote}/${allChunks.length}...`);
+      await postSupabaseChunk(item.table, item.payload, headers, lote, allChunks.length);
+      sentRows += item.payload.length;
+      loadingSet(((i + 1) / allChunks.length) * 100, `${item.table} · lote ${lote} concluído`, lote, sentRows);
+      loadingLog(`${item.table} · lote ${lote} concluído. Total enviado: ${sentRows}/${totalRows}`, 'success');
+      await sleep(80);
+    }
+    loadingFinish(true, 'Lote completo mesclado no Supabase com sucesso.');
+    showToast('Lote completo mesclado no Supabase com sucesso');
+  } catch (err) {
+    loadingLog('Falha definitiva no envio: ' + err.message, 'error');
+    loadingFinish(false, 'Falha ao mesclar o lote no Supabase.');
+    showToast('Envio interrompido. Consulte os lotes concluídos no log.');
+    console.error(err);
+  }
+}
+
+// ===================== LOADING OVERLAY =====================
+let loadingStarted = 0;
+function loadingOpen(title) {
+  loadingStarted = Date.now();
+  const overlay = $('loadingOverlay');
+  if (!overlay) return;
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+  const spinner = $('loadingSpinner');
+  if (spinner) spinner.className = 'loading-spinner';
+  $('loadingTitle').textContent = title;
+  $('loadingStage').textContent = 'Preparando dados...';
+  $('loadingPct').textContent = '0%';
+  $('loadingBar').style.width = '0%';
+  $('loadingFiles').textContent = '0';
+  $('loadingRows').textContent = '0';
+  $('loadingElapsed').textContent = '0s';
+  $('loadingLog').innerHTML = '';
+  $('loadingClose').hidden = true;
+  loadingLog('Operação iniciada. Aguarde o processamento.');
+}
+function loadingSet(percent, stage, files, rows) {
+  $('loadingPct').textContent = Math.round(percent) + '%';
+  $('loadingBar').style.width = Math.max(0, Math.min(100, percent)) + '%';
+  $('loadingStage').textContent = stage;
+  $('loadingFiles').textContent = files;
+  $('loadingRows').textContent = rows;
+  $('loadingElapsed').textContent = Math.max(0, Math.round((Date.now() - loadingStarted) / 1000)) + 's';
+}
+function loadingLog(message, type = 'info') {
+  const box = $('loadingLog');
+  if (!box) return;
+  const line = document.createElement('div');
+  line.className = 'log-line ' + type;
+  line.innerHTML = `<span class="log-time">[${new Date().toLocaleTimeString('pt-BR')}]</span><span>${String(message).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</span>`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+function loadingClose() {
+  const overlay = $('loadingOverlay');
+  if (overlay) { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden', 'true'); }
+}
+function loadingFinish(ok, message) {
+  const spinner = $('loadingSpinner');
+  if (spinner) spinner.className = 'loading-spinner ' + (ok ? 'done' : 'fail');
+  $('loadingBar').style.width = '100%';
+  $('loadingPct').textContent = '100%';
+  $('loadingStage').textContent = message;
+  $('loadingNote').textContent = ok ? 'Operação concluída. Você pode fechar esta janela.' : 'Operação finalizada com alertas ou erro. Consulte o log.';
+  $('loadingClose').hidden = false;
+  $('loadingClose').onclick = loadingClose;
+  loadingLog(message, ok ? 'success' : 'error');
+}
+
+// ===================== AUTENTICAÇÃO =====================
+function showLoginError(msg) { loginError.textContent = msg; loginError.classList.add('show'); }
+function clearLoginError() { loginError.textContent = ''; loginError.classList.remove('show'); }
+function applySession(user) {
+  const name = user.NAME || user.USER || 'Usuário WMS';
+  const level = user.LEVEL || 'Operacional';
+  const userName = document.querySelector('.user b');
+  if (userName) userName.textContent = name;
+  const userMeta = document.querySelector('.user b')?.parentElement;
+  if (userMeta && userMeta.lastChild) userMeta.lastChild.textContent = ' ' + level;
+  const avatar = document.querySelector('.avatar');
+  if (avatar) avatar.textContent = name.split(/\s+/).map(x => x[0]).join('').slice(0, 2).toUpperCase();
+  loginOverlay.classList.add('hide');
+  setTimeout(() => { loginOverlay.style.display = 'none'; }, 500);
+}
+async function authenticateLogin(ev) {
+  ev.preventDefault();
+  clearLoginError();
+  const user = $('loginUser').value.trim();
+  const password = passwordInput.value;
+  if (!user || !password) { showLoginError('Informe usuário e senha para continuar.'); return; }
+  loginSubmit.disabled = true;
+  loginLoading.classList.add('show');
+  try {
+    const params = new URLSearchParams();
+    params.set('USER', 'eq.' + user);
+    params.set('select', 'USER,NAME,PASSWORD,LEVEL');
+    params.set('limit', '1');
+    const url = `${SUPABASE_URL}/rest/v1/USERS?${params.toString()}`;
+    const res = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + SUPABASE_ANON, Accept: 'application/json', 'Cache-Control': 'no-store' } });
+    if (!res.ok) throw new Error('auth');
+    const rows = await res.json();
+    const record = rows[0];
+    const field = (name) => record?.[name] ?? record?.[name.toLowerCase()] ?? record?.[name.toUpperCase()];
+    if (!record || String(field('PASSWORD') ?? '') !== password) { showLoginError('Usuário ou senha inválidos. Verifique os dados e tente novamente.'); return; }
+    const session = { USER: field('USER') || user, NAME: field('NAME') || field('USER') || user, LEVEL: field('LEVEL') || 'Operacional', at: Date.now() };
+    localStorage.setItem('wmsSession', JSON.stringify(session));
+    sessionStorage.setItem('wmsSession', JSON.stringify(session));
+    applySession(session);
+  } catch (err) {
+    console.error(err);
+    showLoginError('Não foi possível validar o acesso. Verifique a conexão com o Supabase.');
+  } finally {
+    loginSubmit.disabled = false;
+    loginLoading.classList.remove('show');
+  }
+}
+
+function logoutWms() {
+  localStorage.removeItem('wmsSession');
+  sessionStorage.removeItem('wmsSession');
+  const card = document.querySelector('.login-card');
+  if (card) { card.querySelector('#loginUser').value = ''; card.querySelector('#loginPassword').value = ''; }
+  loginError?.classList.remove('show');
+  loginOverlay.classList.remove('hide');
+  loginOverlay.style.display = 'flex';
+  showToast('Sessão encerrada com segurança');
+}
+
+// ===================== INICIALIZAÇÃO =====================
 function initSidebar() {
-  // Marcar item ativo com base na URL
-  const currentPage = location.pathname.split('/').pop();
-  if (!currentPage) currentPage = 'index.html';
+  const currentPage = location.pathname.split('/').pop() || 'index.html';
 
-  // Ativar link correspondente
+  // Ativar link correto
   document.querySelectorAll('.nav-item').forEach(link => {
     const href = link.getAttribute('href');
-    if (href === currentPage) {
-      link.classList.add('active');
-    }
+    if (href === currentPage) link.classList.add('active');
   });
 
-  // Configurar navegação interna (apenas no index)
+  // Configurar navegação interna (somente no index)
   document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const page = btn.dataset.page;
       go(page);
-      // Atualizar ativo
       document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
       btn.classList.add('active');
     });
   });
 
-  // Botão de logout
+  // Logout
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) logoutBtn.addEventListener('click', logoutWms);
 
@@ -60,22 +676,54 @@ function initSidebar() {
     e.preventDefault();
     window.location.href = 'user.html';
   });
-
-  // Submenus já funcionam com <details>
 }
 
-/* ===== CARREGAMENTO DA SIDEBAR ===== */
 document.addEventListener('DOMContentLoaded', () => {
   fetch('sidebar.html')
     .then(res => res.text())
     .then(html => {
       document.getElementById('sidebar-container').innerHTML = html;
-      initSidebar(); // Chamar depois de injetar
+      initSidebar();
     })
     .catch(err => console.error('Erro ao carregar sidebar:', err));
 
-  // Restante da inicialização (renderBases, login, etc.)
-  // ...
+  renderBases();
+
+  if (loginSubmit) loginSubmit.addEventListener('click', authenticateLogin);
+  loginForm.addEventListener('submit', (e) => e.preventDefault());
+  $('loginUser').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginSubmit.click(); } });
+  passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginSubmit.click(); } });
+  passwordToggle.addEventListener('click', () => { const visible = passwordInput.type === 'text'; passwordInput.type = visible ? 'password' : 'text'; passwordToggle.textContent = visible ? '◉' : '◌'; });
+
+  const processBtn = document.getElementById('processBatchBtn');
+  if (processBtn) processBtn.addEventListener('click', processBatch);
+
+  const loadingCloseBtn = document.getElementById('loadingClose');
+  if (loadingCloseBtn) loadingCloseBtn.addEventListener('click', loadingClose);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.shiftKey && e.key.toLowerCase() === 'q') {
+      e.preventDefault();
+      logoutWms();
+    }
+  });
+
+  try {
+    const saved = JSON.parse(localStorage.getItem('wmsSession') || 'null');
+    if (saved && saved.USER) applySession(saved);
+  } catch (e) {
+    localStorage.removeItem('wmsSession');
+    sessionStorage.removeItem('wmsSession');
+  }
+
+  function openFromHash() {
+    const hash = location.hash.replace('#', '').toLowerCase();
+    if (!hash) return;
+    if (hash === 'bases') { location.replace('bases.html'); return; }
+    const map = { expedicao: 'expedicao', estoque: 'estoque', indicadores: 'indicadores', dashboard: 'dashboard', recebimento: 'dashboard' };
+    if (map[hash] && typeof go === 'function') go(map[hash]);
+  }
+  openFromHash();
 });
 </script>
 </body>
