@@ -9,6 +9,7 @@
 </style>
 <style id="wv-logo-style">.brand-logo{display:block;width:186px;height:73px;object-fit:contain;filter:drop-shadow(0 8px 18px #1680ff38)}.logo-login{display:block;width:360px;max-width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 15px 28px #2585ff44)}@media(max-width:700px){.brand-logo{width:50px;height:45px}.logo-login{width:270px}}</style>
 <style id="wv-logo-size-override">.brand-logo{width:210px!important;height:86px!important;object-fit:contain}.logo-login{width:390px!important;max-width:100%}@media(max-width:700px){.brand-logo{width:58px!important;height:54px!important}.logo-login{width:280px!important}}</style>
+  <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
 <div id="sidebar-container"></div>
@@ -646,46 +647,7 @@ function logoutWms() {
 }
 
 // ===================== INICIALIZAÇÃO =====================
-function initSidebar() {
-  const currentPage = location.pathname.split('/').pop() || 'index.html';
-
-  // Ativar link correto
-  document.querySelectorAll('.nav-item').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPage) link.classList.add('active');
-  });
-
-  // Configurar navegação interna (somente no index)
-  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = btn.dataset.page;
-      go(page);
-      document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
-
-  // Logout
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) logoutBtn.addEventListener('click', logoutWms);
-
-  // Usuários
-  const usersNav = document.getElementById('usersNav');
-  if (usersNav) usersNav.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = 'user.html';
-  });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('sidebar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('sidebar-container').innerHTML = html;
-      initSidebar();
-    })
-    .catch(err => console.error('Erro ao carregar sidebar:', err));
 
   renderBases();
 
@@ -726,5 +688,6 @@ document.addEventListener('DOMContentLoaded', () => {
   openFromHash();
 });
 </script>
+  <script src="sidebar.js" defer></script>
 </body>
 </html>
