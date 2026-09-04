@@ -27,8 +27,8 @@
 .dock-square .tooltip strong{color:#fff;font-weight:800}
 .dock-square .tooltip .label{color:#8aa3c0}
 .dock-square .tooltip .motivo{color:#f5c542}
-.dock-square .tooltip .expand-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:4px;padding:2px 8px;font-size:8px;cursor:pointer;margin-top:4px;display:inline-block;transition:background .2s}
-.dock-square .tooltip .expand-btn:hover{background:rgba(255,255,255,0.3)}
+.dock-square .tooltip .fornecedor{color:#6fc9ff}
+.dock-square .tooltip .categoria{color:#b7e6a0}
 .empty{text-align:center;padding:32px;color:#8192a6;font-size:10px;grid-column:1/-1}
 .form-panel{margin-top:17px}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
@@ -133,26 +133,6 @@
   </div>
 </div>
 
-<!-- MODAL DE DETALHES (expandir) -->
-<div class="modal-overlay hidden" id="detalhesModal">
-  <div class="modal-content">
-    <div class="panel-head">
-      <div>
-        <div class="panel-title" id="detalhesTitle">Detalhes da carga</div>
-        <div class="panel-sub" id="detalhesSub">Informações complementares da AGENDA.</div>
-      </div>
-      <button class="btn" id="closeDetalhesModal">Fechar</button>
-    </div>
-    <div id="detalhesContent">
-      <div class="detalhes-grid">
-        <div class="item"><div class="rotulo">Fornecedor</div><div class="valor" id="detalhesFornecedor">—</div></div>
-        <div class="item"><div class="rotulo">Categoria</div><div class="valor" id="detalhesCategoria">—</div></div>
-      </div>
-      <div class="notice" id="detalhesStatus">Carregando...</div>
-    </div>
-  </div>
-</div>
-
 <!-- MODAL DE CONFIRMAÇÃO PARA LIBERAR -->
 <div class="modal-overlay hidden modal-confirm" id="confirmModal">
   <div class="modal-content">
@@ -186,7 +166,6 @@ function getDocaNumber(doca){const num=doca.replace(/\D/g,'');return num.padStar
 function setNotice(message,type=''){const el=$('notice');el.className='notice '+type;el.textContent=message}
 function setState(id,message){$(id).textContent=message}
 
-// Função para formatar duração corretamente (dias, horas, minutos)
 function formatarDuracao(milissegundos) {
   if (milissegundos < 0) return '0h 0min';
   const totalSegundos = Math.floor(milissegundos / 1000);
@@ -200,7 +179,6 @@ function formatarDuracao(milissegundos) {
   return partes.join(' ');
 }
 
-// Calcula a diferença a partir de uma string ISO
 function calcularDuracao(inicioISO) {
   if (!inicioISO) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
   const inicio = new Date(inicioISO);
@@ -217,90 +195,304 @@ function calcularDuracao(inicioISO) {
 
 async function getRows(){const u=`${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=DOCA.asc&limit=1000`;const r=await fetch(u,{headers});if(!r.ok)throw new Error(await r.text());return r.json()}
 function uniqueRows(){const map=new Map();for(const row of rows){const doca=normDoca(val(row,'DOCA'));if(doca&&!map.has(doca))map.set(doca,row)}return [...map.values()].sort((a,b)=>normDoca(val(a,'DOCA')).localeCompare(normDoca(val(b,'DOCA')),undefined,{numeric:true}))}
-function render(){const list=uniqueRows(),total=list.length,occ=list.filter(isOccupied).length,bloq=list.filter(isBlocked).length,avail=total-occ-bloq;const pct=n=>total?(n/total*100):0;$('mTotal').textContent=total.toLocaleString('pt-BR');$('mAvailable').textContent=pct(avail).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';$('mOccupied').textContent=pct(occ).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';$('mAvailableCount').textContent=avail+' doca(s) livres';$('mOccupiedCount').textContent=occ+' doca(s) em uso';$('mIndex').textContent=pct(occ).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';$('state').textContent=total+' doca(s) monitorada(s)';const map=$('dockMap');if(!list.length){map.innerHTML='<div class="empty">Nenhuma doca cadastrada. Use “Cadastrar doca” para começar.</div>';return}
-let html='';for(const row of list){const doca=normDoca(val(row,'DOCA'));const status=getStatus(row);const isOcc=status==='OCUPADO';const isBloq=status==='BLOQUEADO';const inicio=val(row,'INICIO');let tempoHtml='',tempoTexto='',overdueClass='',alerta24=false;if(isOcc&&inicio){const duracao=calcularDuracao(inicio);tempoTexto=duracao.texto;tempoHtml=`<div class="dock-tempo">${tempoTexto}</div>`;if(duracao.horas + duracao.dias*24 >= 4) overdueClass='overdue';if(duracao.horas + duracao.dias*24 >= 24) alerta24=true;}const motivo=clean(val(row,'MOTIVO BLOQ'));const senha=clean(val(row,'SENHA'));
-const expandBtn=senha?`<button class="expand-btn" data-expand="${esc(doca)}" data-senha="${esc(senha)}" type="button">🔍 Expandir</button>`:'';
-const tooltipContent=`
-<strong>${esc(doca)}</strong><br>
-<span class="label">Status:</span> ${status}<br>
-${isBloq?`<span class="label">Motivo:</span> <span class="motivo">${esc(motivo)}</span><br>`:''}
-<span class="label">Senha:</span> ${isOcc?esc(senha)||'—':'—'}<br>
-<span class="label">Carga:</span> ${isOcc?esc(val(row,'CARGA'))||'—':'—'}<br>
-<span class="label">Tempo:</span> ${isOcc?tempoTexto:'—'}<br>
-${expandBtn}
-`;
-let extraClass=''; if(isOcc) extraClass='ocupado'; else if(isBloq) extraClass='bloqueado';
-if(overdueClass) extraClass+=' '+overdueClass;
-if(alerta24) extraClass+=' alerta24';
-const releaseBtn=(isOcc||isBloq)?`<button class="dock-release" data-release="${esc(doca)}" type="button" title="Liberar doca">✕</button>`:'';
-const lockIcon=isBloq?'🔒 ':'';
-const alertIcon=alerta24?'🚨':'';
-html+=`<div class="dock-square ${extraClass}" data-doca="${esc(doca)}" data-status="${status}" data-inicio="${inicio||''}">
-  <div class="dock-number">${lockIcon}${esc(getDocaNumber(doca))}${alertIcon?`<span class="alert-icon">${alertIcon}</span>`:''}</div>
-  ${tempoHtml}
-  ${releaseBtn}
-  <div class="tooltip">${tooltipContent}</div>
-</div>`}
-map.innerHTML=html}
-function populateDocaSelect(list){/* não usado */ }
-function togglePanel(id,open){$(id).classList.toggle('hidden',!open);if(open)$(id).scrollIntoView({behavior:'smooth',block:'center'})}
-function syncEditStatus(){const status=$('editStatus').value;const isBloq=status==='BLOQUEADO';const isOcc=status==='OCUPADO';$('editMotivoField').style.display=isBloq?'flex':'none';if(!isBloq)$('editMotivo').value='';for(const id of ['editSenha','editCarga']){const el=$(id);if(isBloq){el.disabled=true;el.required=false;el.value=''}else{el.disabled=false;el.required=isOcc;if(!isOcc)el.value=''}} $('editSenhaHelp').textContent=isBloq?'Não necessário para bloquear.':isOcc?'Obrigatório para ocupar.':'Não utilizado.';$('editCargaHelp').textContent=isBloq?'Não necessário para bloquear.':isOcc?'Obrigatório para ocupar.':'Não utilizado.'; $('editMotivo').required=isBloq}
-async function post(payload){const r=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`,{method:'POST',headers:{...headers,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload)});if(!r.ok)throw new Error(await r.text())}
-async function patchByDoca(doca,payload){const u=`${SUPABASE_URL}/rest/v1/${TABLE}?DOCA=eq.${encodeURIComponent(doca)}`;const r=await fetch(u,{method:'PATCH',headers:{...headers,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload)});if(!r.ok)throw new Error(await r.text())}
-async function reload(){rows=await getRows();render()}
-function updateTimers(){document.querySelectorAll('.dock-square.ocupado[data-inicio]').forEach(square=>{const inicio=square.dataset.inicio;if(!inicio)return;const duracao=calcularDuracao(inicio);const tempoEl=square.querySelector('.dock-tempo');if(tempoEl)tempoEl.textContent=duracao.texto;const tooltip=square.querySelector('.tooltip');if(tooltip){const lines=tooltip.innerHTML.split('<br>');if(lines.length>=5){const tempoLine=lines[4];if(tempoLine.includes('Tempo:')){lines[4]=`<span class="label">Tempo:</span> ${duracao.texto}`;tooltip.innerHTML=lines.join('<br>')}}}const horasTotais=duracao.horas + duracao.dias*24;if(horasTotais>=4)square.classList.add('overdue');else square.classList.remove('overdue');if(horasTotais>=24){square.classList.add('alerta24');if(!square.querySelector('.alert-icon')){const numDiv=square.querySelector('.dock-number');if(numDiv){const alertSpan=document.createElement('span');alertSpan.className='alert-icon';alertSpan.textContent='🚨';numDiv.appendChild(alertSpan)}}}else{square.classList.remove('alerta24');const alertSpan=square.querySelector('.alert-icon');if(alertSpan)alertSpan.remove()}})}
-let timerInterval=null;
-function openEditModal(doca){const row=uniqueRows().find(r=>normDoca(val(r,'DOCA'))===doca);if(!row){setNotice('Doca não encontrada.','error');return}currentEditDoca=doca;const status=getStatus(row);const motivo=clean(val(row,'MOTIVO BLOQ'));const senha=clean(val(row,'SENHA'));const carga=clean(val(row,'CARGA'));$('editDoca').value=doca;$('editStatus').value=status;$('editMotivo').value=motivo||'';$('editSenha').value=senha;$('editCarga').value=carga;$('editState').textContent='Carregado.';$('editModalTitle').textContent='Editar doca '+doca;$('editModalSub').textContent='Altere os dados conforme necessário.';syncEditStatus();$('editModal').classList.remove('hidden')}
-function closeEditModal(){$('editModal').classList.add('hidden');currentEditDoca=null}
-async function buscarDetalhes(senha, doca) {
-  $('detalhesTitle').textContent = 'Detalhes da carga - Doca '+doca;
-  $('detalhesSub').textContent = 'Buscando informações na AGENDA...';
-  $('detalhesFornecedor').textContent = '—';
-  $('detalhesCategoria').textContent = '—';
-  $('detalhesStatus').className = 'notice';
-  $('detalhesStatus').textContent = 'Buscando...';
-  $('detalhesModal').classList.remove('hidden');
+
+// Busca os dados da AGENDA para todas as senhas de uma vez
+async function buscarDadosAgenda(senhas) {
+  if (!senhas || senhas.length === 0) return new Map();
+  // Filtra senhas não vazias
+  const senhasValidas = senhas.filter(s => s && s.trim() !== '');
+  if (senhasValidas.length === 0) return new Map();
+  // Monta query com IN
+  const lista = senhasValidas.map(s => `"${encodeURIComponent(s)}"`).join(',');
+  const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=in.(${lista})&select=SENHA,FORNECEDOR,CATEGORIA`;
   try {
-    const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senha)}&select=FORNECEDOR,CATEGORIA`;
     const resp = await fetch(url, { headers });
     if (!resp.ok) throw new Error(await resp.text());
     const data = await resp.json();
-    if (data && data.length > 0) {
-      const item = data[0];
-      $('detalhesFornecedor').textContent = item.FORNECEDOR || '—';
-      $('detalhesCategoria').textContent = item.CATEGORIA || '—';
-      $('detalhesStatus').className = 'notice success';
-      $('detalhesStatus').textContent = 'Dados encontrados com sucesso.';
-    } else {
-      $('detalhesStatus').className = 'notice error';
-      $('detalhesStatus').textContent = 'Nenhum registro encontrado para a senha '+senha+'.';
-    }
+    const map = new Map();
+    data.forEach(item => {
+      const senha = clean(item.SENHA);
+      if (senha) map.set(senha, { fornecedor: item.FORNECEDOR || '—', categoria: item.CATEGORIA || '—' });
+    });
+    return map;
   } catch (err) {
-    console.error(err);
-    $('detalhesStatus').className = 'notice error';
-    $('detalhesStatus').textContent = 'Erro ao buscar: '+err.message;
+    console.error('Erro ao buscar AGENDA:', err);
+    return new Map();
   }
 }
-function closeDetalhesModal() { $('detalhesModal').classList.add('hidden'); }
-function openConfirmModal(doca){pendingRelease=doca;$('confirmDoca').textContent=doca;$('confirmModal').classList.remove('hidden')}
-function closeConfirmModal(){$('confirmModal').classList.add('hidden');pendingRelease=null}
+
+// Função assíncrona de render que carrega os dados da agenda
+async function renderAsync() {
+  const list = uniqueRows();
+  const total = list.length;
+  const occ = list.filter(isOccupied).length;
+  const bloq = list.filter(isBlocked).length;
+  const avail = total - occ - bloq;
+  const pct = n => total ? (n/total*100) : 0;
+  $('mTotal').textContent = total.toLocaleString('pt-BR');
+  $('mAvailable').textContent = pct(avail).toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1})+'%';
+  $('mOccupied').textContent = pct(occ).toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1})+'%';
+  $('mAvailableCount').textContent = avail+' doca(s) livres';
+  $('mOccupiedCount').textContent = occ+' doca(s) em uso';
+  $('mIndex').textContent = pct(occ).toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1})+'%';
+  $('state').textContent = total+' doca(s) monitorada(s)';
+  const map = $('dockMap');
+  if (!list.length) {
+    map.innerHTML = '<div class="empty">Nenhuma doca cadastrada. Use “Cadastrar doca” para começar.</div>';
+    return;
+  }
+
+  // Coleta todas as senhas ocupadas
+  const senhas = [];
+  list.forEach(row => {
+    if (isOccupied(row)) {
+      const senha = clean(val(row, 'SENHA'));
+      if (senha) senhas.push(senha);
+    }
+  });
+  // Busca dados da agenda
+  const agendaMap = await buscarDadosAgenda(senhas);
+
+  let html = '';
+  for (const row of list) {
+    const doca = normDoca(val(row, 'DOCA'));
+    const status = getStatus(row);
+    const isOcc = status === 'OCUPADO';
+    const isBloq = status === 'BLOQUEADO';
+    const inicio = val(row, 'INICIO');
+    let tempoHtml = '', tempoTexto = '', overdueClass = '', alerta24 = false;
+    if (isOcc && inicio) {
+      const duracao = calcularDuracao(inicio);
+      tempoTexto = duracao.texto;
+      tempoHtml = `<div class="dock-tempo">${tempoTexto}</div>`;
+      if (duracao.horas + duracao.dias*24 >= 4) overdueClass = 'overdue';
+      if (duracao.horas + duracao.dias*24 >= 24) alerta24 = true;
+    }
+    const motivo = clean(val(row, 'MOTIVO BLOQ'));
+    const senha = clean(val(row, 'SENHA'));
+    // Dados da agenda
+    let fornecedor = '—', categoria = '—';
+    if (senha && agendaMap.has(senha)) {
+      const info = agendaMap.get(senha);
+      fornecedor = info.fornecedor;
+      categoria = info.categoria;
+    }
+
+    const tooltipContent = `
+<strong>${esc(doca)}</strong><br>
+<span class="label">Status:</span> ${status}<br>
+${isBloq ? `<span class="label">Motivo:</span> <span class="motivo">${esc(motivo)}</span><br>` : ''}
+${isOcc ? `<span class="label">Senha:</span> ${esc(senha)}<br>` : ''}
+${isOcc ? `<span class="label">Carga:</span> ${esc(val(row,'CARGA'))||'—'}<br>` : ''}
+${isOcc ? `<span class="label">Tempo:</span> ${tempoTexto}<br>` : ''}
+${isOcc ? `<span class="label">Fornecedor:</span> <span class="fornecedor">${esc(fornecedor)}</span><br>` : ''}
+${isOcc ? `<span class="label">Categoria:</span> <span class="categoria">${esc(categoria)}</span>` : ''}
+`;
+
+    let extraClass = '';
+    if (isOcc) extraClass = 'ocupado';
+    else if (isBloq) extraClass = 'bloqueado';
+    if (overdueClass) extraClass += ' ' + overdueClass;
+    if (alerta24) extraClass += ' alerta24';
+
+    const releaseBtn = (isOcc || isBloq) ? `<button class="dock-release" data-release="${esc(doca)}" type="button" title="Liberar doca">✕</button>` : '';
+    const lockIcon = isBloq ? '🔒 ' : '';
+    const alertIcon = alerta24 ? '🚨' : '';
+
+    html += `<div class="dock-square ${extraClass}" data-doca="${esc(doca)}" data-status="${status}" data-inicio="${inicio||''}">
+  <div class="dock-number">${lockIcon}${esc(getDocaNumber(doca))}${alertIcon ? `<span class="alert-icon">${alertIcon}</span>` : ''}</div>
+  ${tempoHtml}
+  ${releaseBtn}
+  <div class="tooltip">${tooltipContent}</div>
+</div>`;
+  }
+  map.innerHTML = html;
+}
+
+// Wrapper para manter compatibilidade com reload()
+async function reload() {
+  rows = await getRows();
+  await renderAsync();
+}
+
+function updateTimers() {
+  document.querySelectorAll('.dock-square.ocupado[data-inicio]').forEach(square => {
+    const inicio = square.dataset.inicio;
+    if (!inicio) return;
+    const duracao = calcularDuracao(inicio);
+    const tempoEl = square.querySelector('.dock-tempo');
+    if (tempoEl) tempoEl.textContent = duracao.texto;
+    // Atualiza tooltip também (opcional, mas não necessário porque o tooltip é recriado no hover)
+    // Vamos atualizar o tooltip inline se existir
+    const tooltip = square.querySelector('.tooltip');
+    if (tooltip) {
+      const lines = tooltip.innerHTML.split('<br>');
+      // Encontra a linha que contém "Tempo:"
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('Tempo:')) {
+          lines[i] = `<span class="label">Tempo:</span> ${duracao.texto}`;
+          break;
+        }
+      }
+      tooltip.innerHTML = lines.join('<br>');
+    }
+    const horasTotais = duracao.horas + duracao.dias * 24;
+    if (horasTotais >= 4) square.classList.add('overdue');
+    else square.classList.remove('overdue');
+    if (horasTotais >= 24) {
+      square.classList.add('alerta24');
+      if (!square.querySelector('.alert-icon')) {
+        const numDiv = square.querySelector('.dock-number');
+        if (numDiv) {
+          const alertSpan = document.createElement('span');
+          alertSpan.className = 'alert-icon';
+          alertSpan.textContent = '🚨';
+          numDiv.appendChild(alertSpan);
+        }
+      }
+    } else {
+      square.classList.remove('alerta24');
+      const alertSpan = square.querySelector('.alert-icon');
+      if (alertSpan) alertSpan.remove();
+    }
+  });
+}
+
+let timerInterval = null;
+
+function togglePanel(id, open) { $(id).classList.toggle('hidden', !open); if (open) $(id).scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function syncEditStatus() {
+  const status = $('editStatus').value;
+  const isBloq = status === 'BLOQUEADO';
+  const isOcc = status === 'OCUPADO';
+  $('editMotivoField').style.display = isBloq ? 'flex' : 'none';
+  if (!isBloq) $('editMotivo').value = '';
+  for (const id of ['editSenha', 'editCarga']) {
+    const el = $(id);
+    if (isBloq) { el.disabled = true; el.required = false; el.value = ''; }
+    else { el.disabled = false; el.required = isOcc; if (!isOcc) el.value = ''; }
+  }
+  $('editSenhaHelp').textContent = isBloq ? 'Não necessário para bloquear.' : isOcc ? 'Obrigatório para ocupar.' : 'Não utilizado.';
+  $('editCargaHelp').textContent = isBloq ? 'Não necessário para bloquear.' : isOcc ? 'Obrigatório para ocupar.' : 'Não utilizado.';
+  $('editMotivo').required = isBloq;
+}
+async function post(payload) { const r = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(payload) }); if (!r.ok) throw new Error(await r.text()); }
+async function patchByDoca(doca, payload) { const u = `${SUPABASE_URL}/rest/v1/${TABLE}?DOCA=eq.${encodeURIComponent(doca)}`; const r = await fetch(u, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(payload) }); if (!r.ok) throw new Error(await r.text()); }
+
+function openEditModal(doca) {
+  const row = uniqueRows().find(r => normDoca(val(r, 'DOCA')) === doca);
+  if (!row) { setNotice('Doca não encontrada.', 'error'); return; }
+  currentEditDoca = doca;
+  const status = getStatus(row);
+  const motivo = clean(val(row, 'MOTIVO BLOQ'));
+  const senha = clean(val(row, 'SENHA'));
+  const carga = clean(val(row, 'CARGA'));
+  $('editDoca').value = doca;
+  $('editStatus').value = status;
+  $('editMotivo').value = motivo || '';
+  $('editSenha').value = senha;
+  $('editCarga').value = carga;
+  $('editState').textContent = 'Carregado.';
+  $('editModalTitle').textContent = 'Editar doca ' + doca;
+  $('editModalSub').textContent = 'Altere os dados conforme necessário.';
+  syncEditStatus();
+  $('editModal').classList.remove('hidden');
+}
+function closeEditModal() { $('editModal').classList.add('hidden'); currentEditDoca = null; }
+function openConfirmModal(doca) { pendingRelease = doca; $('confirmDoca').textContent = doca; $('confirmModal').classList.remove('hidden'); }
+function closeConfirmModal() { $('confirmModal').classList.add('hidden'); pendingRelease = null; }
+
 // Eventos
-$('registerOpen').onclick=()=>togglePanel('registerPanel',true);
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>togglePanel(b.dataset.close,false));
-$('closeEditModal').onclick=closeEditModal;
-$('editModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)closeEditModal()});
-$('editStatus').onchange=syncEditStatus; syncEditStatus();
-$('closeDetalhesModal').onclick=closeDetalhesModal;
-$('detalhesModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)closeDetalhesModal()});
-$('confirmCancel').onclick=closeConfirmModal;
-$('confirmModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)closeConfirmModal()});
-$('confirmOk').onclick=async ()=>{if(!pendingRelease)return;const doca=pendingRelease;closeConfirmModal();try{await patchByDoca(doca,{STATUS:'DISPONIVEL',SENHA:null,CARGA:null,INICIO:null,'MOTIVO BLOQ':null});setNotice('Doca '+doca+' liberada. Todos os dados foram apagados.','success');await reload()}catch(err){console.error(err);setNotice('Erro ao liberar: '+err.message,'error')}};
-document.getElementById('dockMap').addEventListener('click',(e)=>{const square=e.target.closest('.dock-square');if(!square)return;const doca=square.dataset.doca;if(!doca)return;const releaseBtn=e.target.closest('.dock-release');if(releaseBtn)return;const expandBtn=e.target.closest('.expand-btn');if(expandBtn)return;openEditModal(doca)});
-document.addEventListener('click',(e)=>{const btn=e.target.closest('.expand-btn');if(!btn)return;e.stopPropagation();const doca=btn.dataset.expand;const senha=btn.dataset.senha;if(doca&&senha){buscarDetalhes(senha, doca)}else{setNotice('Dados incompletos para expandir.','error')}});
-document.addEventListener('click',(e)=>{const btn=e.target.closest('.dock-release');if(!btn)return;e.stopPropagation();const doca=btn.dataset.release;if(doca)openConfirmModal(doca)});
-$('registerForm').onsubmit=async e=>{e.preventDefault();const doca=normDoca($('newDoca').value);if(!doca)return;const duplicate=uniqueRows().some(r=>normDoca(val(r,'DOCA'))===doca);if(duplicate){$('registerState').textContent='Essa doca já está cadastrada.';return}$('registerState').textContent='Enviando...';try{await post({DOCA:doca,STATUS:'DISPONIVEL',SENHA:null,CARGA:null,INICIO:null,'MOTIVO BLOQ':null});$('registerState').textContent='Doca cadastrada como disponível.';$('newDoca').value='';setNotice('Doca '+doca+' cadastrada com sucesso.','success');await reload()}catch(err){console.error(err);$('registerState').textContent='Falha ao cadastrar';setNotice('Erro: '+err.message,'error')}};
-$('editForm').onsubmit=async e=>{e.preventDefault();const doca=normDoca($('editDoca').value);if(!doca){setNotice('Doca inválida.','error');return}const status=$('editStatus').value;const motivo=clean($('editMotivo').value);const senha=$('editSenha').value.trim();const carga=$('editCarga').value.trim();if(status==='OCUPADO'&&(!/^\d+$/.test(senha)||!/^\d+$/.test(carga))){setNotice('SENHA e CARGA são obrigatórios e aceitam apenas números para ocupar.','error');return}if(status==='BLOQUEADO'&&!motivo){setNotice('Selecione um motivo para bloquear a doca.','error');return}$('editState').textContent='Salvando...';try{let payload={STATUS:status};if(status==='DISPONIVEL'){payload.SENHA=null;payload.CARGA=null;payload.INICIO=null;payload['MOTIVO BLOQ']=null;}else if(status==='OCUPADO'){payload.SENHA=Number(senha);payload.CARGA=Number(carga);payload.INICIO=new Date().toISOString();payload['MOTIVO BLOQ']=null;}else if(status==='BLOQUEADO'){payload.SENHA=null;payload.CARGA=null;payload.INICIO=null;payload['MOTIVO BLOQ']=motivo;}await patchByDoca(doca,payload);setNotice('Doca atualizada com sucesso.','success');await reload();closeEditModal()}catch(err){console.error(err);$('editState').textContent='Erro ao salvar';setNotice('Erro: '+err.message,'error')}};
-(async()=>{try{await reload();if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(updateTimers,60000)}catch(err){console.error(err);$('state').textContent='Erro de conexão';$('dockMap').innerHTML='<div class="empty">Não foi possível consultar a base.</div>';setNotice('Falha ao carregar: '+err.message,'error')}})();
+$('registerOpen').onclick = () => togglePanel('registerPanel', true);
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => togglePanel(b.dataset.close, false));
+$('closeEditModal').onclick = closeEditModal;
+$('editModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeEditModal(); });
+$('editStatus').onchange = syncEditStatus; syncEditStatus();
+$('confirmCancel').onclick = closeConfirmModal;
+$('confirmModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeConfirmModal(); });
+$('confirmOk').onclick = async () => {
+  if (!pendingRelease) return;
+  const doca = pendingRelease;
+  closeConfirmModal();
+  try {
+    await patchByDoca(doca, { STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null });
+    setNotice('Doca '+doca+' liberada. Todos os dados foram apagados.', 'success');
+    await reload();
+  } catch (err) { console.error(err); setNotice('Erro ao liberar: '+err.message, 'error'); }
+};
+document.getElementById('dockMap').addEventListener('click', (e) => {
+  const square = e.target.closest('.dock-square');
+  if (!square) return;
+  const doca = square.dataset.doca;
+  if (!doca) return;
+  const releaseBtn = e.target.closest('.dock-release');
+  if (releaseBtn) return;
+  openEditModal(doca);
+});
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.dock-release');
+  if (!btn) return;
+  e.stopPropagation();
+  const doca = btn.dataset.release;
+  if (doca) openConfirmModal(doca);
+});
+$('registerForm').onsubmit = async e => {
+  e.preventDefault();
+  const doca = normDoca($('newDoca').value);
+  if (!doca) return;
+  const duplicate = uniqueRows().some(r => normDoca(val(r, 'DOCA')) === doca);
+  if (duplicate) { $('registerState').textContent = 'Essa doca já está cadastrada.'; return; }
+  $('registerState').textContent = 'Enviando...';
+  try {
+    await post({ DOCA: doca, STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null });
+    $('registerState').textContent = 'Doca cadastrada como disponível.';
+    $('newDoca').value = '';
+    setNotice('Doca '+doca+' cadastrada com sucesso.', 'success');
+    await reload();
+  } catch (err) { console.error(err); $('registerState').textContent = 'Falha ao cadastrar'; setNotice('Erro: '+err.message, 'error'); }
+};
+$('editForm').onsubmit = async e => {
+  e.preventDefault();
+  const doca = normDoca($('editDoca').value);
+  if (!doca) { setNotice('Doca inválida.', 'error'); return; }
+  const status = $('editStatus').value;
+  const motivo = clean($('editMotivo').value);
+  const senha = $('editSenha').value.trim();
+  const carga = $('editCarga').value.trim();
+  if (status === 'OCUPADO' && (!/^\d+$/.test(senha) || !/^\d+$/.test(carga))) {
+    setNotice('SENHA e CARGA são obrigatórios e aceitam apenas números para ocupar.', 'error');
+    return;
+  }
+  if (status === 'BLOQUEADO' && !motivo) {
+    setNotice('Selecione um motivo para bloquear a doca.', 'error');
+    return;
+  }
+  $('editState').textContent = 'Salvando...';
+  try {
+    let payload = { STATUS: status };
+    if (status === 'DISPONIVEL') { payload.SENHA = null; payload.CARGA = null; payload.INICIO = null; payload['MOTIVO BLOQ'] = null; }
+    else if (status === 'OCUPADO') { payload.SENHA = Number(senha); payload.CARGA = Number(carga); payload.INICIO = new Date().toISOString(); payload['MOTIVO BLOQ'] = null; }
+    else if (status === 'BLOQUEADO') { payload.SENHA = null; payload.CARGA = null; payload.INICIO = null; payload['MOTIVO BLOQ'] = motivo; }
+    await patchByDoca(doca, payload);
+    setNotice('Doca atualizada com sucesso.', 'success');
+    await reload();
+    closeEditModal();
+  } catch (err) { console.error(err); $('editState').textContent = 'Erro ao salvar'; setNotice('Erro: '+err.message, 'error'); }
+};
+
+// Inicialização
+(async () => {
+  try {
+    await reload();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimers, 60000);
+  } catch (err) {
+    console.error(err);
+    $('state').textContent = 'Erro de conexão';
+    $('dockMap').innerHTML = '<div class="empty">Não foi possível consultar a base.</div>';
+    setNotice('Falha ao carregar: '+err.message, 'error');
+  }
+})();
 </script>
   <script src="sidebar.js" defer></script>
 </body></html>
