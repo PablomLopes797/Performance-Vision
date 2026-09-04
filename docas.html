@@ -185,11 +185,40 @@ function esc(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;'
 function getDocaNumber(doca){const num=doca.replace(/\D/g,'');return num.padStart(2,'0')}
 function setNotice(message,type=''){const el=$('notice');el.className='notice '+type;el.textContent=message}
 function setState(id,message){$(id).textContent=message}
+
+// Função para formatar duração corretamente (dias, horas, minutos)
+function formatarDuracao(milissegundos) {
+  if (milissegundos < 0) return '0h 0min';
+  const totalSegundos = Math.floor(milissegundos / 1000);
+  const dias = Math.floor(totalSegundos / 86400);
+  const horas = Math.floor((totalSegundos % 86400) / 3600);
+  const minutos = Math.floor((totalSegundos % 3600) / 60);
+  let partes = [];
+  if (dias > 0) partes.push(dias + 'd');
+  if (horas > 0 || dias > 0) partes.push(horas + 'h');
+  partes.push(minutos + 'min');
+  return partes.join(' ');
+}
+
+// Calcula a diferença a partir de uma string ISO
+function calcularDuracao(inicioISO) {
+  if (!inicioISO) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
+  const inicio = new Date(inicioISO);
+  if (isNaN(inicio.getTime())) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
+  const diff = Date.now() - inicio.getTime();
+  if (diff < 0) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
+  const totalSegundos = Math.floor(diff / 1000);
+  const dias = Math.floor(totalSegundos / 86400);
+  const horas = Math.floor((totalSegundos % 86400) / 3600);
+  const minutos = Math.floor((totalSegundos % 3600) / 60);
+  const texto = formatarDuracao(diff);
+  return { diff, horas, minutos, dias, texto };
+}
+
 async function getRows(){const u=`${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=DOCA.asc&limit=1000`;const r=await fetch(u,{headers});if(!r.ok)throw new Error(await r.text());return r.json()}
 function uniqueRows(){const map=new Map();for(const row of rows){const doca=normDoca(val(row,'DOCA'));if(doca&&!map.has(doca))map.set(doca,row)}return [...map.values()].sort((a,b)=>normDoca(val(a,'DOCA')).localeCompare(normDoca(val(b,'DOCA')),undefined,{numeric:true}))}
 function render(){const list=uniqueRows(),total=list.length,occ=list.filter(isOccupied).length,bloq=list.filter(isBlocked).length,avail=total-occ-bloq;const pct=n=>total?(n/total*100):0;$('mTotal').textContent=total.toLocaleString('pt-BR');$('mAvailable').textContent=pct(avail).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';$('mOccupied').textContent=pct(occ).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';$('mAvailableCount').textContent=avail+' doca(s) livres';$('mOccupiedCount').textContent=occ+' doca(s) em uso';$('mIndex').textContent=pct(occ).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';$('state').textContent=total+' doca(s) monitorada(s)';const map=$('dockMap');if(!list.length){map.innerHTML='<div class="empty">Nenhuma doca cadastrada. Use “Cadastrar doca” para começar.</div>';return}
-let html='';for(const row of list){const doca=normDoca(val(row,'DOCA'));const status=getStatus(row);const isOcc=status==='OCUPADO';const isBloq=status==='BLOQUEADO';const inicio=val(row,'INICIO');let tempoHtml='',tempoTexto='',overdueClass='',alerta24=false;if(isOcc&&inicio){const diff=Date.now()-new Date(inicio).getTime();const hours=Math.floor(diff/3600000);const minutes=Math.floor((diff%3600000)/60000);tempoTexto=`${hours}h ${minutes}min`;tempoHtml=`<div class="dock-tempo">${tempoTexto}</div>`;if(hours>=4)overdueClass='overdue';if(hours>=24)alerta24=true;}const motivo=clean(val(row,'MOTIVO BLOQ'));const senha=clean(val(row,'SENHA'));
-// Botão expandir (só aparece se houver senha)
+let html='';for(const row of list){const doca=normDoca(val(row,'DOCA'));const status=getStatus(row);const isOcc=status==='OCUPADO';const isBloq=status==='BLOQUEADO';const inicio=val(row,'INICIO');let tempoHtml='',tempoTexto='',overdueClass='',alerta24=false;if(isOcc&&inicio){const duracao=calcularDuracao(inicio);tempoTexto=duracao.texto;tempoHtml=`<div class="dock-tempo">${tempoTexto}</div>`;if(duracao.horas + duracao.dias*24 >= 4) overdueClass='overdue';if(duracao.horas + duracao.dias*24 >= 24) alerta24=true;}const motivo=clean(val(row,'MOTIVO BLOQ'));const senha=clean(val(row,'SENHA'));
 const expandBtn=senha?`<button class="expand-btn" data-expand="${esc(doca)}" data-senha="${esc(senha)}" type="button">🔍 Expandir</button>`:'';
 const tooltipContent=`
 <strong>${esc(doca)}</strong><br>
@@ -219,12 +248,10 @@ function syncEditStatus(){const status=$('editStatus').value;const isBloq=status
 async function post(payload){const r=await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`,{method:'POST',headers:{...headers,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload)});if(!r.ok)throw new Error(await r.text())}
 async function patchByDoca(doca,payload){const u=`${SUPABASE_URL}/rest/v1/${TABLE}?DOCA=eq.${encodeURIComponent(doca)}`;const r=await fetch(u,{method:'PATCH',headers:{...headers,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload)});if(!r.ok)throw new Error(await r.text())}
 async function reload(){rows=await getRows();render()}
-function updateTimers(){document.querySelectorAll('.dock-square.ocupado[data-inicio]').forEach(square=>{const inicio=square.dataset.inicio;if(!inicio)return;const diff=Date.now()-new Date(inicio).getTime();const hours=Math.floor(diff/3600000);const minutes=Math.floor((diff%3600000)/60000);const tempoEl=square.querySelector('.dock-tempo');if(tempoEl)tempoEl.textContent=`${hours}h ${minutes}min`;const tooltip=square.querySelector('.tooltip');if(tooltip){const lines=tooltip.innerHTML.split('<br>');if(lines.length>=5){const tempoLine=lines[4];if(tempoLine.includes('Tempo:')){lines[4]=`<span class="label">Tempo:</span> ${hours}h ${minutes}min`;tooltip.innerHTML=lines.join('<br>')}}}if(hours>=4)square.classList.add('overdue');else square.classList.remove('overdue');if(hours>=24){square.classList.add('alerta24');if(!square.querySelector('.alert-icon')){const numDiv=square.querySelector('.dock-number');if(numDiv){const alertSpan=document.createElement('span');alertSpan.className='alert-icon';alertSpan.textContent='🚨';numDiv.appendChild(alertSpan)}}}else{square.classList.remove('alerta24');const alertSpan=square.querySelector('.alert-icon');if(alertSpan)alertSpan.remove()}})}
+function updateTimers(){document.querySelectorAll('.dock-square.ocupado[data-inicio]').forEach(square=>{const inicio=square.dataset.inicio;if(!inicio)return;const duracao=calcularDuracao(inicio);const tempoEl=square.querySelector('.dock-tempo');if(tempoEl)tempoEl.textContent=duracao.texto;const tooltip=square.querySelector('.tooltip');if(tooltip){const lines=tooltip.innerHTML.split('<br>');if(lines.length>=5){const tempoLine=lines[4];if(tempoLine.includes('Tempo:')){lines[4]=`<span class="label">Tempo:</span> ${duracao.texto}`;tooltip.innerHTML=lines.join('<br>')}}}const horasTotais=duracao.horas + duracao.dias*24;if(horasTotais>=4)square.classList.add('overdue');else square.classList.remove('overdue');if(horasTotais>=24){square.classList.add('alerta24');if(!square.querySelector('.alert-icon')){const numDiv=square.querySelector('.dock-number');if(numDiv){const alertSpan=document.createElement('span');alertSpan.className='alert-icon';alertSpan.textContent='🚨';numDiv.appendChild(alertSpan)}}}else{square.classList.remove('alerta24');const alertSpan=square.querySelector('.alert-icon');if(alertSpan)alertSpan.remove()}})}
 let timerInterval=null;
-// Abrir modal de edição ao clicar na doca
 function openEditModal(doca){const row=uniqueRows().find(r=>normDoca(val(r,'DOCA'))===doca);if(!row){setNotice('Doca não encontrada.','error');return}currentEditDoca=doca;const status=getStatus(row);const motivo=clean(val(row,'MOTIVO BLOQ'));const senha=clean(val(row,'SENHA'));const carga=clean(val(row,'CARGA'));$('editDoca').value=doca;$('editStatus').value=status;$('editMotivo').value=motivo||'';$('editSenha').value=senha;$('editCarga').value=carga;$('editState').textContent='Carregado.';$('editModalTitle').textContent='Editar doca '+doca;$('editModalSub').textContent='Altere os dados conforme necessário.';syncEditStatus();$('editModal').classList.remove('hidden')}
 function closeEditModal(){$('editModal').classList.add('hidden');currentEditDoca=null}
-// Buscar detalhes na AGENDA
 async function buscarDetalhes(senha, doca) {
   $('detalhesTitle').textContent = 'Detalhes da carga - Doca '+doca;
   $('detalhesSub').textContent = 'Buscando informações na AGENDA...';
@@ -255,7 +282,6 @@ async function buscarDetalhes(senha, doca) {
   }
 }
 function closeDetalhesModal() { $('detalhesModal').classList.add('hidden'); }
-// Liberar via ✕
 function openConfirmModal(doca){pendingRelease=doca;$('confirmDoca').textContent=doca;$('confirmModal').classList.remove('hidden')}
 function closeConfirmModal(){$('confirmModal').classList.add('hidden');pendingRelease=null}
 // Eventos
@@ -269,17 +295,11 @@ $('detalhesModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)
 $('confirmCancel').onclick=closeConfirmModal;
 $('confirmModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)closeConfirmModal()});
 $('confirmOk').onclick=async ()=>{if(!pendingRelease)return;const doca=pendingRelease;closeConfirmModal();try{await patchByDoca(doca,{STATUS:'DISPONIVEL',SENHA:null,CARGA:null,INICIO:null,'MOTIVO BLOQ':null});setNotice('Doca '+doca+' liberada. Todos os dados foram apagados.','success');await reload()}catch(err){console.error(err);setNotice('Erro ao liberar: '+err.message,'error')}};
-// Clique nas docas (abre edição)
 document.getElementById('dockMap').addEventListener('click',(e)=>{const square=e.target.closest('.dock-square');if(!square)return;const doca=square.dataset.doca;if(!doca)return;const releaseBtn=e.target.closest('.dock-release');if(releaseBtn)return;const expandBtn=e.target.closest('.expand-btn');if(expandBtn)return;openEditModal(doca)});
-// Clique no botão Expandir
 document.addEventListener('click',(e)=>{const btn=e.target.closest('.expand-btn');if(!btn)return;e.stopPropagation();const doca=btn.dataset.expand;const senha=btn.dataset.senha;if(doca&&senha){buscarDetalhes(senha, doca)}else{setNotice('Dados incompletos para expandir.','error')}});
-// Clique no botão ✕
 document.addEventListener('click',(e)=>{const btn=e.target.closest('.dock-release');if(!btn)return;e.stopPropagation();const doca=btn.dataset.release;if(doca)openConfirmModal(doca)});
-// Cadastrar
 $('registerForm').onsubmit=async e=>{e.preventDefault();const doca=normDoca($('newDoca').value);if(!doca)return;const duplicate=uniqueRows().some(r=>normDoca(val(r,'DOCA'))===doca);if(duplicate){$('registerState').textContent='Essa doca já está cadastrada.';return}$('registerState').textContent='Enviando...';try{await post({DOCA:doca,STATUS:'DISPONIVEL',SENHA:null,CARGA:null,INICIO:null,'MOTIVO BLOQ':null});$('registerState').textContent='Doca cadastrada como disponível.';$('newDoca').value='';setNotice('Doca '+doca+' cadastrada com sucesso.','success');await reload()}catch(err){console.error(err);$('registerState').textContent='Falha ao cadastrar';setNotice('Erro: '+err.message,'error')}};
-// Editar
 $('editForm').onsubmit=async e=>{e.preventDefault();const doca=normDoca($('editDoca').value);if(!doca){setNotice('Doca inválida.','error');return}const status=$('editStatus').value;const motivo=clean($('editMotivo').value);const senha=$('editSenha').value.trim();const carga=$('editCarga').value.trim();if(status==='OCUPADO'&&(!/^\d+$/.test(senha)||!/^\d+$/.test(carga))){setNotice('SENHA e CARGA são obrigatórios e aceitam apenas números para ocupar.','error');return}if(status==='BLOQUEADO'&&!motivo){setNotice('Selecione um motivo para bloquear a doca.','error');return}$('editState').textContent='Salvando...';try{let payload={STATUS:status};if(status==='DISPONIVEL'){payload.SENHA=null;payload.CARGA=null;payload.INICIO=null;payload['MOTIVO BLOQ']=null;}else if(status==='OCUPADO'){payload.SENHA=Number(senha);payload.CARGA=Number(carga);payload.INICIO=new Date().toISOString();payload['MOTIVO BLOQ']=null;}else if(status==='BLOQUEADO'){payload.SENHA=null;payload.CARGA=null;payload.INICIO=null;payload['MOTIVO BLOQ']=motivo;}await patchByDoca(doca,payload);setNotice('Doca atualizada com sucesso.','success');await reload();closeEditModal()}catch(err){console.error(err);$('editState').textContent='Erro ao salvar';setNotice('Erro: '+err.message,'error')}};
-// Inicialização
 (async()=>{try{await reload();if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(updateTimers,60000)}catch(err){console.error(err);$('state').textContent='Erro de conexão';$('dockMap').innerHTML='<div class="empty">Não foi possível consultar a base.</div>';setNotice('Falha ao carregar: '+err.message,'error')}})();
 </script>
   <script src="sidebar.js" defer></script>
