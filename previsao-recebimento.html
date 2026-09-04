@@ -316,7 +316,7 @@
       <!-- Gráficos -->
       <div class="charts-grid">
         <div class="chart-card full">
-          <h3>📅 Senhas distintas por dia</h3>
+          <h3>📅 Senhas distintas por dia e turno</h3>
           <div class="chart-container tall"><canvas id="chartDia"></canvas></div>
         </div>
         <div class="chart-card full">
@@ -350,18 +350,7 @@
   let allData = [];
   let filteredData = [];
   let charts = {};
-  // Filtros atuais (para toggle)
-  let activeFilters = {
-    mes: new Set(),
-    turno: new Set(),
-    diaSemana: new Set(),
-    categoria: new Set(),
-    rangePlt: new Set(),
-    rangeAlt: new Set(),
-    status: new Set(),
-    fornecedor: new Set(),
-    pluNome: ''
-  };
+  let activeFilters = {};
 
   // ========== DOM REFS ==========
   const $ = id => document.getElementById(id);
@@ -427,9 +416,9 @@
         row._mesAno = getMonthYear(row.AGENDA);
         row._diaSemana = getDiaSemana(row.AGENDA);
         row._hora = getHora(row.AGENDA);
+        row._turno = clean(row.TURNO);
       });
       populateFilters();
-      // Selecionar todos por padrão
       selectAllFilters();
       applyFilters();
     } catch (err) {
@@ -442,7 +431,7 @@
   function populateFilters() {
     const fields = {
       mes: { data: allData.map(r => r._mesAno).filter(Boolean), unique: true },
-      turno: { data: allData.map(r => clean(r.TURNO)).filter(Boolean), unique: true },
+      turno: { data: allData.map(r => r._turno).filter(Boolean), unique: true },
       diaSemana: { data: allData.map(r => r._diaSemana).filter(Boolean), unique: true },
       categoria: { data: allData.map(r => clean(r.CATEGORIA)).filter(Boolean), unique: true },
       rangePlt: { data: allData.map(r => clean(r['RANGE QTD PLT'])).filter(Boolean), unique: true },
@@ -496,7 +485,7 @@
 
     filteredData = allData.filter(row => {
       if (mes.length && !mes.includes(row._mesAno)) return false;
-      if (turno.length && !turno.includes(clean(row.TURNO))) return false;
+      if (turno.length && !turno.includes(row._turno)) return false;
       if (diaSemana.length && !diaSemana.includes(row._diaSemana)) return false;
       if (categoria.length && !categoria.includes(clean(row.CATEGORIA))) return false;
       if (rangePlt.length && !rangePlt.includes(clean(row['RANGE QTD PLT']))) return false;
@@ -524,7 +513,7 @@
     renderChartRangeAlt(data);
   }
 
-  // --- UTIL: toggle filter ---
+  // --- TOGGLE FILTER ---
   function toggleFilter(filterType, value) {
     const container = containers[filterType];
     if (!container) return;
@@ -540,71 +529,101 @@
     applyFilters();
   }
 
-  // ========== GRÁFICOS ==========
-
-  // Configuração padrão para datalabels (visível em todas as barras)
-  const datalabelsPlugin = {
-    id: 'datalabels',
-    afterDraw: function(chart) {
-      // Plugin já registrado globalmente, mas vamos usar a configuração local
-    }
-  };
-
-  // --- Gráfico 1: Senhas por dia ---
+  // --- GRÁFICO 1: Senhas por dia e turno (empilhado) ---
   function renderChartDia(data) {
-    const map = new Map();
+    // Agrupa por dia e turno
+    const map = new Map(); // key = data, value = { turno1: Set(senhas), turno2: ... }
     data.forEach(row => {
-      const key = row.AGENDA ? row.AGENDA.split(' ')[0] : '';
-      if (!key) return;
+      const dia = row.AGENDA ? row.AGENDA.split(' ')[0] : '';
+      if (!dia) return;
+      const turno = row._turno || 'Sem turno';
       const senha = clean(row.SENHA);
       if (!senha) return;
-      if (!map.has(key)) map.set(key, new Set());
-      map.get(key).add(senha);
+      if (!map.has(dia)) map.set(dia, new Map());
+      const turnoMap = map.get(dia);
+      if (!turnoMap.has(turno)) turnoMap.set(turno, new Set());
+      turnoMap.get(turno).add(senha);
     });
-    const sorted = Array.from(map.keys()).sort();
-    const labels = sorted.map(d => d.split('/')[0] || d);
-    const values = sorted.map(d => map.get(d).size);
-    const weekdays = sorted.map(d => {
-      const dt = new Date(d.split('/').reverse().join('-'));
-      return isNaN(dt) ? '' : ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][dt.getDay()];
+
+    // Ordenar dias
+    const dias = Array.from(map.keys()).sort();
+    // Obter todos os turnos presentes
+    const turnosSet = new Set();
+    dias.forEach(d => {
+      const turnoMap = map.get(d);
+      turnoMap.forEach((_, turno) => turnosSet.add(turno));
     });
+    const turnos = Array.from(turnosSet).sort();
+
+    // Construir datasets
+    const cores = {
+      '1 TURNO': '#347eff',
+      '2 TURNO': '#22c7b1',
+      '3 TURNO': '#f4b34e',
+      'Sem turno': '#a0aec0'
+    };
+    const datasets = turnos.map(turno => ({
+      label: turno,
+      data: dias.map(d => {
+        const turnoMap = map.get(d);
+        return turnoMap.has(turno) ? turnoMap.get(turno).size : 0;
+      }),
+      backgroundColor: cores[turno] || '#888',
+      borderRadius: 2,
+    }));
 
     const ctx = document.getElementById('chartDia').getContext('2d');
     if (charts.dia) charts.dia.destroy();
     charts.dia = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels,
-        datasets: [{
-          label: 'Senhas distintas',
-          data: values,
-          backgroundColor: '#347eff',
-          borderRadius: 4,
-        }]
+        labels: dias.map(d => d.split('/')[0] || d),
+        datasets: datasets
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
+          legend: { position: 'top', labels: { font: { size: 8 }, boxWidth: 12 } },
+          tooltip: {
+            callbacks: {
+              afterLabel: function(context) {
+                const dia = dias[context.dataIndex];
+                const weekDay = getDiaSemana(dia);
+                return 'Dia: ' + weekDay;
+              }
+            }
+          },
           datalabels: {
             anchor: 'end',
             align: 'end',
             color: '#17263a',
             font: { size: 8, weight: 'bold' },
-            formatter: v => v || '',
-            offset: 2
+            formatter: (v, ctx) => {
+              if (v === 0) return '';
+              // Mostra apenas se for o maior valor do dia ou se for o único
+              const datasetIndex = ctx.datasetIndex;
+              const dataIndex = ctx.dataIndex;
+              const total = ctx.chart.data.datasets.reduce((sum, ds, i) => {
+                return sum + (ds.data[dataIndex] || 0);
+              }, 0);
+              // Se for o maior segmento ou se total for pequeno, mostra
+              const maxVal = Math.max(...ctx.chart.data.datasets.map(ds => ds.data[dataIndex] || 0));
+              if (v === maxVal || total < 10) return v;
+              return '';
+            }
           }
         },
         scales: {
-          x: { ticks: { font: { size: 8 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
+          x: { stacked: true, ticks: { font: { size: 8 } }, grid: { display: false } },
+          y: { stacked: true, beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
         },
         onClick: (e, elements) => {
           if (elements.length) {
-            const idx = elements[0].index;
-            const dia = sorted[idx];
-            toggleFilter('diaSemana', weekdays[idx]);
+            const el = elements[0];
+            const dia = dias[el.index];
+            const turno = el.datasetIndex !== undefined ? turnos[el.datasetIndex] : null;
+            if (turno) toggleFilter('turno', turno);
           }
         }
       },
@@ -612,7 +631,7 @@
     });
   }
 
-  // --- Gráfico 2: Senhas por hora (agrupado por dia da semana) ---
+  // --- GRÁFICO 2: Senhas por hora (agrupado por dia da semana) ---
   function renderChartHora(data) {
     const map = new Map();
     data.forEach(row => {
@@ -655,8 +674,7 @@
             align: 'end',
             color: '#17263a',
             font: { size: 7, weight: 'bold' },
-            formatter: v => v || '',
-            offset: 1
+            formatter: (v) => v > 0 ? v : ''
           }
         },
         scales: {
@@ -675,7 +693,7 @@
     });
   }
 
-  // --- Gráfico 3: Categoria ---
+  // --- GRÁFICO 3: Categoria ---
   function renderChartCategoria(data) {
     const map = new Map();
     data.forEach(row => {
@@ -686,8 +704,6 @@
     const sorted = Array.from(map.entries()).sort((a,b) => b[1] - a[1]);
     const labels = sorted.map(e => e[0]);
     const values = sorted.map(e => e[1]);
-    // Cores modernas
-    const colors = ['#347eff', '#22c7b1', '#f4b34e', '#a78bfa', '#f472b6', '#e16565', '#34d399', '#f59e0b'];
 
     const ctx = document.getElementById('chartCategoria').getContext('2d');
     if (charts.categoria) charts.categoria.destroy();
@@ -698,7 +714,7 @@
         datasets: [{
           label: 'Registros',
           data: values,
-          backgroundColor: colors.slice(0, labels.length),
+          backgroundColor: '#22c7b1',
           borderRadius: 4,
         }]
       },
@@ -712,8 +728,7 @@
             align: 'end',
             color: '#17263a',
             font: { size: 9, weight: 'bold' },
-            formatter: v => v || '',
-            offset: 2
+            formatter: v => v || ''
           }
         },
         scales: {
@@ -732,7 +747,7 @@
     });
   }
 
-  // --- Gráfico 4: Range QTD PLT ---
+  // --- GRÁFICO 4: Range QTD PLT ---
   function renderChartRangePlt(data) {
     const map = new Map();
     data.forEach(row => {
@@ -743,7 +758,6 @@
     const sorted = Array.from(map.entries()).sort((a,b) => a[0].localeCompare(b[0]));
     const labels = sorted.map(e => e[0]);
     const values = sorted.map(e => e[1]);
-    const colors = ['#f4b34e', '#e16565', '#347eff', '#22c7b1', '#a78bfa', '#f472b6'];
 
     const ctx = document.getElementById('chartRangePlt').getContext('2d');
     if (charts.rangePlt) charts.rangePlt.destroy();
@@ -754,7 +768,7 @@
         datasets: [{
           label: 'Registros',
           data: values,
-          backgroundColor: colors.slice(0, labels.length),
+          backgroundColor: '#f4b34e',
           borderRadius: 4,
         }]
       },
@@ -768,8 +782,7 @@
             align: 'end',
             color: '#17263a',
             font: { size: 9, weight: 'bold' },
-            formatter: v => v || '',
-            offset: 2
+            formatter: v => v || ''
           }
         },
         scales: {
@@ -788,7 +801,7 @@
     });
   }
 
-  // --- Gráfico 5: Range ALT PLT ---
+  // --- GRÁFICO 5: Range ALT PLT ---
   function renderChartRangeAlt(data) {
     const map = new Map();
     data.forEach(row => {
@@ -799,7 +812,6 @@
     const sorted = Array.from(map.entries()).sort((a,b) => a[0].localeCompare(b[0]));
     const labels = sorted.map(e => e[0]);
     const values = sorted.map(e => e[1]);
-    const colors = ['#e16565', '#f4b34e', '#347eff', '#22c7b1', '#a78bfa', '#f472b6'];
 
     const ctx = document.getElementById('chartRangeAlt').getContext('2d');
     if (charts.rangeAlt) charts.rangeAlt.destroy();
@@ -810,7 +822,7 @@
         datasets: [{
           label: 'Registros',
           data: values,
-          backgroundColor: colors.slice(0, labels.length),
+          backgroundColor: '#e16565',
           borderRadius: 4,
         }]
       },
@@ -824,8 +836,7 @@
             align: 'end',
             color: '#17263a',
             font: { size: 9, weight: 'bold' },
-            formatter: v => v || '',
-            offset: 2
+            formatter: v => v || ''
           }
         },
         scales: {
