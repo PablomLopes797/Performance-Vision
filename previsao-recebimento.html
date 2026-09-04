@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Warehouse Vision | Previsão de recebimento</title>
   <style>
+    /* RESET E BASE */
     * { box-sizing: border-box; margin: 0; }
     body {
       font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -13,7 +14,7 @@
       margin: 0;
       min-height: 100vh;
     }
-    /* Sidebar (mesmo estilo) */
+    /* SIDEBAR (mesmo estilo anterior) */
     .sidebar {
       position: fixed; inset: 0 auto 0 0; width: 218px;
       background: linear-gradient(180deg, #07182b, #0b223c 55%, #071728);
@@ -53,7 +54,7 @@
     .side-sign { font-size: 7px; color: #5e7692; margin-top: 16px; line-height: 1.5; }
     .side-sign b { display: block; color: #9ab0c6; }
 
-    /* Main */
+    /* MAIN */
     .main { margin-left: 218px; min-height: 100vh; }
     .topbar {
       height: 62px; padding: 0 34px; display: flex; align-items: center;
@@ -74,47 +75,81 @@
     .hero h1 { margin: 6px 0 6px; font-size: 31px; letter-spacing: -.05em; }
     .hero p { margin: 0; color: #73849a; font-size: 12px; }
 
-    /* Filtros com dropdown checkbox */
+    /* FILTROS COM CHECKBOX */
     .filter-panel {
       background: #fff; border: 1px solid #e6edf4; border-radius: 14px;
       padding: 18px; margin-bottom: 20px; box-shadow: 0 15px 38px #132b4514;
     }
     .filter-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 12px 16px;
       align-items: start;
     }
-    .filter-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
     .filter-group label { font-size: 8px; font-weight: 800; color: #60758a; text-transform: uppercase; letter-spacing: .05em; }
-    .dropdown-btn {
+    .filter-group .checkbox-container {
+      background: #fbfdff;
+      border: 1px solid #dfe7ef;
+      border-radius: 8px;
+      padding: 4px 0;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 9px;
+    }
+    .filter-group .checkbox-container label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 9px;
+      font-weight: 400;
+      color: #304762;
+      text-transform: none;
+      letter-spacing: 0;
+      transition: background .1s;
+    }
+    .filter-group .checkbox-container label:hover {
+      background: #eef4fa;
+    }
+    .filter-group .checkbox-container input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: #347eff;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .filter-group .checkbox-actions {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 4px;
+      padding: 0 6px;
+    }
+    .filter-group .checkbox-actions button {
+      border: 0;
+      background: transparent;
+      color: #347eff;
+      font-size: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .filter-group .checkbox-actions button:hover {
+      background: #eaf2ff;
+    }
+
+    .filter-group input[type="text"] {
       border: 1px solid #dfe7ef; border-radius: 8px; padding: 8px 10px;
       background: #fbfdff; color: #304762; font-size: 9px; outline: none;
-      width: 100%; text-align: left; cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center;
+      width: 100%;
     }
-    .dropdown-btn span { display: flex; align-items: center; gap: 6px; }
-    .dropdown-btn .arrow { font-size: 10px; transition: transform 0.2s; }
-    .dropdown-btn.active .arrow { transform: rotate(180deg); }
-    .dropdown-menu {
-      position: absolute; top: 100%; left: 0; right: 0;
-      background: #fff; border: 1px solid #dfe7ef; border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto;
-      display: none; z-index: 20; padding: 6px 0;
-      margin-top: 2px;
+    .filter-group input[type="text"]:focus {
+      border-color: #76a7ff; box-shadow: 0 0 0 3px #347eff12;
     }
-    .dropdown-menu.open { display: block; }
-    .dropdown-menu label {
-      display: flex; align-items: center; gap: 8px;
-      padding: 6px 12px; font-size: 9px; color: #304762;
-      cursor: pointer; transition: background 0.1s;
-    }
-    .dropdown-menu label:hover { background: #f0f4fa; }
-    .dropdown-menu input[type="checkbox"] { margin: 0; width: 14px; height: 14px; cursor: pointer; }
-    .dropdown-menu .select-all {
-      border-bottom: 1px solid #e6edf4; padding-bottom: 4px; margin-bottom: 4px;
-    }
-    .filter-actions { display: flex; gap: 8px; align-items: center; padding-top: 10px; flex-wrap: wrap; }
+
+    .filter-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
     .btn-filter {
       border: 0; border-radius: 8px; padding: 8px 14px; font-size: 9px; font-weight: 800;
       background: #347eff; color: #fff; cursor: pointer; transition: .15s;
@@ -122,8 +157,9 @@
     .btn-filter:hover { background: #2865d6; }
     .btn-filter.outline { background: transparent; color: #466079; border: 1px solid #dfe7ef; }
     .btn-filter.outline:hover { background: #f0f4fa; }
+    #recordCount { font-size: 9px; color: #73849a; }
 
-    /* Charts */
+    /* GRÁFICOS */
     .charts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -139,13 +175,12 @@
     .chart-container { position: relative; height: 200px; }
     .chart-container.tall { height: 260px; }
 
-    /* Rótulos de dados com fonte visível (configurado no Chart.js) */
-
     @media (max-width: 1000px) {
       .sidebar { width: 190px; }
       .main { margin-left: 190px; }
       .content { padding: 24px; }
       .charts-grid { grid-template-columns: 1fr; }
+      .filter-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     }
     @media (max-width: 700px) {
       .sidebar { width: 66px; padding: 15px 8px; }
@@ -162,9 +197,8 @@
       .filter-grid { grid-template-columns: 1fr; }
     }
   </style>
-  <!-- Chart.js -->
+  <!-- Chart.js e plugin de datalabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <!-- Chart.js Data Labels plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <link rel="stylesheet" href="sidebar.css">
 </head>
@@ -185,33 +219,97 @@
         <div>
           <div class="eyebrow">Inbound / forecast</div>
           <h1>Previsão de recebimento</h1>
-          <p>Análise interativa – clique nos gráficos para filtrar os demais.</p>
+          <p>Análise interativa – clique nos gráficos para filtrar (toggle).</p>
         </div>
         <div style="display:flex; gap:8px;">
-          <button class="btn-filter outline" id="clearFilters">Limpar filtros</button>
+          <button class="btn-filter outline" id="clearFilters">Limpar todos os filtros</button>
         </div>
       </div>
 
-      <!-- Filtros com dropdown checkbox -->
+      <!-- Filtros com checkboxes -->
       <div class="filter-panel">
         <div class="filter-grid" id="filterGrid">
-          <!-- Cada filtro será gerado via JS, mas criamos os containers -->
-          <div class="filter-group" data-filter="mes"><label>Mês</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="turno"><label>Turno</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="diaSemana"><label>Dia da semana</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="categoria"><label>Categoria</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="rangePlt"><label>Range QTD PLT</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="rangeAlt"><label>Range ALT PLT</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="status"><label>Status Item</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
-          <div class="filter-group" data-filter="fornecedor"><label>Fornecedor</label><div class="dropdown-btn"><span>Selecionar</span><span class="arrow">▼</span></div><div class="dropdown-menu"></div></div>
+          <!-- Mês -->
+          <div class="filter-group">
+            <label>Mês</label>
+            <div class="checkbox-actions">
+              <button data-target="filterMes" class="select-all">Selecionar tudo</button>
+              <button data-target="filterMes" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterMes"></div>
+          </div>
+          <!-- Turno -->
+          <div class="filter-group">
+            <label>Turno</label>
+            <div class="checkbox-actions">
+              <button data-target="filterTurno" class="select-all">Selecionar tudo</button>
+              <button data-target="filterTurno" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterTurno"></div>
+          </div>
+          <!-- Dia da semana -->
+          <div class="filter-group">
+            <label>Dia da semana</label>
+            <div class="checkbox-actions">
+              <button data-target="filterDiaSemana" class="select-all">Selecionar tudo</button>
+              <button data-target="filterDiaSemana" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterDiaSemana"></div>
+          </div>
+          <!-- Categoria -->
+          <div class="filter-group">
+            <label>Categoria</label>
+            <div class="checkbox-actions">
+              <button data-target="filterCategoria" class="select-all">Selecionar tudo</button>
+              <button data-target="filterCategoria" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterCategoria"></div>
+          </div>
+          <!-- RANGE QTD PLT -->
+          <div class="filter-group">
+            <label>Range QTD PLT</label>
+            <div class="checkbox-actions">
+              <button data-target="filterRangePlt" class="select-all">Selecionar tudo</button>
+              <button data-target="filterRangePlt" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterRangePlt"></div>
+          </div>
+          <!-- RANGE ALT PLT -->
+          <div class="filter-group">
+            <label>Range ALT PLT</label>
+            <div class="checkbox-actions">
+              <button data-target="filterRangeAlt" class="select-all">Selecionar tudo</button>
+              <button data-target="filterRangeAlt" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterRangeAlt"></div>
+          </div>
+          <!-- STATUS ITEM -->
+          <div class="filter-group">
+            <label>Status Item</label>
+            <div class="checkbox-actions">
+              <button data-target="filterStatus" class="select-all">Selecionar tudo</button>
+              <button data-target="filterStatus" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterStatus"></div>
+          </div>
+          <!-- Fornecedor -->
+          <div class="filter-group">
+            <label>Fornecedor</label>
+            <div class="checkbox-actions">
+              <button data-target="filterFornecedor" class="select-all">Selecionar tudo</button>
+              <button data-target="filterFornecedor" class="clear-all">Limpar</button>
+            </div>
+            <div class="checkbox-container" id="filterFornecedor"></div>
+          </div>
+          <!-- PLU / Nome (pesquisa) -->
           <div class="filter-group" style="grid-column: span 1;">
             <label>PLU ou Descrição</label>
-            <input type="text" id="filterPluNome" placeholder="Digite para filtrar..." style="border:1px solid #dfe7ef; border-radius:8px; padding:8px 10px; background:#fbfdff; color:#304762; font-size:9px; outline:none; width:100%;">
+            <input type="text" id="filterPluNome" placeholder="Digite para filtrar...">
           </div>
         </div>
         <div class="filter-actions">
           <button class="btn-filter" id="applyFilters">Aplicar filtros</button>
-          <span style="font-size:9px; color:#73849a; align-self:center;" id="recordCount">0 registros</span>
+          <span id="recordCount">0 registros</span>
         </div>
       </div>
 
@@ -243,7 +341,7 @@
 </div>
 
 <script>
-  // ========== CONFIGURAÇÃO SUPABASE ==========
+  // ========== CONFIG SUPABASE ==========
   const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
   const TABLE = 'PREVISÃO DE RECEBIMENTO';
@@ -252,16 +350,34 @@
   let allData = [];
   let filteredData = [];
   let charts = {};
-  let filterValues = {};
+  // Filtros atuais (para toggle)
+  let activeFilters = {
+    mes: new Set(),
+    turno: new Set(),
+    diaSemana: new Set(),
+    categoria: new Set(),
+    rangePlt: new Set(),
+    rangeAlt: new Set(),
+    status: new Set(),
+    fornecedor: new Set(),
+    pluNome: ''
+  };
 
-  // ========== DOM ==========
+  // ========== DOM REFS ==========
   const $ = id => document.getElementById(id);
-  const filterPluNome = $('filterPluNome');
+  const containers = {
+    mes: $('filterMes'),
+    turno: $('filterTurno'),
+    diaSemana: $('filterDiaSemana'),
+    categoria: $('filterCategoria'),
+    rangePlt: $('filterRangePlt'),
+    rangeAlt: $('filterRangeAlt'),
+    status: $('filterStatus'),
+    fornecedor: $('filterFornecedor'),
+  };
 
-  // ========== FUNÇÕES AUXILIARES ==========
+  // ========== AUX ==========
   function clean(v) { return (v ?? '').toString().trim(); }
-  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase(); }
-
   function getMonthYear(dateStr) {
     if (!dateStr) return '';
     let d = new Date(dateStr);
@@ -273,7 +389,6 @@
     const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
     return meses[d.getMonth()] + '/' + d.getFullYear();
   }
-
   function getDiaSemana(dateStr) {
     if (!dateStr) return '';
     let d = new Date(dateStr);
@@ -282,10 +397,8 @@
       if (parts) d = new Date(parts[3], parts[2]-1, parts[1]);
     }
     if (isNaN(d)) return '';
-    const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    return dias[d.getDay()];
+    return ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][d.getDay()];
   }
-
   function getHora(dateStr) {
     if (!dateStr) return '';
     let d = new Date(dateStr);
@@ -315,118 +428,75 @@
         row._diaSemana = getDiaSemana(row.AGENDA);
         row._hora = getHora(row.AGENDA);
       });
-      // Inicializar filtros
-      initFilters();
+      populateFilters();
+      // Selecionar todos por padrão
+      selectAllFilters();
       applyFilters();
     } catch (err) {
       console.error(err);
-      alert('Erro ao carregar dados do Supabase.');
+      alert('Erro ao carregar dados do Supabase. Verifique a tabela e a conexão.');
     }
   }
 
-  // ========== FILTROS DROPDOWN CHECKBOX ==========
-  function initFilters() {
-    const filterDefs = {
-      mes: { field: '_mesAno', label: 'Mês' },
-      turno: { field: 'TURNO', label: 'Turno' },
-      diaSemana: { field: '_diaSemana', label: 'Dia da semana' },
-      categoria: { field: 'CATEGORIA', label: 'Categoria' },
-      rangePlt: { field: 'RANGE QTD PLT', label: 'Range QTD PLT' },
-      rangeAlt: { field: 'RANGE ALT PLT', label: 'Range ALT PLT' },
-      status: { field: 'STATUS ITEM', label: 'Status Item' },
-      fornecedor: { field: 'FORNECEDOR', label: 'Fornecedor' }
+  // ========== POPULAR FILTROS COM CHECKBOX ==========
+  function populateFilters() {
+    const fields = {
+      mes: { data: allData.map(r => r._mesAno).filter(Boolean), unique: true },
+      turno: { data: allData.map(r => clean(r.TURNO)).filter(Boolean), unique: true },
+      diaSemana: { data: allData.map(r => r._diaSemana).filter(Boolean), unique: true },
+      categoria: { data: allData.map(r => clean(r.CATEGORIA)).filter(Boolean), unique: true },
+      rangePlt: { data: allData.map(r => clean(r['RANGE QTD PLT'])).filter(Boolean), unique: true },
+      rangeAlt: { data: allData.map(r => clean(r['RANGE ALT PLT'])).filter(Boolean), unique: true },
+      status: { data: allData.map(r => clean(r['STATUS ITEM'])).filter(Boolean), unique: true },
+      fornecedor: { data: allData.map(r => clean(r.FORNECEDOR)).filter(Boolean), unique: true },
     };
 
-    Object.keys(filterDefs).forEach(key => {
-      const def = filterDefs[key];
-      const values = Array.from(new Set(allData.map(r => clean(r[def.field])))).filter(Boolean).sort();
-      const group = document.querySelector(`.filter-group[data-filter="${key}"]`);
-      if (!group) return;
-      const btn = group.querySelector('.dropdown-btn');
-      const menu = group.querySelector('.dropdown-menu');
-      
-      // Montar opções
-      let html = `<div class="select-all"><label><input type="checkbox" class="select-all-checkbox" checked> Selecionar todos</label></div>`;
+    for (const [key, cfg] of Object.entries(fields)) {
+      const values = [...new Set(cfg.data)].sort();
+      const container = containers[key];
+      container.innerHTML = '';
       values.forEach(val => {
-        html += `<label><input type="checkbox" value="${val}" checked> ${val}</label>`;
-      });
-      menu.innerHTML = html;
-
-      // Evento para abrir/fechar
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = menu.classList.contains('open');
-        // Fechar todos os outros
-        document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-        document.querySelectorAll('.dropdown-btn.active').forEach(b => b.classList.remove('active'));
-        if (!isOpen) {
-          menu.classList.add('open');
-          btn.classList.add('active');
-        }
-      });
-
-      // Fechar ao clicar fora
-      document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-        document.querySelectorAll('.dropdown-btn.active').forEach(b => b.classList.remove('active'));
-      });
-
-      // Selecionar todos / desmarcar todos
-      const selectAll = menu.querySelector('.select-all-checkbox');
-      selectAll.addEventListener('change', (e) => {
-        const checked = e.target.checked;
-        menu.querySelectorAll('input[type="checkbox"]:not(.select-all-checkbox)').forEach(cb => cb.checked = checked);
-        updateFilterButton(key);
-      });
-
-      // Atualizar botão ao mudar checkboxes
-      menu.querySelectorAll('input[type="checkbox"]:not(.select-all-checkbox)').forEach(cb => {
+        const label = document.createElement('label');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = val;
+        cb.checked = true;
+        cb.dataset.filterKey = key;
         cb.addEventListener('change', () => {
-          // Atualizar "selecionar todos" se todos estiverem marcados
-          const all = menu.querySelectorAll('input[type="checkbox"]:not(.select-all-checkbox)');
-          const checked = menu.querySelectorAll('input[type="checkbox"]:not(.select-all-checkbox):checked');
-          selectAll.checked = (checked.length === all.length);
-          updateFilterButton(key);
+          // Ao mudar um checkbox, atualizamos os filtros automaticamente (opcional)
+          // Mas vamos aplicar apenas no clique do botão "Aplicar" ou ao clicar nos gráficos.
+          // Para manter a UX fluida, podemos aplicar automático com debounce.
+          // Vamos aplicar após um pequeno delay.
+          clearTimeout(window._filterTimeout);
+          window._filterTimeout = setTimeout(applyFilters, 300);
         });
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(' ' + val));
+        container.appendChild(label);
       });
-
-      // Atualizar o texto do botão
-      function updateFilterButton(key) {
-        const menu = document.querySelector(`.filter-group[data-filter="${key}"] .dropdown-menu`);
-        const btnSpan = document.querySelector(`.filter-group[data-filter="${key}"] .dropdown-btn span:first-child`);
-        const checked = menu.querySelectorAll('input[type="checkbox"]:not(.select-all-checkbox):checked');
-        if (checked.length === 0) {
-          btnSpan.textContent = 'Nenhum';
-        } else if (checked.length === menu.querySelectorAll('input[type="checkbox"]:not(.select-all-checkbox)').length) {
-          btnSpan.textContent = 'Todos';
-        } else {
-          btnSpan.textContent = checked.length + ' selecionados';
-        }
-      }
-      // Inicializar
-      updateFilterButton(key);
-    });
+    }
   }
 
-  // Obter valores selecionados de um filtro
-  function getSelectedValues(key) {
-    const group = document.querySelector(`.filter-group[data-filter="${key}"]`);
-    if (!group) return [];
-    const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox):checked');
+  function selectAllFilters() {
+    document.querySelectorAll('.checkbox-container input[type="checkbox"]').forEach(cb => cb.checked = true);
+  }
+
+  function getCheckedValues(container) {
+    const checks = container.querySelectorAll('input[type="checkbox"]:checked');
     return Array.from(checks).map(cb => cb.value);
   }
 
   // ========== APLICAR FILTROS ==========
   function applyFilters() {
-    const mes = getSelectedValues('mes');
-    const turno = getSelectedValues('turno');
-    const diaSemana = getSelectedValues('diaSemana');
-    const categoria = getSelectedValues('categoria');
-    const rangePlt = getSelectedValues('rangePlt');
-    const rangeAlt = getSelectedValues('rangeAlt');
-    const status = getSelectedValues('status');
-    const fornecedor = getSelectedValues('fornecedor');
-    const pluNome = clean(filterPluNome.value).toLowerCase();
+    const mes = getCheckedValues(containers.mes);
+    const turno = getCheckedValues(containers.turno);
+    const diaSemana = getCheckedValues(containers.diaSemana);
+    const categoria = getCheckedValues(containers.categoria);
+    const rangePlt = getCheckedValues(containers.rangePlt);
+    const rangeAlt = getCheckedValues(containers.rangeAlt);
+    const status = getCheckedValues(containers.status);
+    const fornecedor = getCheckedValues(containers.fornecedor);
+    const pluNome = clean($('filterPluNome').value).toLowerCase();
 
     filteredData = allData.filter(row => {
       if (mes.length && !mes.includes(row._mesAno)) return false;
@@ -449,16 +519,34 @@
     renderCharts(filteredData);
   }
 
-  // ========== RENDER GRÁFICOS COM DATALABELS ==========
-  // Registrar plugin datalabels globalmente
-  Chart.register(ChartDataLabels);
-
+  // ========== RENDER GRÁFICOS ==========
   function renderCharts(data) {
     renderChartDia(data);
     renderChartHora(data);
     renderChartCategoria(data);
     renderChartRangePlt(data);
     renderChartRangeAlt(data);
+  }
+
+  // --- UTIL: dados para gráficos com toggle ---
+  // Vamos armazenar os filtros atuais para toggle
+  let currentFilters = {};
+
+  function toggleFilter(filterType, value) {
+    // Se o valor já estiver no filtro, remove; senão adiciona
+    const container = containers[filterType];
+    if (!container) return;
+    const checks = container.querySelectorAll('input[type="checkbox"]');
+    let found = false;
+    checks.forEach(cb => {
+      if (cb.value === value) {
+        cb.checked = !cb.checked;
+        found = true;
+      }
+    });
+    if (!found) return;
+    // Aplicar filtros
+    applyFilters();
   }
 
   // --- Gráfico 1: Senhas por dia ---
@@ -473,7 +561,7 @@
       map.get(key).add(senha);
     });
     const sorted = Array.from(map.keys()).sort();
-    const labels = sorted.map(d => d.split('/')[0]);
+    const labels = sorted.map(d => d.split('/')[0] || d);
     const values = sorted.map(d => map.get(d).size);
     const weekdays = sorted.map(d => {
       const dt = new Date(d.split('/').reverse().join('-'));
@@ -502,34 +590,27 @@
             anchor: 'end',
             align: 'end',
             color: '#17263a',
-            font: { size: 10, weight: 'bold' },
-            formatter: (v) => v > 0 ? v : ''
-          },
-          tooltip: {
-            callbacks: {
-              afterLabel: function(context) {
-                const idx = context.dataIndex;
-                return 'Dia: ' + weekdays[idx];
-              }
-            }
+            font: { size: 8, weight: 'bold' },
+            formatter: v => v || ''
           }
         },
         scales: {
-          x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 } }
+          x: { ticks: { font: { size: 8 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
         },
         onClick: (e, elements) => {
           if (elements.length) {
             const idx = elements[0].index;
             const dia = sorted[idx];
-            filterByDate(dia);
+            toggleFilter('diaSemana', weekdays[idx]); // Aplica toggle no dia da semana
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
   }
 
-  // --- Gráfico 2: Senhas por hora ---
+  // --- Gráfico 2: Senhas por hora (agrupado por dia da semana) ---
   function renderChartHora(data) {
     const map = new Map();
     data.forEach(row => {
@@ -566,29 +647,29 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'top', labels: { font: { size: 9 }, boxWidth: 12 } },
+          legend: { position: 'top', labels: { font: { size: 8 }, boxWidth: 12 } },
           datalabels: {
             anchor: 'end',
             align: 'end',
             color: '#17263a',
-            font: { size: 8, weight: 'bold' },
-            formatter: (v) => v > 0 ? v : '',
-            offset: 2
+            font: { size: 7, weight: 'bold' },
+            formatter: v => v || ''
           }
         },
         scales: {
-          x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 } }
+          x: { ticks: { font: { size: 8 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
         },
         onClick: (e, elements) => {
           if (elements.length) {
             const el = elements[0];
             const hora = horas[el.index];
-            const dia = el.datasetIndex !== undefined ? diasSemana[el.datasetIndex] : null;
-            filterByHoraDia(hora, dia);
+            const dia = diasSemana[el.datasetIndex];
+            toggleFilter('diaSemana', dia);
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
   }
 
@@ -626,21 +707,23 @@
             anchor: 'end',
             align: 'end',
             color: '#17263a',
-            font: { size: 10, weight: 'bold' },
-            formatter: (v) => v > 0 ? v : ''
+            font: { size: 9, weight: 'bold' },
+            formatter: v => v || ''
           }
         },
         scales: {
-          x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 } }
+          x: { ticks: { font: { size: 8 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
         },
         onClick: (e, elements) => {
           if (elements.length) {
             const idx = elements[0].index;
-            filterByCategoria(labels[idx]);
+            const cat = labels[idx];
+            toggleFilter('categoria', cat);
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
   }
 
@@ -678,21 +761,23 @@
             anchor: 'end',
             align: 'end',
             color: '#17263a',
-            font: { size: 10, weight: 'bold' },
-            formatter: (v) => v > 0 ? v : ''
+            font: { size: 9, weight: 'bold' },
+            formatter: v => v || ''
           }
         },
         scales: {
-          x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 } }
+          x: { ticks: { font: { size: 8 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
         },
         onClick: (e, elements) => {
           if (elements.length) {
             const idx = elements[0].index;
-            filterByRangePlt(labels[idx]);
+            const range = labels[idx];
+            toggleFilter('rangePlt', range);
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
   }
 
@@ -730,85 +815,24 @@
             anchor: 'end',
             align: 'end',
             color: '#17263a',
-            font: { size: 10, weight: 'bold' },
-            formatter: (v) => v > 0 ? v : ''
+            font: { size: 9, weight: 'bold' },
+            formatter: v => v || ''
           }
         },
         scales: {
-          x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 9 }, stepSize: 1 } }
+          x: { ticks: { font: { size: 8 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
         },
         onClick: (e, elements) => {
           if (elements.length) {
             const idx = elements[0].index;
-            filterByRangeAlt(labels[idx]);
+            const range = labels[idx];
+            toggleFilter('rangeAlt', range);
           }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     });
-  }
-
-  // ========== FUNÇÕES DE FILTRO POR CLIQUE ==========
-  function filterByDate(dateStr) {
-    const mesAno = getMonthYear(dateStr);
-    if (mesAno) {
-      // Selecionar apenas esse mês no filtro de mês
-      const group = document.querySelector('.filter-group[data-filter="mes"]');
-      const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)');
-      checks.forEach(cb => cb.checked = (cb.value === mesAno));
-      // Atualizar botão
-      updateFilterButton('mes');
-    }
-    applyFilters();
-  }
-
-  function filterByHoraDia(hora, diaSemana) {
-    if (diaSemana) {
-      const group = document.querySelector('.filter-group[data-filter="diaSemana"]');
-      const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)');
-      checks.forEach(cb => cb.checked = (cb.value === diaSemana));
-      updateFilterButton('diaSemana');
-    }
-    applyFilters();
-  }
-
-  function filterByCategoria(categoria) {
-    const group = document.querySelector('.filter-group[data-filter="categoria"]');
-    const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)');
-    checks.forEach(cb => cb.checked = (cb.value === categoria));
-    updateFilterButton('categoria');
-    applyFilters();
-  }
-
-  function filterByRangePlt(range) {
-    const group = document.querySelector('.filter-group[data-filter="rangePlt"]');
-    const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)');
-    checks.forEach(cb => cb.checked = (cb.value === range));
-    updateFilterButton('rangePlt');
-    applyFilters();
-  }
-
-  function filterByRangeAlt(range) {
-    const group = document.querySelector('.filter-group[data-filter="rangeAlt"]');
-    const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)');
-    checks.forEach(cb => cb.checked = (cb.value === range));
-    updateFilterButton('rangeAlt');
-    applyFilters();
-  }
-
-  function updateFilterButton(key) {
-    const group = document.querySelector(`.filter-group[data-filter="${key}"]`);
-    if (!group) return;
-    const btnSpan = group.querySelector('.dropdown-btn span:first-child');
-    const checks = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox):checked');
-    const total = group.querySelectorAll('.dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)').length;
-    if (checks.length === 0) {
-      btnSpan.textContent = 'Nenhum';
-    } else if (checks.length === total) {
-      btnSpan.textContent = 'Todos';
-    } else {
-      btnSpan.textContent = checks.length + ' selecionados';
-    }
   }
 
   // ========== CORES ==========
@@ -827,28 +851,47 @@
 
   // ========== EVENTOS ==========
   document.getElementById('applyFilters').addEventListener('click', applyFilters);
+
   document.getElementById('clearFilters').addEventListener('click', () => {
-    // Selecionar todos os checkboxes em todos os filtros
-    document.querySelectorAll('.filter-group .dropdown-menu input[type="checkbox"]:not(.select-all-checkbox)').forEach(cb => cb.checked = true);
-    document.querySelectorAll('.filter-group .select-all-checkbox').forEach(cb => cb.checked = true);
-    // Atualizar textos dos botões
-    document.querySelectorAll('.filter-group').forEach(group => {
-      const key = group.dataset.filter;
-      updateFilterButton(key);
-    });
-    filterPluNome.value = '';
+    document.querySelectorAll('.checkbox-container input[type="checkbox"]').forEach(cb => cb.checked = true);
+    $('filterPluNome').value = '';
     applyFilters();
   });
 
-  // Atualizar ao digitar no campo PLU/Nome (com delay)
+  // Selecionar tudo / Limpar tudo
+  document.querySelectorAll('.select-all').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      const container = containers[target];
+      if (container) {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        applyFilters();
+      }
+    });
+  });
+  document.querySelectorAll('.clear-all').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      const container = containers[target];
+      if (container) {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        applyFilters();
+      }
+    });
+  });
+
+  // PLU/Nome com debounce
   let timeoutId;
-  filterPluNome.addEventListener('input', () => {
+  $('filterPluNome').addEventListener('input', () => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(applyFilters, 400);
   });
 
-  // Carregar dados
+  // ========== INICIAR ==========
   loadData();
+
+  // ========== SIDEBAR ==========
+  // O sidebar.js será carregado via script externo
 </script>
 <script src="sidebar.js" defer></script>
 </body>
