@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Warehouse Vision | Previsão de recebimento</title>
   <style>
-    /* RESET E BASE */
     * { box-sizing: border-box; margin: 0; }
     body {
       font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -14,7 +13,6 @@
       margin: 0;
       min-height: 100vh;
     }
-    /* SIDEBAR (mesmo estilo anterior) */
     .sidebar {
       position: fixed; inset: 0 auto 0 0; width: 218px;
       background: linear-gradient(180deg, #07182b, #0b223c 55%, #071728);
@@ -54,7 +52,6 @@
     .side-sign { font-size: 7px; color: #5e7692; margin-top: 16px; line-height: 1.5; }
     .side-sign b { display: block; color: #9ab0c6; }
 
-    /* MAIN */
     .main { margin-left: 218px; min-height: 100vh; }
     .topbar {
       height: 62px; padding: 0 34px; display: flex; align-items: center;
@@ -75,7 +72,6 @@
     .hero h1 { margin: 6px 0 6px; font-size: 31px; letter-spacing: -.05em; }
     .hero p { margin: 0; color: #73849a; font-size: 12px; }
 
-    /* FILTROS COM CHECKBOX */
     .filter-panel {
       background: #fff; border: 1px solid #e6edf4; border-radius: 14px;
       padding: 18px; margin-bottom: 20px; box-shadow: 0 15px 38px #132b4514;
@@ -110,12 +106,9 @@
       letter-spacing: 0;
       transition: background .1s;
     }
-    .filter-group .checkbox-container label:hover {
-      background: #eef4fa;
-    }
+    .filter-group .checkbox-container label:hover { background: #eef4fa; }
     .filter-group .checkbox-container input[type="checkbox"] {
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       accent-color: #347eff;
       cursor: pointer;
       flex-shrink: 0;
@@ -136,10 +129,7 @@
       padding: 2px 6px;
       border-radius: 4px;
     }
-    .filter-group .checkbox-actions button:hover {
-      background: #eaf2ff;
-    }
-
+    .filter-group .checkbox-actions button:hover { background: #eaf2ff; }
     .filter-group input[type="text"] {
       border: 1px solid #dfe7ef; border-radius: 8px; padding: 8px 10px;
       background: #fbfdff; color: #304762; font-size: 9px; outline: none;
@@ -148,7 +138,6 @@
     .filter-group input[type="text"]:focus {
       border-color: #76a7ff; box-shadow: 0 0 0 3px #347eff12;
     }
-
     .filter-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
     .btn-filter {
       border: 0; border-radius: 8px; padding: 8px 14px; font-size: 9px; font-weight: 800;
@@ -159,7 +148,6 @@
     .btn-filter.outline:hover { background: #f0f4fa; }
     #recordCount { font-size: 9px; color: #73849a; }
 
-    /* GRÁFICOS */
     .charts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -197,7 +185,6 @@
       .filter-grid { grid-template-columns: 1fr; }
     }
   </style>
-  <!-- Chart.js e plugin de datalabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <link rel="stylesheet" href="sidebar.css">
@@ -226,10 +213,8 @@
         </div>
       </div>
 
-      <!-- Filtros com checkboxes -->
       <div class="filter-panel">
         <div class="filter-grid" id="filterGrid">
-          <!-- Mês -->
           <div class="filter-group">
             <label>Mês</label>
             <div class="checkbox-actions">
@@ -238,7 +223,6 @@
             </div>
             <div class="checkbox-container" id="filterMes"></div>
           </div>
-          <!-- Turno -->
           <div class="filter-group">
             <label>Turno</label>
             <div class="checkbox-actions">
@@ -247,7 +231,6 @@
             </div>
             <div class="checkbox-container" id="filterTurno"></div>
           </div>
-          <!-- Dia da semana -->
           <div class="filter-group">
             <label>Dia da semana</label>
             <div class="checkbox-actions">
@@ -256,7 +239,6 @@
             </div>
             <div class="checkbox-container" id="filterDiaSemana"></div>
           </div>
-          <!-- Categoria -->
           <div class="filter-group">
             <label>Categoria</label>
             <div class="checkbox-actions">
@@ -265,7 +247,6 @@
             </div>
             <div class="checkbox-container" id="filterCategoria"></div>
           </div>
-          <!-- RANGE QTD PLT -->
           <div class="filter-group">
             <label>Range QTD PLT</label>
             <div class="checkbox-actions">
@@ -274,7 +255,6 @@
             </div>
             <div class="checkbox-container" id="filterRangePlt"></div>
           </div>
-          <!-- RANGE ALT PLT -->
           <div class="filter-group">
             <label>Range ALT PLT</label>
             <div class="checkbox-actions">
@@ -283,7 +263,6 @@
             </div>
             <div class="checkbox-container" id="filterRangeAlt"></div>
           </div>
-          <!-- STATUS ITEM -->
           <div class="filter-group">
             <label>Status Item</label>
             <div class="checkbox-actions">
@@ -292,7 +271,6 @@
             </div>
             <div class="checkbox-container" id="filterStatus"></div>
           </div>
-          <!-- Fornecedor -->
           <div class="filter-group">
             <label>Fornecedor</label>
             <div class="checkbox-actions">
@@ -301,7 +279,6 @@
             </div>
             <div class="checkbox-container" id="filterFornecedor"></div>
           </div>
-          <!-- PLU / Nome (pesquisa) -->
           <div class="filter-group" style="grid-column: span 1;">
             <label>PLU ou Descrição</label>
             <input type="text" id="filterPluNome" placeholder="Digite para filtrar...">
@@ -313,7 +290,6 @@
         </div>
       </div>
 
-      <!-- Gráficos -->
       <div class="charts-grid">
         <div class="chart-card full">
           <h3>📅 Senhas distintas por dia e turno</h3>
@@ -341,18 +317,14 @@
 </div>
 
 <script>
-  // ========== CONFIG SUPABASE ==========
   const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
   const TABLE = 'PREVISÃO DE RECEBIMENTO';
 
-  // ========== ESTADO ==========
   let allData = [];
   let filteredData = [];
   let charts = {};
-  let activeFilters = {};
 
-  // ========== DOM REFS ==========
   const $ = id => document.getElementById(id);
   const containers = {
     mes: $('filterMes'),
@@ -365,7 +337,6 @@
     fornecedor: $('filterFornecedor'),
   };
 
-  // ========== AUX ==========
   function clean(v) { return (v ?? '').toString().trim(); }
   function getMonthYear(dateStr) {
     if (!dateStr) return '';
@@ -399,7 +370,6 @@
     return String(d.getHours()).padStart(2, '0') + 'h';
   }
 
-  // ========== CARREGAR DADOS ==========
   async function loadData() {
     try {
       const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLE)}?select=*`;
@@ -423,11 +393,10 @@
       applyFilters();
     } catch (err) {
       console.error(err);
-      alert('Erro ao carregar dados do Supabase. Verifique a tabela e a conexão.');
+      alert('Erro ao carregar dados do Supabase.');
     }
   }
 
-  // ========== POPULAR FILTROS COM CHECKBOX ==========
   function populateFilters() {
     const fields = {
       mes: { data: allData.map(r => r._mesAno).filter(Boolean), unique: true },
@@ -439,7 +408,6 @@
       status: { data: allData.map(r => clean(r['STATUS ITEM'])).filter(Boolean), unique: true },
       fornecedor: { data: allData.map(r => clean(r.FORNECEDOR)).filter(Boolean), unique: true },
     };
-
     for (const [key, cfg] of Object.entries(fields)) {
       const values = [...new Set(cfg.data)].sort();
       const container = containers[key];
@@ -450,7 +418,6 @@
         cb.type = 'checkbox';
         cb.value = val;
         cb.checked = true;
-        cb.dataset.filterKey = key;
         cb.addEventListener('change', () => {
           clearTimeout(window._filterTimeout);
           window._filterTimeout = setTimeout(applyFilters, 300);
@@ -471,7 +438,6 @@
     return Array.from(checks).map(cb => cb.value);
   }
 
-  // ========== APLICAR FILTROS ==========
   function applyFilters() {
     const mes = getCheckedValues(containers.mes);
     const turno = getCheckedValues(containers.turno);
@@ -504,7 +470,6 @@
     renderCharts(filteredData);
   }
 
-  // ========== RENDER GRÁFICOS ==========
   function renderCharts(data) {
     renderChartDia(data);
     renderChartHora(data);
@@ -513,7 +478,6 @@
     renderChartRangeAlt(data);
   }
 
-  // --- TOGGLE FILTER ---
   function toggleFilter(filterType, value) {
     const container = containers[filterType];
     if (!container) return;
@@ -529,10 +493,40 @@
     applyFilters();
   }
 
-  // --- GRÁFICO 1: Senhas por dia e turno (empilhado) ---
+  // ---- GRÁFICO 1: Senhas por dia e turno (empilhado) com todos os dias do mês ----
   function renderChartDia(data) {
-    // Agrupa por dia e turno
-    const map = new Map(); // key = data, value = { turno1: Set(senhas), turno2: ... }
+    // Determinar mês/ano a partir dos dados (pega o primeiro mês disponível ou usa o mês atual)
+    let mesAno = '';
+    if (data.length > 0) {
+      const first = data[0];
+      mesAno = first._mesAno || '';
+    }
+    if (!mesAno) {
+      const now = new Date();
+      const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+      mesAno = meses[now.getMonth()] + '/' + now.getFullYear();
+    }
+
+    // Extrair mês e ano do mesAno (ex: "Set/2026")
+    const [mesStr, anoStr] = mesAno.split('/');
+    const mesesMap = { 'Jan':0,'Fev':1,'Mar':2,'Abr':3,'Mai':4,'Jun':5,'Jul':6,'Ago':7,'Set':8,'Out':9,'Nov':10,'Dez':11 };
+    const mesNum = mesesMap[mesStr];
+    const ano = parseInt(anoStr);
+    const diasNoMes = new Date(ano, mesNum + 1, 0).getDate();
+
+    // Gerar todos os dias do mês no formato "DD/MM/AAAA"
+    const dias = [];
+    const diasLabels = [];
+    for (let d = 1; d <= diasNoMes; d++) {
+      const dd = String(d).padStart(2, '0');
+      const mm = String(mesNum + 1).padStart(2, '0');
+      const dataStr = `${dd}/${mm}/${ano}`;
+      dias.push(dataStr);
+      diasLabels.push(dd);
+    }
+
+    // Agrupar dados por dia e turno (senhas distintas)
+    const map = new Map();
     data.forEach(row => {
       const dia = row.AGENDA ? row.AGENDA.split(' ')[0] : '';
       if (!dia) return;
@@ -545,93 +539,142 @@
       turnoMap.get(turno).add(senha);
     });
 
-    // Ordenar dias
-    const dias = Array.from(map.keys()).sort();
-    // Obter todos os turnos presentes
+    // Obter turnos presentes
     const turnosSet = new Set();
-    dias.forEach(d => {
-      const turnoMap = map.get(d);
+    map.forEach(turnoMap => {
       turnoMap.forEach((_, turno) => turnosSet.add(turno));
     });
-    const turnos = Array.from(turnosSet).sort();
+    // Garantir ordem dos turnos
+    const turnos = ['1 TURNO','2 TURNO','3 TURNO','Sem turno'].filter(t => turnosSet.has(t));
 
-    // Construir datasets
     const cores = {
       '1 TURNO': '#347eff',
       '2 TURNO': '#22c7b1',
       '3 TURNO': '#f4b34e',
       'Sem turno': '#a0aec0'
     };
+
+    // Construir datasets para cada turno
     const datasets = turnos.map(turno => ({
       label: turno,
-      data: dias.map(d => {
-        const turnoMap = map.get(d);
-        return turnoMap.has(turno) ? turnoMap.get(turno).size : 0;
+      data: dias.map(dia => {
+        const turnoMap = map.get(dia);
+        return turnoMap && turnoMap.has(turno) ? turnoMap.get(turno).size : 0;
       }),
       backgroundColor: cores[turno] || '#888',
       borderRadius: 2,
     }));
 
+    // Calcular totais por dia (para rótulo acima)
+    const totals = dias.map(dia => {
+      let total = 0;
+      const turnoMap = map.get(dia);
+      if (turnoMap) {
+        turnoMap.forEach(set => total += set.size);
+      }
+      return total;
+    });
+
     const ctx = document.getElementById('chartDia').getContext('2d');
     if (charts.dia) charts.dia.destroy();
+
+    // Adicionar dataset fantasma para exibir rótulos de total acima das barras
+    datasets.push({
+      label: 'Total',
+      data: totals,
+      backgroundColor: 'rgba(0,0,0,0)',
+      borderColor: 'rgba(0,0,0,0)',
+      datalabels: {
+        anchor: 'end',
+        align: 'top',
+        color: '#17263a',
+        font: { size: 9, weight: 'bold' },
+        formatter: v => v > 0 ? v : ''
+      }
+    });
+
     charts.dia = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: dias.map(d => d.split('/')[0] || d),
+        labels: diasLabels,
         datasets: datasets
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'top', labels: { font: { size: 8 }, boxWidth: 12 } },
+          legend: {
+            position: 'top',
+            labels: {
+              font: { size: 8 },
+              boxWidth: 12,
+              filter: (legendItem) => legendItem.text !== 'Total' // esconde "Total" da legenda
+            }
+          },
           tooltip: {
             callbacks: {
               afterLabel: function(context) {
                 const dia = dias[context.dataIndex];
-                const weekDay = getDiaSemana(dia);
-                return 'Dia: ' + weekDay;
+                return 'Dia: ' + getDiaSemana(dia);
               }
             }
           },
           datalabels: {
             anchor: 'end',
             align: 'end',
-            color: '#17263a',
-            font: { size: 8, weight: 'bold' },
+            color: '#fff',
+            font: { size: 7, weight: 'bold' },
             formatter: (v, ctx) => {
               if (v === 0) return '';
-              // Mostra apenas se for o maior valor do dia ou se for o único
-              const datasetIndex = ctx.datasetIndex;
-              const dataIndex = ctx.dataIndex;
-              const total = ctx.chart.data.datasets.reduce((sum, ds, i) => {
-                return sum + (ds.data[dataIndex] || 0);
-              }, 0);
-              // Se for o maior segmento ou se total for pequeno, mostra
-              const maxVal = Math.max(...ctx.chart.data.datasets.map(ds => ds.data[dataIndex] || 0));
-              if (v === maxVal || total < 10) return v;
-              return '';
-            }
+              // Mostra o valor do segmento se for > 0
+              return v;
+            },
+            // Para o dataset "Total", usamos configuração específica
+            // Mas como o dataset "Total" tem backgroundColor transparente, seus rótulos são configurados separadamente
           }
         },
         scales: {
-          x: { stacked: true, ticks: { font: { size: 8 } }, grid: { display: false } },
-          y: { stacked: true, beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
+          x: {
+            stacked: true,
+            ticks: { font: { size: 7 }, maxRotation: 45 },
+            grid: { display: false }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            ticks: { font: { size: 8 }, stepSize: 1 },
+            // Aumentar offset para dar espaço para os rótulos superiores
+            offset: true
+          }
         },
         onClick: (e, elements) => {
           if (elements.length) {
             const el = elements[0];
             const dia = dias[el.index];
-            const turno = el.datasetIndex !== undefined ? turnos[el.datasetIndex] : null;
+            const turno = el.datasetIndex !== undefined && el.datasetIndex < turnos.length ? turnos[el.datasetIndex] : null;
             if (turno) toggleFilter('turno', turno);
           }
         }
       },
       plugins: [ChartDataLabels]
     });
+
+    // Aplicar configuração específica para o rótulo do total (dataset "Total")
+    // O último dataset é o "Total"
+    const totalDatasetIndex = datasets.length - 1;
+    if (charts.dia.data.datasets[totalDatasetIndex]) {
+      charts.dia.data.datasets[totalDatasetIndex].datalabels = {
+        anchor: 'end',
+        align: 'top',
+        color: '#17263a',
+        font: { size: 9, weight: 'bold' },
+        formatter: (v) => v > 0 ? v : ''
+      };
+      charts.dia.update();
+    }
   }
 
-  // --- GRÁFICO 2: Senhas por hora (agrupado por dia da semana) ---
+  // ---- GRÁFICO 2: Senhas por hora (agrupado por dia da semana) ----
   function renderChartHora(data) {
     const map = new Map();
     data.forEach(row => {
@@ -679,7 +722,7 @@
         },
         scales: {
           x: { ticks: { font: { size: 8 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 }, offset: true }
         },
         onClick: (e, elements) => {
           if (elements.length) {
@@ -693,7 +736,7 @@
     });
   }
 
-  // --- GRÁFICO 3: Categoria ---
+  // ---- GRÁFICO 3: Categoria ----
   function renderChartCategoria(data) {
     const map = new Map();
     data.forEach(row => {
@@ -733,7 +776,7 @@
         },
         scales: {
           x: { ticks: { font: { size: 8 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 }, offset: true }
         },
         onClick: (e, elements) => {
           if (elements.length) {
@@ -747,7 +790,7 @@
     });
   }
 
-  // --- GRÁFICO 4: Range QTD PLT ---
+  // ---- GRÁFICO 4: Range QTD PLT ----
   function renderChartRangePlt(data) {
     const map = new Map();
     data.forEach(row => {
@@ -787,7 +830,7 @@
         },
         scales: {
           x: { ticks: { font: { size: 8 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 }, offset: true }
         },
         onClick: (e, elements) => {
           if (elements.length) {
@@ -801,7 +844,7 @@
     });
   }
 
-  // --- GRÁFICO 5: Range ALT PLT ---
+  // ---- GRÁFICO 5: Range ALT PLT ----
   function renderChartRangeAlt(data) {
     const map = new Map();
     data.forEach(row => {
@@ -841,7 +884,7 @@
         },
         scales: {
           x: { ticks: { font: { size: 8 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 } }
+          y: { beginAtZero: true, ticks: { font: { size: 8 }, stepSize: 1 }, offset: true }
         },
         onClick: (e, elements) => {
           if (elements.length) {
@@ -855,7 +898,6 @@
     });
   }
 
-  // ========== CORES ==========
   function getColor(label) {
     const colors = {
       'Dom': '#e16565',
@@ -869,9 +911,8 @@
     return colors[label] || '#888';
   }
 
-  // ========== EVENTOS ==========
+  // ---- EVENTOS ----
   document.getElementById('applyFilters').addEventListener('click', applyFilters);
-
   document.getElementById('clearFilters').addEventListener('click', () => {
     document.querySelectorAll('.checkbox-container input[type="checkbox"]').forEach(cb => cb.checked = true);
     $('filterPluNome').value = '';
@@ -905,7 +946,6 @@
     timeoutId = setTimeout(applyFilters, 400);
   });
 
-  // ========== INICIAR ==========
   loadData();
 </script>
 <script src="sidebar.js" defer></script>
