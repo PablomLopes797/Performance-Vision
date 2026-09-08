@@ -110,4 +110,8 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadSidebar, { once: true });
   else loadSidebar();
+})();  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadSidebar, { once: true });
+  else loadSidebar();
 })();
