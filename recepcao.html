@@ -317,19 +317,6 @@
       color: var(--muted);
       font-size: 10px;
     }
-    .senha-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 12px;
-      background: #f0f4fa;
-      color: #526982;
-    }
-    .senha-status.ok { background: #e6f5ed; color: #1a8a6e; }
-    .senha-status.erro { background: #fde8e8; color: #b33e4a; }
 
     /* ===== RESPONSIVO ===== */
     @media (max-width: 1050px) {
@@ -349,9 +336,11 @@
       .data-table { min-width: 480px; }
     }
   </style>
+  <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
 <div class="app">
+  <!-- Sidebar container (carregado via sidebar.js) -->
   <div id="sidebar-container"></div>
 
   <main class="main">
@@ -478,10 +467,12 @@
   (function() {
     'use strict';
 
+    // ===== CONFIGURAÇÃO SUPABASE =====
     const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
 
+    // ===== ELEMENTOS =====
     const $ = id => document.getElementById(id);
     const modal = $('recepcaoModal');
     const closeModalBtn = $('closeModalBtn');
@@ -506,6 +497,7 @@
     let senhaEncontrada = false;
     let dadosAgenda = null;
 
+    // ===== FUNÇÕES AUXILIARES =====
     function setNotice(msg, tipo = '') {
       notice.textContent = msg;
       notice.className = 'notice ' + tipo;
@@ -547,7 +539,7 @@
       formState.textContent = 'Aguardando senha.';
     }
 
-    // Máscaras
+    // ===== MÁSCARAS =====
     function formatCPF(valor) {
       let v = valor.replace(/\D/g, '');
       if (v.length > 11) v = v.slice(0, 11);
@@ -594,7 +586,7 @@
       });
     }
 
-    // Busca senha
+    // ===== BUSCA SENHA =====
     let timeoutBusca = null;
 
     async function buscarSenha(senhaValor) {
@@ -639,6 +631,7 @@
       }
     }
 
+    // ===== EVENTOS DA SENHA =====
     senha.addEventListener('input', function() {
       clearTimeout(timeoutBusca);
       const val = this.value.trim();
@@ -668,7 +661,7 @@
       }
     });
 
-    // Submissão
+    // ===== SUBMISSÃO =====
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
 
@@ -731,6 +724,7 @@
       }
     });
 
+    // ===== CONTROLE DO MODAL =====
     function openModal() {
       resetarModal();
       modal.classList.remove('hidden');
@@ -748,6 +742,7 @@
       if (e.target === this) closeModal();
     });
 
+    // ===== CARREGAR HISTÓRICO =====
     async function carregarHistorico() {
       try {
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS&order=CHEGADA.desc.nullslast&limit=20`;
@@ -778,6 +773,7 @@
       }
     }
 
+    // ===== INICIALIZAÇÃO =====
     function init() {
       setupMasks();
       resetarModal();
@@ -789,6 +785,8 @@
 
   })();
 </script>
+
+<!-- ===== SIDEBAR JS ===== -->
 <script src="sidebar.js" defer></script>
 </body>
 </html>
