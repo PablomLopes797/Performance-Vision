@@ -585,11 +585,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderBases();
 
-  if (loginSubmit) loginSubmit.addEventListener('click', authenticateLogin);
-  loginForm.addEventListener('submit', (e) => e.preventDefault());
-  $('loginUser').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginSubmit.click(); } });
-  passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginSubmit.click(); } });
-  passwordToggle.addEventListener('click', () => { const visible = passwordInput.type === 'text'; passwordInput.type = visible ? 'password' : 'text'; passwordToggle.textContent = visible ? '◉' : '◌'; });
+// ===== EVENTOS DE AUTENTICAÇÃO COM VERIFICAÇÕES =====
+if (loginSubmit) loginSubmit.addEventListener('click', authenticateLogin);
+if (loginForm) loginForm.addEventListener('submit', (e) => e.preventDefault());
+
+const loginUser = $('loginUser');
+if (loginUser) {
+  loginUser.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (loginSubmit) loginSubmit.click();
+    }
+  });
+}
+
+if (passwordInput) {
+  passwordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (loginSubmit) loginSubmit.click();
+    }
+  });
+}
+
+if (passwordToggle) {
+  passwordToggle.addEventListener('click', () => {
+    if (passwordInput) {
+      const visible = passwordInput.type === 'text';
+      passwordInput.type = visible ? 'password' : 'text';
+      passwordToggle.textContent = visible ? '◉' : '◌';
+    }
+  });
+}
 
   const processBtn = document.getElementById('processBatchBtn');
   if (processBtn) processBtn.addEventListener('click', processBatch);
