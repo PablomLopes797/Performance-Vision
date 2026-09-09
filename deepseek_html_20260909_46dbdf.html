@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel do Motorista · Warehouse Vision</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f7fb;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      padding: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e4ebf3;
+      border-radius: 24px;
+      box-shadow: 0 18px 55px #10254112;
+      max-width: 560px;
+      width: 100%;
+      padding: 32px 28px 38px;
+      text-align: center;
+      transition: box-shadow 0.2s;
+    }
+
+    .logo {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2877ff;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #071426;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .sub {
+      font-size: 13px;
+      color: #71849b;
+      margin-bottom: 28px;
+    }
+
+    .campo-senha {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .campo-senha input {
+      flex: 1;
+      height: 48px;
+      border: 1px solid #dfe7ef;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 16px;
+      background: #fbfdff;
+      color: #15283f;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .campo-senha input:focus {
+      border-color: #75a6ff;
+      box-shadow: 0 0 0 3px #347eff12;
+    }
+
+    .campo-senha button {
+      height: 48px;
+      padding: 0 22px;
+      background: linear-gradient(135deg, #2d7bff, #16bda9);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 8px 22px #347eff35;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .campo-senha button:active {
+      transform: scale(0.97);
+    }
+
+    .campo-senha button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Área de status */
+    .status-area {
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e4ebf3;
+      padding: 24px 16px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .status-area .mensagem {
+      font-size: 15px;
+      color: #526982;
+      line-height: 1.5;
+    }
+
+    .status-area .horario {
+      font-size: 13px;
+      color: #71849b;
+      margin-top: 6px;
+    }
+
+    .status-area .destaque {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      margin: 4px 0 8px;
+    }
+
+    .status-area .destaque.acionado {
+      color: #1db889;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .status-area .destaque.aguardando {
+      color: #efa83a;
+    }
+
+    .status-area .destaque.erro {
+      color: #e34b60;
+    }
+
+    .status-area .frase-acionamento {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1db889;
+      background: #effcf5;
+      padding: 8px 18px;
+      border-radius: 40px;
+      margin-top: 6px;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.04); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .badge-refresh {
+      margin-top: 18px;
+      font-size: 10px;
+      color: #8c9aab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .badge-refresh .led {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #8c9aab;
+    }
+
+    .badge-refresh .led.ativo {
+      background: #1fc4b1;
+      animation: pisca 1.2s steps(2) infinite;
+    }
+
+    @keyframes pisca {
+      0% { opacity: 1; }
+      50% { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsivo */
+    @media (max-width: 500px) {
+      .card {
+        padding: 24px 16px 28px;
+      }
+      .campo-senha {
+        flex-direction: column;
+      }
+      .campo-senha button {
+        width: 100%;
+      }
+      .status-area .destaque {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Warehouse Vision</div>
+    <h1>Painel do Motorista</h1>
+    <p class="sub">Informe sua senha para verificar o acionamento</p>
+
+    <div class="campo-senha">
+      <input type="text" id="inputSenha" placeholder="Digite sua senha" autocomplete="off" />
+      <button id="btnConsultar">Consultar</button>
+    </div>
+
+    <div class="status-area" id="statusArea">
+      <div class="mensagem" id="mensagemStatus">Aguardando consulta...</div>
+      <div class="horario" id="horarioStatus"></div>
+    </div>
+
+    <div class="badge-refresh">
+      <span class="led" id="ledRefresh"></span>
+      <span id="textoRefresh">Atualização automática a cada 60s</span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ===== CONFIGURAÇÃO SUPABASE =====
+      const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
+      const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
+      const AGENDA_TABLE = encodeURIComponent('AGENDA');
+
+      // ===== ELEMENTOS =====
+      const inputSenha = document.getElementById('inputSenha');
+      const btnConsultar = document.getElementById('btnConsultar');
+      const mensagemStatus = document.getElementById('mensagemStatus');
+      const horarioStatus = document.getElementById('horarioStatus');
+      const statusArea = document.getElementById('statusArea');
+      const ledRefresh = document.getElementById('ledRefresh');
+      const textoRefresh = document.getElementById('textoRefresh');
+
+      // ===== ESTADO =====
+      let senhaAtual = '';
+      let ultimoStatus = 'vazio'; // 'vazio', 'aguardando', 'acionado', 'erro'
+      let ultimoHorario = '';
+      let intervaloId = null;
+      let primeiraBusca = true;
+
+      // ===== FUNÇÃO DE ÁUDIO (beep de alerta) =====
+      function tocarAlerta() {
+        try {
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+          // Frequência de 880 Hz (tom agradável)
+          const frequencia = 880;
+          const duracao = 0.12; // segundos
+          const pausa = 0.10;
+
+          // Tocar 3 vezes com pequena pausa
+          const tocarBeep = (vezes) => {
+            if (vezes === 0) {
+              audioCtx.close().catch(() => {});
+              return;
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = frequencia;
+            gain.gain.value = 0.3;
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duracao);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + duracao);
+
+            // Próximo beep após pausa
+            setTimeout(() => {
+              tocarBeep(vezes - 1);
+            }, (duracao + pausa) * 1000);
+          };
+
+          tocarBeep(3);
+        } catch (e) {
+          // Fallback silencioso se o áudio não for suportado
+          console.warn('Áudio não disponível:', e);
+        }
+      }
+
+      // ===== CONSULTA AO SUPABASE =====
+      async function consultarSenha(senha) {
+        if (!senha || senha.trim() === '') {
+          atualizarStatus('vazio', 'Digite uma senha para consultar.', '');
+          return;
+        }
+
+        const senhaLimpa = senha.trim();
+        btnConsultar.disabled = true;
+        ledRefresh.className = 'led ativo';
+        textoRefresh.textContent = 'Consultando...';
+
+        try {
+          const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaLimpa)}&select=SENHA,"ACIONAMENTO ENTRADA"`;
+          const resp = await fetch(url, {
+            headers: {
+              'apikey': SUPABASE_ANON,
+              'Authorization': `Bearer ${SUPABASE_ANON}`
+            }
+          });
+
+          if (!resp.ok) throw new Error('Erro na consulta: ' + resp.status);
+
+          const data = await resp.json();
+
+          if (!data || data.length === 0) {
+            // Senha não encontrada
+            atualizarStatus('erro', 'Senha não encontrada.', '');
+            return;
+          }
+
+          const registro = data[0];
+          const acionamento = registro['ACIONAMENTO ENTRADA'] || null;
+
+          if (acionamento && acionamento.trim() !== '') {
+            // Acionado!
+            const horario = acionamento.trim();
+            atualizarStatus('acionado', horario);
+          } else {
+            // Senha encontrada mas ainda não acionada
+            atualizarStatus('aguardando', '');
+          }
+
+        } catch (err) {
+          console.error(err);
+          atualizarStatus('erro', 'Erro ao consultar: ' + err.message, '');
+        } finally {
+          btnConsultar.disabled = false;
+          ledRefresh.className = 'led';
+          textoRefresh.textContent = 'Atualização automática a cada 60s';
+        }
+      }
+
+      // ===== ATUALIZAR INTERFACE =====
+      function atualizarStatus(novoStatus, param1, param2) {
+        // Guarda o status anterior para detectar mudança para acionado
+        const statusAnterior = ultimoStatus;
+        ultimoStatus = novoStatus;
+
+        // Remove classes anteriores
+        statusArea.className = 'status-area';
+
+        if (novoStatus === 'vazio') {
+          mensagemStatus.textContent = param1 || 'Aguardando consulta...';
+          horarioStatus.textContent = '';
+          statusArea.style.background = '#f8fafc';
+          statusArea.style.borderColor = '#e4ebf3';
+        } else if (novoStatus === 'aguardando') {
+          mensagemStatus.innerHTML = `
+            <div class="destaque aguardando">⏳ AGUARDANDO</div>
+            <div style="font-size:14px; color:#71849b;">A senha está cadastrada, mas ainda não foi acionada.</div>
+          `;
+          horarioStatus.textContent = 'Última verificação: ' + new Date().toLocaleTimeString();
+          statusArea.style.background = '#fff9eb';
+          statusArea.style.borderColor = '#efa83a';
+        } else if (novoStatus === 'acionado') {
+          const horario = param1 || 'Horário não informado';
+          mensagemStatus.innerHTML = `
+            <div class="destaque acionado">✅ ACIONADO</div>
+            <div class="frase-acionamento">A senha informada foi Acionada. Por gentileza se dirigir à portaria.</div>
+          `;
+          horarioStatus.textContent = 'Acionamento registrado em: ' + horario;
+          statusArea.style.background = '#effcf5';
+          statusArea.style.borderColor = '#1db889';
+
+          // Se antes não estava acionado, toca o alerta (evita repetir a cada refresh)
+          if (statusAnterior !== 'acionado' && statusAnterior !== 'vazio') {
+            tocarAlerta();
+          }
+        } else if (novoStatus === 'erro') {
+          mensagemStatus.innerHTML = `
+            <div class="destaque erro">⚠️ ERRO</div>
+            <div style="font-size:14px; color:#71849b;">${param1 || 'Falha na consulta'}</div>
+          `;
+          horarioStatus.textContent = '';
+          statusArea.style.background = '#fff1f2';
+          statusArea.style.borderColor = '#e34b60';
+        }
+      }
+
+      // ===== AÇÃO DE CONSULTAR =====
+      function realizarConsulta() {
+        const senha = inputSenha.value.trim();
+        if (senha) {
+          senhaAtual = senha;
+          consultarSenha(senha);
+        } else {
+          atualizarStatus('vazio', 'Digite uma senha para consultar.', '');
+        }
+      }
+
+      // ===== AUTO-REFRESH (a cada 60 segundos) =====
+      function iniciarAutoRefresh() {
+        if (intervaloId) clearInterval(intervaloId);
+        intervaloId = setInterval(() => {
+          if (senhaAtual && senhaAtual.trim() !== '') {
+            // Mantém a senha atual e faz nova consulta, sem perder o estado visual
+            // Mas a função consultarSenha já atualiza a UI de acordo
+            consultarSenha(senhaAtual);
+          } else {
+            // Se não tem senha, apenas mantém o led piscando? não, só espera.
+          }
+        }, 60000); // 60 segundos
+      }
+
+      // ===== EVENTOS =====
+      btnConsultar.addEventListener('click', function() {
+        realizarConsulta();
+        // Se não havia senha antes, agora temos, então inicia o auto-refresh se ainda não iniciado
+        if (!intervaloId && inputSenha.value.trim() !== '') {
+          iniciarAutoRefresh();
+        }
+      });
+
+      inputSenha.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnConsultar.click();
+        }
+      });
+
+      // Se o usuário digitar uma nova senha, paramos o refresh e resetamos estado?
+      inputSenha.addEventListener('input', function() {
+        // Se o campo for esvaziado, paramos o refresh e resetamos
+        if (this.value.trim() === '') {
+          if (intervaloId) {
+            clearInterval(intervaloId);
+            intervaloId = null;
+          }
+          senhaAtual = '';
+          atualizarStatus('vazio', 'Aguardando consulta...', '');
+        }
+      });
+
+      // ===== INICIALIZAÇÃO =====
+      atualizarStatus('vazio', 'Digite sua senha e clique em Consultar', '');
+      // Não inicia o refresh automaticamente, apenas após a primeira consulta bem-sucedida.
+
+      // Pequeno helper: se a página for carregada com uma senha no input (ex: via autocomplete), não faz nada.
+      // O usuário deve clicar em consultar.
+
+      // Para melhor experiência, podemos iniciar o refresh após a primeira consulta.
+      // Já fazemos isso dentro do evento de clique.
+
+      console.log('Painel do Motorista pronto. Use a senha para verificar acionamento.');
+    })();
+  </script>
+</body>
+</html>
