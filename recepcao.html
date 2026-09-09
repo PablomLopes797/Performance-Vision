@@ -134,6 +134,19 @@
       box-shadow: 0 8px 22px #347eff35;
     }
     .btn:active { transform: scale(.98); }
+    .btn.small {
+      padding: 4px 10px;
+      font-size: 7px;
+      border-radius: 6px;
+    }
+    .btn.success {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .btn.success:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     .panel {
       background: #fff;
@@ -378,10 +391,11 @@
                 <th>Fornecedor</th>
                 <th>Chegada</th>
                 <th>Status</th>
+                <th>Acionamento</th>
               </tr>
             </thead>
             <tbody id="historicoBody">
-              <tr><td colspan="4" class="empty-table">Carregando histórico...</td></tr>
+              <tr><td colspan="5" class="empty-table">Carregando histórico...</td></tr>
             </tbody>
           </table>
         </div>
@@ -742,10 +756,60 @@
       if (e.target === this) closeModal();
     });
 
+    // ===== FUNÇÃO PARA REGISTRAR ACIONAMENTO =====
+    async function registrarAcionamento(senhaValor, botao) {
+      if (!senhaValor) return;
+
+      // Desabilita o botão enquanto processa
+      botao.disabled = true;
+      botao.textContent = '...';
+
+      try {
+        const agora = new Date();
+        const dia = String(agora.getDate()).padStart(2, '0');
+        const mes = String(agora.getMonth() + 1).padStart(2, '0');
+        const ano = agora.getFullYear();
+        const horas = String(agora.getHours()).padStart(2, '0');
+        const minutos = String(agora.getMinutes()).padStart(2, '0');
+        const acionamentoStr = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
+        const resp = await fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ "ACIONAMENTO ENTRADA": acionamentoStr })
+        });
+
+        if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
+
+        // Atualiza o botão para mostrar sucesso
+        botao.textContent = '✓ Acionado';
+        botao.classList.remove('btn', 'success');
+        botao.classList.add('btn', 'success');
+        botao.disabled = true; // mantém desabilitado
+
+        setNotice(`Acionamento registrado para a senha ${senhaValor} às ${acionamentoStr}.`, 'success');
+
+        // Recarrega o histórico para atualizar a coluna "Acionamento" (opcional, mas mantém sincronizado)
+        carregarHistorico();
+      } catch (err) {
+        console.error(err);
+        setNotice('Erro ao registrar acionamento: ' + err.message, 'error');
+        botao.textContent = 'Tentar novamente';
+        botao.disabled = false;
+      }
+    }
+
     // ===== CARREGAR HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS&order=CHEGADA.desc.nullslast&limit=20`;
+        // Seleciona também a coluna "ACIONAMENTO ENTRADA"
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS,"ACIONAMENTO ENTRADA"&order=CHEGADA.desc.nullslast&limit=20`;
         const resp = await fetch(url, {
           headers: {
             'apikey': SUPABASE_ANON,
@@ -756,20 +820,45 @@
         const data = await resp.json();
         totalRegistros.textContent = data.length;
         if (!data.length) {
-          historicoBody.innerHTML = '<tr><td colspan="4" class="empty-table">Nenhum registro de chegada ainda.</td></tr>';
+          historicoBody.innerHTML = '<tr><td colspan="5" class="empty-table">Nenhum registro de chegada ainda.</td></tr>';
           return;
         }
-        historicoBody.innerHTML = data.map(row => `
-          <tr>
-            <td>${row.SENHA || '—'}</td>
-            <td>${row.FORNECEDOR || '—'}</td>
-            <td>${row.CHEGADA || '—'}</td>
-            <td>${row.STATUS || '—'}</td>
-          </tr>
-        `).join('');
+
+        historicoBody.innerHTML = data.map(row => {
+          const senhaVal = row.SENHA || '—';
+          const acionamento = row["ACIONAMENTO ENTRADA"] || null;
+          const jaAcionado = acionamento !== null && acionamento !== '';
+          // Botão: se já acionado, mostra desabilitado com check
+          let btnHtml = '';
+          if (jaAcionado) {
+            btnHtml = `<button class="btn success small" disabled>✓ ${acionamento}</button>`;
+          } else {
+            btnHtml = `<button class="btn small" data-senha="${senhaVal}">Acionar</button>`;
+          }
+          return `
+            <tr>
+              <td>${senhaVal}</td>
+              <td>${row.FORNECEDOR || '—'}</td>
+              <td>${row.CHEGADA || '—'}</td>
+              <td>${row.STATUS || '—'}</td>
+              <td>${btnHtml}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Adiciona eventos para os botões "Acionar"
+        document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            const senhaVal = this.dataset.senha;
+            if (senhaVal && !this.disabled) {
+              registrarAcionamento(senhaVal, this);
+            }
+          });
+        });
+
       } catch (err) {
         console.error(err);
-        historicoBody.innerHTML = '<tr><td colspan="4" class="empty-table">Erro ao carregar histórico.</td></tr>';
+        historicoBody.innerHTML = '<tr><td colspan="5" class="empty-table">Erro ao carregar histórico.</td></tr>';
       }
     }
 
