@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" />
   <title>Painel do Motorista · Warehouse Vision</title>
   <style>
     * {
@@ -18,81 +18,87 @@
       justify-content: center;
       background: #f3f7fb;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-      padding: 20px;
+      padding: 16px;
+      margin: 0;
     }
 
     .card {
       background: #ffffff;
       border: 1px solid #e4ebf3;
-      border-radius: 24px;
+      border-radius: 28px;
       box-shadow: 0 18px 55px #10254112;
-      max-width: 560px;
+      max-width: 480px;
       width: 100%;
-      padding: 32px 28px 38px;
+      padding: 28px 20px 32px;
       text-align: center;
       transition: box-shadow 0.2s;
     }
 
     .logo {
-      font-size: 10px;
-      letter-spacing: 0.18em;
+      font-size: 11px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: #2877ff;
       font-weight: 800;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     h1 {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 700;
       color: #071426;
       letter-spacing: -0.03em;
-      margin-bottom: 6px;
+      margin-bottom: 2px;
     }
 
     .sub {
-      font-size: 13px;
+      font-size: 14px;
       color: #71849b;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
+    /* Campo de senha */
     .campo-senha {
       display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
     .campo-senha input {
-      flex: 1;
-      height: 48px;
+      height: 56px;
       border: 1px solid #dfe7ef;
-      border-radius: 12px;
-      padding: 0 16px;
-      font-size: 16px;
+      border-radius: 16px;
+      padding: 0 18px;
+      font-size: 18px;
       background: #fbfdff;
       color: #15283f;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
     }
 
     .campo-senha input:focus {
       border-color: #75a6ff;
-      box-shadow: 0 0 0 3px #347eff12;
+      box-shadow: 0 0 0 4px #347eff12;
     }
 
     .campo-senha button {
-      height: 48px;
-      padding: 0 22px;
+      height: 56px;
+      padding: 0 24px;
       background: linear-gradient(135deg, #2d7bff, #16bda9);
       border: none;
-      border-radius: 12px;
+      border-radius: 16px;
       color: #fff;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 18px;
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 8px 22px #347eff35;
       transition: transform 0.15s, opacity 0.15s;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .campo-senha button:active {
@@ -106,12 +112,12 @@
 
     /* Área de status */
     .status-area {
-      min-height: 130px;
+      min-height: 160px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 16px;
+      border-radius: 20px;
       background: #f8fafc;
       border: 1px solid #e4ebf3;
       padding: 24px 16px;
@@ -119,19 +125,20 @@
     }
 
     .status-area .mensagem {
-      font-size: 15px;
+      font-size: 16px;
       color: #526982;
-      line-height: 1.5;
+      line-height: 1.6;
+      width: 100%;
     }
 
     .status-area .horario {
-      font-size: 13px;
+      font-size: 14px;
       color: #71849b;
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
     .status-area .destaque {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 900;
       letter-spacing: 0.02em;
       margin: 4px 0 8px;
@@ -151,35 +158,37 @@
     }
 
     .status-area .frase-acionamento {
-      font-size: 16px;
-      font-weight: 500;
+      font-size: 18px;
+      font-weight: 600;
       color: #1db889;
       background: #effcf5;
-      padding: 8px 18px;
+      padding: 10px 18px;
       border-radius: 40px;
-      margin-top: 6px;
+      margin-top: 8px;
+      line-height: 1.4;
     }
 
     @keyframes pulse {
       0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.04); }
+      50% { opacity: 0.6; transform: scale(1.05); }
       100% { opacity: 1; transform: scale(1); }
     }
 
     .badge-refresh {
       margin-top: 18px;
-      font-size: 10px;
+      font-size: 11px;
       color: #8c9aab;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .badge-refresh .led {
       display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: #8c9aab;
     }
@@ -199,19 +208,65 @@
       display: none !important;
     }
 
-    /* Responsivo */
-    @media (max-width: 500px) {
+    /* Ajustes para telas muito pequenas */
+    @media (max-width: 420px) {
       .card {
-        padding: 24px 16px 28px;
+        padding: 20px 14px 24px;
       }
-      .campo-senha {
-        flex-direction: column;
+      h1 {
+        font-size: 24px;
+      }
+      .sub {
+        font-size: 13px;
+      }
+      .campo-senha input {
+        height: 50px;
+        font-size: 16px;
       }
       .campo-senha button {
-        width: 100%;
+        height: 50px;
+        font-size: 16px;
       }
       .status-area .destaque {
-        font-size: 26px;
+        font-size: 28px;
+      }
+      .status-area .frase-acionamento {
+        font-size: 16px;
+        padding: 8px 14px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .status-area {
+        min-height: 140px;
+        padding: 16px 10px;
+      }
+      .status-area .destaque {
+        font-size: 24px;
+      }
+      .status-area .frase-acionamento {
+        font-size: 14px;
+      }
+    }
+
+    /* Suporte para landscape em celular – mantém legível */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .card {
+        padding: 16px 20px;
+      }
+      .status-area {
+        min-height: 120px;
+        padding: 16px;
+      }
+      .campo-senha {
+        flex-direction: row;
+        gap: 10px;
+      }
+      .campo-senha input {
+        flex: 2;
+      }
+      .campo-senha button {
+        flex: 1;
       }
     }
   </style>
@@ -223,7 +278,7 @@
     <p class="sub">Informe sua senha para verificar o acionamento</p>
 
     <div class="campo-senha">
-      <input type="text" id="inputSenha" placeholder="Digite sua senha" autocomplete="off" />
+      <input type="text" id="inputSenha" placeholder="Digite sua senha" autocomplete="off" inputmode="text" />
       <button id="btnConsultar">Consultar</button>
     </div>
 
@@ -237,6 +292,15 @@
       <span id="textoRefresh">Atualização automática a cada 60s</span>
     </div>
   </div>
+
+  <!-- ===== ÁUDIO EXTERNO ===== -->
+  <!-- Substitua o src pelo link do seu arquivo de som (pode ser no GitHub raw) -->
+  <audio id="somAlerta" preload="auto" crossorigin="anonymous">
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+    <!-- Fallback: se o MP3 não carregar, tenta OGG (opcional) -->
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.ogg" type="audio/ogg">
+    Seu navegador não suporta áudio.
+  </audio>
 
   <script>
     (function() {
@@ -255,54 +319,88 @@
       const statusArea = document.getElementById('statusArea');
       const ledRefresh = document.getElementById('ledRefresh');
       const textoRefresh = document.getElementById('textoRefresh');
+      const somAlerta = document.getElementById('somAlerta');
 
       // ===== ESTADO =====
       let senhaAtual = '';
       let ultimoStatus = 'vazio'; // 'vazio', 'aguardando', 'acionado', 'erro'
-      let ultimoHorario = '';
       let intervaloId = null;
-      let primeiraBusca = true;
+      let audioPronto = false;
 
-      // ===== FUNÇÃO DE ÁUDIO (beep de alerta) =====
+      // ===== INICIALIZAÇÃO DO ÁUDIO (requer interação do usuário) =====
+      function prepararAudio() {
+        if (audioPronto) return;
+        // Tenta carregar o áudio para que fique pronto
+        somAlerta.load();
+        // Em alguns navegadores, é necessário tocar e pausar para "ativar"
+        somAlerta.play().then(() => {
+          somAlerta.pause();
+          somAlerta.currentTime = 0;
+          audioPronto = true;
+          console.log('Áudio preparado.');
+        }).catch(() => {
+          // Se falhar, mantém audioPronto false, mas tentaremos novamente no clique
+          console.warn('Áudio não pôde ser preparado automaticamente.');
+        });
+      }
+
+      // ===== FUNÇÃO PARA TOCAR O SOM =====
       function tocarAlerta() {
-        try {
-          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // Se o áudio ainda não foi preparado, tenta novamente
+        if (!audioPronto) {
+          prepararAudio();
+          // Se mesmo assim não estiver pronto, tenta reproduzir diretamente
+        }
 
-          // Frequência de 880 Hz (tom agradável)
-          const frequencia = 880;
-          const duracao = 0.12; // segundos
-          const pausa = 0.10;
+        // Tenta reproduzir o áudio
+        somAlerta.currentTime = 0;
+        const playPromise = somAlerta.play();
 
-          // Tocar 3 vezes com pequena pausa
-          const tocarBeep = (vezes) => {
-            if (vezes === 0) {
-              audioCtx.close().catch(() => {});
-              return;
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.warn('Falha ao tocar áudio:', error);
+            // Fallback: tenta usar Web Audio API como último recurso
+            try {
+              const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.value = 880;
+              gain.gain.value = 0.2;
+              gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start();
+              osc.stop(audioCtx.currentTime + 0.15);
+              // Toca três vezes com pequena pausa
+              setTimeout(() => {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.value = 880;
+                gain2.gain.value = 0.2;
+                gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.15);
+              }, 250);
+              setTimeout(() => {
+                const osc3 = audioCtx.createOscillator();
+                const gain3 = audioCtx.createGain();
+                osc3.type = 'sine';
+                osc3.frequency.value = 880;
+                gain3.gain.value = 0.2;
+                gain3.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                osc3.connect(gain3);
+                gain3.connect(audioCtx.destination);
+                osc3.start();
+                osc3.stop(audioCtx.currentTime + 0.15);
+              }, 500);
+            } catch (e) {
+              console.warn('Fallback de áudio também falhou:', e);
             }
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = frequencia;
-            gain.gain.value = 0.3;
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duracao);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + duracao);
-
-            // Próximo beep após pausa
-            setTimeout(() => {
-              tocarBeep(vezes - 1);
-            }, (duracao + pausa) * 1000);
-          };
-
-          tocarBeep(3);
-        } catch (e) {
-          // Fallback silencioso se o áudio não for suportado
-          console.warn('Áudio não disponível:', e);
+          });
         }
       }
 
@@ -332,7 +430,6 @@
           const data = await resp.json();
 
           if (!data || data.length === 0) {
-            // Senha não encontrada
             atualizarStatus('erro', 'Senha não encontrada.', '');
             return;
           }
@@ -341,11 +438,9 @@
           const acionamento = registro['ACIONAMENTO ENTRADA'] || null;
 
           if (acionamento && acionamento.trim() !== '') {
-            // Acionado!
             const horario = acionamento.trim();
             atualizarStatus('acionado', horario);
           } else {
-            // Senha encontrada mas ainda não acionada
             atualizarStatus('aguardando', '');
           }
 
@@ -361,11 +456,9 @@
 
       // ===== ATUALIZAR INTERFACE =====
       function atualizarStatus(novoStatus, param1, param2) {
-        // Guarda o status anterior para detectar mudança para acionado
         const statusAnterior = ultimoStatus;
         ultimoStatus = novoStatus;
 
-        // Remove classes anteriores
         statusArea.className = 'status-area';
 
         if (novoStatus === 'vazio') {
@@ -376,7 +469,7 @@
         } else if (novoStatus === 'aguardando') {
           mensagemStatus.innerHTML = `
             <div class="destaque aguardando">⏳ AGUARDANDO</div>
-            <div style="font-size:14px; color:#71849b;">A senha está cadastrada, mas ainda não foi acionada.</div>
+            <div style="font-size:15px; color:#71849b;">A senha está cadastrada, mas ainda não foi acionada.</div>
           `;
           horarioStatus.textContent = 'Última verificação: ' + new Date().toLocaleTimeString();
           statusArea.style.background = '#fff9eb';
@@ -391,14 +484,14 @@
           statusArea.style.background = '#effcf5';
           statusArea.style.borderColor = '#1db889';
 
-          // Se antes não estava acionado, toca o alerta (evita repetir a cada refresh)
+          // Dispara o som se mudou para acionado (evita repetir a cada refresh)
           if (statusAnterior !== 'acionado' && statusAnterior !== 'vazio') {
             tocarAlerta();
           }
         } else if (novoStatus === 'erro') {
           mensagemStatus.innerHTML = `
             <div class="destaque erro">⚠️ ERRO</div>
-            <div style="font-size:14px; color:#71849b;">${param1 || 'Falha na consulta'}</div>
+            <div style="font-size:15px; color:#71849b;">${param1 || 'Falha na consulta'}</div>
           `;
           horarioStatus.textContent = '';
           statusArea.style.background = '#fff1f2';
@@ -412,6 +505,10 @@
         if (senha) {
           senhaAtual = senha;
           consultarSenha(senha);
+          // Inicia auto-refresh se ainda não iniciado
+          if (!intervaloId) {
+            iniciarAutoRefresh();
+          }
         } else {
           atualizarStatus('vazio', 'Digite uma senha para consultar.', '');
         }
@@ -422,22 +519,16 @@
         if (intervaloId) clearInterval(intervaloId);
         intervaloId = setInterval(() => {
           if (senhaAtual && senhaAtual.trim() !== '') {
-            // Mantém a senha atual e faz nova consulta, sem perder o estado visual
-            // Mas a função consultarSenha já atualiza a UI de acordo
             consultarSenha(senhaAtual);
-          } else {
-            // Se não tem senha, apenas mantém o led piscando? não, só espera.
           }
-        }, 60000); // 60 segundos
+        }, 60000);
       }
 
       // ===== EVENTOS =====
-      btnConsultar.addEventListener('click', function() {
+      btnConsultar.addEventListener('click', function(e) {
+        // Prepara o áudio na interação do usuário
+        prepararAudio();
         realizarConsulta();
-        // Se não havia senha antes, agora temos, então inicia o auto-refresh se ainda não iniciado
-        if (!intervaloId && inputSenha.value.trim() !== '') {
-          iniciarAutoRefresh();
-        }
       });
 
       inputSenha.addEventListener('keydown', function(e) {
@@ -447,9 +538,8 @@
         }
       });
 
-      // Se o usuário digitar uma nova senha, paramos o refresh e resetamos estado?
+      // Se o usuário esvaziar o campo, para o refresh e reseta
       inputSenha.addEventListener('input', function() {
-        // Se o campo for esvaziado, paramos o refresh e resetamos
         if (this.value.trim() === '') {
           if (intervaloId) {
             clearInterval(intervaloId);
@@ -462,15 +552,11 @@
 
       // ===== INICIALIZAÇÃO =====
       atualizarStatus('vazio', 'Digite sua senha e clique em Consultar', '');
-      // Não inicia o refresh automaticamente, apenas após a primeira consulta bem-sucedida.
+      console.log('Painel do Motorista pronto.');
 
-      // Pequeno helper: se a página for carregada com uma senha no input (ex: via autocomplete), não faz nada.
-      // O usuário deve clicar em consultar.
+      // Pré-carregar áudio se possível
+      somAlerta.load();
 
-      // Para melhor experiência, podemos iniciar o refresh após a primeira consulta.
-      // Já fazemos isso dentro do evento de clique.
-
-      console.log('Painel do Motorista pronto. Use a senha para verificar acionamento.');
     })();
   </script>
 </body>
