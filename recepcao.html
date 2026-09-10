@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WAREHOUSE VISION | RECEPÇÃO</title>
   <style>
-    /* ============================================================
-       TOKENS DE DESIGN
-       ============================================================ */
     :root {
       --navy: #071426;
       --ink: #15283f;
@@ -64,8 +61,6 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-
-    .no-uppercase { text-transform: none; }
 
     button, input, select {
       font-family: inherit;
@@ -190,12 +185,19 @@
     .btn.primary:hover { box-shadow: 0 10px 26px #347eff4a; }
     .btn:active { transform: scale(.98); }
     .btn.small {
-      padding: 5px 10px;
+      padding: 6px 11px;
       font-size: var(--fs-2xs);
       border-radius: 6px;
       letter-spacing: var(--ls-wide);
       white-space: normal;
     }
+    .btn.ghost {
+      background: transparent;
+      border-color: transparent;
+      color: #70839a;
+      padding: 6px 10px;
+    }
+    .btn.ghost:hover { background: #f3f7fb; }
     .btn.success { border-color: var(--green); color: var(--green); }
     .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
 
@@ -214,6 +216,7 @@
       align-items: flex-start;
       gap: 10px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
     }
     .panel-title {
       font-size: var(--fs-lg);
@@ -240,6 +243,61 @@
       letter-spacing: var(--ls-wide);
       white-space: nowrap;
       line-height: 1;
+    }
+
+    /* ===== FILTROS ===== */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+      padding: 12px 14px;
+      background: #f8fbff;
+      border: 1px solid #e8f0fa;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+    .filter-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 130px;
+    }
+    .filter-field label {
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-bold);
+      color: #526982;
+      letter-spacing: var(--ls-wider);
+      line-height: var(--lh-snug);
+    }
+    .filter-field input {
+      height: 34px;
+      border: 1px solid #dfe7ef;
+      border-radius: 8px;
+      padding: 0 10px;
+      background: #fff;
+      color: #253e59;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-wide);
+      outline: none;
+      width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease;
+      font-variant-numeric: tabular-nums;
+    }
+    .filter-field input:focus {
+      border-color: #75a6ff;
+      box-shadow: 0 0 0 3px #347eff12;
+    }
+    .filter-field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
+    .filters .btn.small { height: 34px; }
+    .filters .filter-info {
+      margin-left: auto;
+      font-size: var(--fs-2xs);
+      color: #70839a;
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wide);
+      padding-bottom: 8px;
     }
 
     .notice {
@@ -302,7 +360,6 @@
       letter-spacing: var(--ls-wide);
     }
 
-    /* Colunas com quebra de texto */
     .data-table th.cell-wrap,
     .data-table td.cell-wrap {
       white-space: normal;
@@ -484,6 +541,9 @@
       .actions { margin-top: 14px; }
       .form-grid { grid-template-columns: 1fr; }
       h1 { font-size: 26px; }
+      .filters { flex-direction: column; align-items: stretch; }
+      .filter-field { min-width: 0; }
+      .filters .filter-info { margin-left: 0; text-align: center; }
     }
   </style>
   <link rel="stylesheet" href="sidebar.css">
@@ -518,14 +578,33 @@
           </div>
           <span class="pill" id="totalRegistros">0</span>
         </div>
+
+        <!-- ===== FILTROS ===== -->
+        <div class="filters">
+          <div class="filter-field">
+            <label for="filterMonth">MÊS (MM/AAAA)</label>
+            <input id="filterMonth" type="text" placeholder="MM/AAAA" maxlength="7" autocomplete="off" inputmode="numeric">
+          </div>
+          <div class="filter-field">
+            <label for="filterFrom">DE</label>
+            <input id="filterFrom" type="date">
+          </div>
+          <div class="filter-field">
+            <label for="filterTo">ATÉ</label>
+            <input id="filterTo" type="date">
+          </div>
+          <button class="btn small ghost" id="clearFilters" type="button">LIMPAR FILTROS</button>
+          <span class="filter-info" id="filterInfo"></span>
+        </div>
+
         <div class="table-wrap">
           <table class="data-table">
             <thead>
               <tr>
                 <th>SENHA</th>
                 <th>FORNECEDOR</th>
-                <th>AGENDA</th>
                 <th>STATUS</th>
+                <th>AGENDA</th>
                 <th>CHEGADA</th>
                 <th class="cell-wrap">ACIONAMENTO ADM</th>
                 <th class="cell-wrap">VISUALIZAÇÃO ACIONAMENTO</th>
@@ -626,7 +705,7 @@
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
 
     // ============================================================
-    // MAPA DE COLUNAS (nome exato no Supabase)
+    // MAPA DE COLUNAS
     // ============================================================
     const COLS = {
       SENHA:        'SENHA',
@@ -642,22 +721,6 @@
       TERMO:        'TERMO LIBERAÇÃO',
       PAGAMENTO:    'PAGAMENTO'
     };
-
-    // Conjunto de colunas que SEMPRE contêm data/hora no formato "DD/MM/AAAA HH:MM"
-    const DATE_COLS = new Set([
-      COLS.AGENDA,
-      COLS.CHEGADA,
-      COLS.ACIONAMENTO,
-      COLS.VISUALIZACAO,
-      COLS.ENCOSTA,
-      COLS.INICIO,
-      COLS.FIM,
-      COLS.TERMO,
-      COLS.PAGAMENTO
-    ]);
-
-    // Helper para citar nomes de coluna com espaço
-    const quote = name => name.includes(' ') ? `"${name}"` : name;
 
     // ===== ELEMENTOS =====
     const $ = id => document.getElementById(id);
@@ -680,9 +743,17 @@
     const notice = $('notice');
     const historicoBody = $('historicoBody');
     const totalRegistros = $('totalRegistros');
+    const filterMonth = $('filterMonth');
+    const filterFrom = $('filterFrom');
+    const filterTo = $('filterTo');
+    const clearFilters = $('clearFilters');
+    const filterInfo = $('filterInfo');
 
     let senhaEncontrada = false;
     let dadosAgenda = null;
+
+    // Cache do último fetch completo
+    let allData = [];
 
     // ===== UTILITÁRIOS =====
     function upper(v) {
@@ -698,72 +769,107 @@
     function pad2(n) { return String(n).padStart(2, '0'); }
 
     // ============================================================
-    // FORMATADOR DE DATA — padrão do sistema: "DD/MM/AAAA HH:MM"
+    // PARSER FLEXÍVEL DE DATA
+    // Aceita:
+    //   "1/3/26 15:00"       → D/M/YY
+    //   "1/3/2026 15:00"     → D/M/AAAA
+    //   "13/3/26 15:00"      → D/M/YY (detecta a>12)
+    //   "1/13/26 15:00"      → M/D/YY (detecta b>12)
+    //   "15/01/2025 14:32"   → DD/MM/AAAA
+    //   "2025-01-15T14:32:00Z"
+    //   "2025-01-15 14:32:00"
+    // Retorna { day, month, year, hour, min } ou null.
     // ============================================================
-    // Como todas as colunas de data já chegam nesse formato, esta função
-    // basicamente normaliza para garantir o padrão exato (mesmo se vier
-    // com segundos, com "T", sem hora, ou como ISO residual).
-    function formatarDataHora(valor) {
-      if (valor === null || valor === undefined || valor === '') return '';
+    function parseFlexibleDate(valor) {
+      if (valor === null || valor === undefined || valor === '') return null;
 
       if (typeof valor === 'number' && isFinite(valor)) {
         const d = new Date(valor);
-        return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+        if (isNaN(d.getTime())) return null;
+        return {
+          day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(),
+          hour: d.getHours(), min: d.getMinutes()
+        };
       }
 
       const str = String(valor).trim();
-      if (!str) return '';
+      if (!str) return null;
 
-      // 1) Padrão esperado: "DD/MM/AAAA[ HH:MM[:SS]]"
-      const br = str.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2})(?::\d{2})?)?/);
+      // 1) Formato brasileiro / americano curto: D/M/YY[YY] [H:MM[:SS]]
+      const br = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
       if (br) {
-        const [, dia, mes, ano, hora = '00', min = '00'] = br;
-        return `${dia}/${mes}/${ano} ${hora}:${min}`;
+        let [, a, b, year, hour = '0', min = '0'] = br;
+        a = Number(a); b = Number(b); year = Number(year);
+        if (year < 100) year = 2000 + year;
+
+        let day, month;
+        if (a > 12 && b <= 12) { day = a; month = b; }        // D/M
+        else if (b > 12 && a <= 12) { day = b; month = a; }   // M/D
+        else { day = a; month = b; }                          // assume D/M (pt-BR)
+
+        // Validação
+        if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+        return { day, month, year, hour: Number(hour), min: Number(min) };
       }
 
-      // 2) Fallback: ISO 8601 (caso alguma coluna mude de tipo no futuro)
+      // 2) ISO 8601
       const iso = str.match(
         /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/
       );
       if (iso) {
-        const [, ano, mes, dia, hora = '00', min = '00', , tz] = iso;
+        const [, year, month, day, hour = '0', min = '0', , tz] = iso;
         if (tz) {
           const d = new Date(str);
-          if (!isNaN(d.getTime())) {
-            return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-          }
+          if (isNaN(d.getTime())) return null;
+          return {
+            day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(),
+            hour: d.getHours(), min: d.getMinutes()
+          };
         }
-        return `${dia}/${mes}/${ano} ${hora}:${min}`;
+        return {
+          day: Number(day), month: Number(month), year: Number(year),
+          hour: Number(hour), min: Number(min)
+        };
       }
 
-      return str;
+      // 3) Fallback
+      const d = new Date(str);
+      if (!isNaN(d.getTime())) {
+        return {
+          day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(),
+          hour: d.getHours(), min: d.getMinutes()
+        };
+      }
+      return null;
     }
 
-    // Renderiza uma célula de DATA. Retorna "—" se vazio.
+    // Formata qualquer valor de data para "DD/MM/AAAA HH:MM"
+    function formatarDataHora(valor) {
+      const p = parseFlexibleDate(valor);
+      if (!p) return valor ? String(valor) : '';
+      return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
+    }
+
+    // Retorna um objeto Date (para ordenação e comparação)
+    function toDate(valor) {
+      const p = parseFlexibleDate(valor);
+      if (!p) return null;
+      const d = new Date(p.year, p.month - 1, p.day, p.hour, p.min);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    // Renderiza célula de data
     function renderDate(valor) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
-      return formatarDataHora(valor) || '—';
+      const p = parseFlexibleDate(valor);
+      if (!p) return upper(valor);
+      return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
     }
 
-    // Renderiza uma célula de TEXTO. Retorna "—" se vazio.
+    // Renderiza célula de texto
     function renderText(valor) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
       return upper(valor);
-    }
-
-    // Converte string de data em Date para ordenação
-    function parseDateForSort(valor) {
-      if (!valor) return null;
-      const s = String(valor).trim();
-      if (!s) return null;
-      const br = s.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?/);
-      if (br) {
-        const [, d, m, y, h = '00', mi = '00'] = br;
-        const dt = new Date(Number(y), Number(m) - 1, Number(d), Number(h), Number(mi));
-        return isNaN(dt.getTime()) ? null : dt;
-      }
-      const dt = new Date(s);
-      return isNaN(dt.getTime()) ? null : dt;
     }
 
     // ===== AUXILIARES DO FORM =====
@@ -846,6 +952,158 @@
           if (this.value !== up) {
             this.value = up;
             try { this.setSelectionRange(pos, pos); } catch (_) {}
+          }
+        });
+      });
+    }
+
+    // ===== MÁSCARA DO FILTRO MM/AAAA =====
+    function setupMonthMask() {
+      filterMonth.addEventListener('input', function() {
+        let v = this.value.replace(/\D/g, '');
+        if (v.length > 6) v = v.slice(0, 6);
+        if (v.length <= 2) {
+          this.value = v;
+        } else {
+          this.value = v.slice(0, 2) + '/' + v.slice(2);
+        }
+      });
+      filterMonth.addEventListener('blur', function() {
+        const v = this.value.trim();
+        if (v && !/^\d{2}\/\d{4}$/.test(v)) {
+          // limpa se incompleto
+          const digits = v.replace(/\D/g, '');
+          if (digits.length !== 6) this.value = '';
+        }
+      });
+    }
+
+    // ===== FILTROS =====
+    function applyFilters() {
+      const monthStr = filterMonth.value.trim();      // "MM/AAAA"
+      const fromStr  = filterFrom.value;              // "YYYY-MM-DD" (input nativo)
+      const toStr    = filterTo.value;                // "YYYY-MM-DD"
+
+      let monthNum = null, yearNum = null;
+      if (/^\d{2}\/\d{4}$/.test(monthStr)) {
+        monthNum = Number(monthStr.slice(0, 2));
+        yearNum  = Number(monthStr.slice(3));
+      }
+
+      let fromDate = null, toDate = null;
+      if (fromStr) {
+        const [y, m, d] = fromStr.split('-').map(Number);
+        fromDate = new Date(y, m - 1, d, 0, 0, 0);
+      }
+      if (toStr) {
+        const [y, m, d] = toStr.split('-').map(Number);
+        toDate = new Date(y, m - 1, d, 23, 59, 59);
+      }
+
+      const filtered = allData.filter(row => {
+        const dt = toDate(row[COLS.CHEGADA]);
+        if (!dt) {
+          // Se não tem data, mantém apenas quando não há filtro
+          return !monthNum && !fromDate && !toDate;
+        }
+        if (monthNum !== null) {
+          if (dt.getMonth() + 1 !== monthNum || dt.getFullYear() !== yearNum) return false;
+        }
+        if (fromDate && dt < fromDate) return false;
+        if (toDate && dt > toDate) return false;
+        return true;
+      });
+
+      renderHistorico(filtered);
+
+      // Info do filtro
+      const total = allData.length;
+      const shown = filtered.length;
+      if (monthNum || fromDate || toDate) {
+        filterInfo.textContent = `MOSTRANDO ${shown} DE ${total}`;
+      } else {
+        filterInfo.textContent = '';
+      }
+
+      totalRegistros.textContent = shown;
+    }
+
+    function setupFilters() {
+      filterMonth.addEventListener('input', applyFilters);
+      filterFrom.addEventListener('change', applyFilters);
+      filterTo.addEventListener('change', applyFilters);
+      clearFilters.addEventListener('click', function() {
+        filterMonth.value = '';
+        filterFrom.value = '';
+        filterTo.value = '';
+        applyFilters();
+      });
+    }
+
+    // ===== RENDER DA TABELA =====
+    function renderHistorico(data) {
+      if (!data.length) {
+        historicoBody.innerHTML = '<tr><td colspan="12" class="empty-table">NENHUM REGISTRO ENCONTRADO COM OS FILTROS APLICADOS.</td></tr>';
+        return;
+      }
+
+      historicoBody.innerHTML = data.map(row => {
+        const senhaVal    = renderText(row[COLS.SENHA]);
+        const fornecedorV = renderText(row[COLS.FORNECEDOR]);
+        const statusV     = renderText(row[COLS.STATUS]);
+        const agendaV     = renderDate(row[COLS.AGENDA]);
+        const chegadaV    = renderDate(row[COLS.CHEGADA]);
+        const encostaV    = renderDate(row[COLS.ENCOSTA]);
+        const inicioV     = renderDate(row[COLS.INICIO]);
+        const fimV        = renderDate(row[COLS.FIM]);
+        const termoV      = renderDate(row[COLS.TERMO]);
+        const pagamentoV  = renderDate(row[COLS.PAGAMENTO]);
+
+        const acionamentoRaw  = row[COLS.ACIONAMENTO];
+        const visualizacaoRaw = row[COLS.VISUALIZACAO];
+
+        const jaAcionado =
+          acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
+        const jaVisualizado =
+          visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
+
+        let acionamentoHtml = '';
+        if (jaAcionado) {
+          acionamentoHtml = `<span>${formatarDataHora(acionamentoRaw)}</span>`;
+        } else {
+          acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
+        }
+
+        let visualizacaoHtml = '';
+        if (jaVisualizado) {
+          visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatarDataHora(visualizacaoRaw)}</small></span>`;
+        } else {
+          visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
+        }
+
+        return `
+          <tr>
+            <td>${senhaVal}</td>
+            <td>${fornecedorV}</td>
+            <td>${statusV}</td>
+            <td class="col-date">${agendaV}</td>
+            <td class="col-date">${chegadaV}</td>
+            <td class="cell-wrap">${acionamentoHtml}</td>
+            <td class="cell-wrap">${visualizacaoHtml}</td>
+            <td class="col-date">${encostaV}</td>
+            <td class="col-date">${inicioV}</td>
+            <td class="col-date">${fimV}</td>
+            <td class="col-date">${termoV}</td>
+            <td class="col-date">${pagamentoV}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const senhaVal = this.dataset.senha;
+          if (senhaVal && !this.disabled) {
+            registrarAcionamento(senhaVal, this);
           }
         });
       });
@@ -1031,7 +1289,7 @@
     // ===== HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=200`;
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=500`;
         const resp = await fetch(url, {
           headers: {
             'apikey': SUPABASE_ANON,
@@ -1053,86 +1311,19 @@
         let data = await resp.json();
         if (!Array.isArray(data)) data = [];
 
-        // Ordena por CHEGADA desc (em JS, tolerante a formatos)
+        // Ordena por CHEGADA desc
         data.sort((a, b) => {
-          const va = parseDateForSort(a[COLS.CHEGADA]);
-          const vb = parseDateForSort(b[COLS.CHEGADA]);
-          if (vb && va) return vb - va;
-          if (vb) return 1;
-          if (va) return -1;
+          const da = toDate(a[COLS.CHEGADA]);
+          const db = toDate(b[COLS.CHEGADA]);
+          if (db && da) return db - da;
+          if (db) return 1;
+          if (da) return -1;
           return 0;
         });
-        data = data.slice(0, 50);
+        data = data.slice(0, 200);
 
-        totalRegistros.textContent = data.length;
-
-        if (!data.length) {
-          historicoBody.innerHTML = '<tr><td colspan="12" class="empty-table">NENHUM REGISTRO DE CHEGADA AINDA.</td></tr>';
-          return;
-        }
-
-        historicoBody.innerHTML = data.map(row => {
-          const senhaVal    = renderText(row[COLS.SENHA]);
-          const fornecedorV = renderText(row[COLS.FORNECEDOR]);
-          const agendaV     = renderDate(row[COLS.AGENDA]);
-          const statusV     = renderText(row[COLS.STATUS]);
-          const chegadaV    = renderDate(row[COLS.CHEGADA]);
-          const encostaV    = renderDate(row[COLS.ENCOSTA]);
-          const inicioV     = renderDate(row[COLS.INICIO]);
-          const fimV        = renderDate(row[COLS.FIM]);
-          const termoV      = renderDate(row[COLS.TERMO]);
-          const pagamentoV  = renderDate(row[COLS.PAGAMENTO]);
-
-          const acionamentoRaw  = row[COLS.ACIONAMENTO];
-          const visualizacaoRaw = row[COLS.VISUALIZACAO];
-
-          const jaAcionado =
-            acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
-          const jaVisualizado =
-            visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
-
-          // ACIONAMENTO ADM (quebra de texto)
-          let acionamentoHtml = '';
-          if (jaAcionado) {
-            acionamentoHtml = `<span>${formatarDataHora(acionamentoRaw)}</span>`;
-          } else {
-            acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
-          }
-
-          // VISUALIZAÇÃO ACIONAMENTO (quebra de texto)
-          let visualizacaoHtml = '';
-          if (jaVisualizado) {
-            visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatarDataHora(visualizacaoRaw)}</small></span>`;
-          } else {
-            visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
-          }
-
-          return `
-            <tr>
-              <td>${senhaVal}</td>
-              <td>${fornecedorV}</td>
-              <td class="col-date">${agendaV}</td>
-              <td>${statusV}</td>
-              <td class="col-date">${chegadaV}</td>
-              <td class="cell-wrap">${acionamentoHtml}</td>
-              <td class="cell-wrap">${visualizacaoHtml}</td>
-              <td class="col-date">${encostaV}</td>
-              <td class="col-date">${inicioV}</td>
-              <td class="col-date">${fimV}</td>
-              <td class="col-date">${termoV}</td>
-              <td class="col-date">${pagamentoV}</td>
-            </tr>
-          `;
-        }).join('');
-
-        document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const senhaVal = this.dataset.senha;
-            if (senhaVal && !this.disabled) {
-              registrarAcionamento(senhaVal, this);
-            }
-          });
-        });
+        allData = data;
+        applyFilters();
 
       } catch (err) {
         console.error('[HISTÓRICO] Erro:', err);
@@ -1144,6 +1335,8 @@
     function init() {
       setupMasks();
       setupUppercaseInputs();
+      setupMonthMask();
+      setupFilters();
       resetarModal();
       carregarHistorico();
       setNotice('CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.', '');
