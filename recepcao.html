@@ -273,7 +273,7 @@
       font-size: var(--fs-xs);
       font-weight: var(--fw-regular);
       line-height: var(--lh-snug);
-      min-width: 1600px;
+      min-width: 1700px;
     }
     .data-table th {
       background: #f7fafd;
@@ -643,6 +643,19 @@
       PAGAMENTO:    'PAGAMENTO'
     };
 
+    // Conjunto de colunas que SEMPRE contêm data/hora no formato "DD/MM/AAAA HH:MM"
+    const DATE_COLS = new Set([
+      COLS.AGENDA,
+      COLS.CHEGADA,
+      COLS.ACIONAMENTO,
+      COLS.VISUALIZACAO,
+      COLS.ENCOSTA,
+      COLS.INICIO,
+      COLS.FIM,
+      COLS.TERMO,
+      COLS.PAGAMENTO
+    ]);
+
     // Helper para citar nomes de coluna com espaço
     const quote = name => name.includes(' ') ? `"${name}"` : name;
 
@@ -685,8 +698,11 @@
     function pad2(n) { return String(n).padStart(2, '0'); }
 
     // ============================================================
-    // NORMALIZADOR DE DATA/HORA → "DD/MM/AAAA HH:MM"
+    // FORMATADOR DE DATA — padrão do sistema: "DD/MM/AAAA HH:MM"
     // ============================================================
+    // Como todas as colunas de data já chegam nesse formato, esta função
+    // basicamente normaliza para garantir o padrão exato (mesmo se vier
+    // com segundos, com "T", sem hora, ou como ISO residual).
     function formatarDataHora(valor) {
       if (valor === null || valor === undefined || valor === '') return '';
 
@@ -698,14 +714,14 @@
       const str = String(valor).trim();
       if (!str) return '';
 
-      // Já no formato brasileiro
+      // 1) Padrão esperado: "DD/MM/AAAA[ HH:MM[:SS]]"
       const br = str.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2})(?::\d{2})?)?/);
       if (br) {
         const [, dia, mes, ano, hora = '00', min = '00'] = br;
         return `${dia}/${mes}/${ano} ${hora}:${min}`;
       }
 
-      // ISO 8601
+      // 2) Fallback: ISO 8601 (caso alguma coluna mude de tipo no futuro)
       const iso = str.match(
         /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/
       );
@@ -720,22 +736,19 @@
         return `${dia}/${mes}/${ano} ${hora}:${min}`;
       }
 
-      const d = new Date(str);
-      if (!isNaN(d.getTime())) {
-        return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-      }
       return str;
     }
 
-    // Formata como data se parecer data; senão uppercase
-    function formatCell(valor) {
-      if (valor === null || valor === undefined || valor === '') return '—';
-      const s = String(valor).trim();
-      if (!s) return '—';
-      if (/^\d{2}\/\d{2}\/\d{4}/.test(s) || /^\d{4}-\d{2}-\d{2}/.test(s)) {
-        return formatarDataHora(s);
-      }
-      return upper(s);
+    // Renderiza uma célula de DATA. Retorna "—" se vazio.
+    function renderDate(valor) {
+      if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
+      return formatarDataHora(valor) || '—';
+    }
+
+    // Renderiza uma célula de TEXTO. Retorna "—" se vazio.
+    function renderText(valor) {
+      if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
+      return upper(valor);
     }
 
     // Converte string de data em Date para ordenação
@@ -1018,7 +1031,6 @@
     // ===== HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        // select=* é à prova de erro por nome de coluna; ordenamos em JS
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=200`;
         const resp = await fetch(url, {
           headers: {
@@ -1060,16 +1072,16 @@
         }
 
         historicoBody.innerHTML = data.map(row => {
-          const senhaVal = upper(row[COLS.SENHA]) || '—';
-
-          const agendaFmt    = formatCell(row[COLS.AGENDA]);
-          const chegadaFmt   = formatCell(row[COLS.CHEGADA]);
-          const statusVal    = upper(row[COLS.STATUS]) || '—';
-          const encostaFmt   = formatCell(row[COLS.ENCOSTA]);
-          const inicioFmt    = formatCell(row[COLS.INICIO]);
-          const fimFmt       = formatCell(row[COLS.FIM]);
-          const termoVal     = upper(row[COLS.TERMO]) || '—';
-          const pagamentoVal = upper(row[COLS.PAGAMENTO]) || '—';
+          const senhaVal    = renderText(row[COLS.SENHA]);
+          const fornecedorV = renderText(row[COLS.FORNECEDOR]);
+          const agendaV     = renderDate(row[COLS.AGENDA]);
+          const statusV     = renderText(row[COLS.STATUS]);
+          const chegadaV    = renderDate(row[COLS.CHEGADA]);
+          const encostaV    = renderDate(row[COLS.ENCOSTA]);
+          const inicioV     = renderDate(row[COLS.INICIO]);
+          const fimV        = renderDate(row[COLS.FIM]);
+          const termoV      = renderDate(row[COLS.TERMO]);
+          const pagamentoV  = renderDate(row[COLS.PAGAMENTO]);
 
           const acionamentoRaw  = row[COLS.ACIONAMENTO];
           const visualizacaoRaw = row[COLS.VISUALIZACAO];
@@ -1082,7 +1094,7 @@
           // ACIONAMENTO ADM (quebra de texto)
           let acionamentoHtml = '';
           if (jaAcionado) {
-            acionamentoHtml = `<span>${formatCell(acionamentoRaw)}</span>`;
+            acionamentoHtml = `<span>${formatarDataHora(acionamentoRaw)}</span>`;
           } else {
             acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
           }
@@ -1090,7 +1102,7 @@
           // VISUALIZAÇÃO ACIONAMENTO (quebra de texto)
           let visualizacaoHtml = '';
           if (jaVisualizado) {
-            visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatCell(visualizacaoRaw)}</small></span>`;
+            visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatarDataHora(visualizacaoRaw)}</small></span>`;
           } else {
             visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
           }
@@ -1098,17 +1110,17 @@
           return `
             <tr>
               <td>${senhaVal}</td>
-              <td>${upper(row[COLS.FORNECEDOR]) || '—'}</td>
-              <td class="col-date">${agendaFmt}</td>
-              <td>${statusVal}</td>
-              <td class="col-date">${chegadaFmt}</td>
+              <td>${fornecedorV}</td>
+              <td class="col-date">${agendaV}</td>
+              <td>${statusV}</td>
+              <td class="col-date">${chegadaV}</td>
               <td class="cell-wrap">${acionamentoHtml}</td>
               <td class="cell-wrap">${visualizacaoHtml}</td>
-              <td class="col-date">${encostaFmt}</td>
-              <td class="col-date">${inicioFmt}</td>
-              <td class="col-date">${fimFmt}</td>
-              <td>${termoVal}</td>
-              <td>${pagamentoVal}</td>
+              <td class="col-date">${encostaV}</td>
+              <td class="col-date">${inicioV}</td>
+              <td class="col-date">${fimV}</td>
+              <td class="col-date">${termoV}</td>
+              <td class="col-date">${pagamentoV}</td>
             </tr>
           `;
         }).join('');
