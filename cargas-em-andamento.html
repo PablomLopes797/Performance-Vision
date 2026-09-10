@@ -1,9 +1,364 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Warehouse Vision | Cargas em andamento</title>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Warehouse Vision | Cargas em andamento</title>
 <style>
 :root{--navy:#081a2d;--navy2:#0d2744;--ink:#17263a;--muted:#73849a;--line:#e6edf4;--bg:#f3f7fb;--blue:#347eff;--cyan:#22c7b1;--shadow:0 15px 38px #132b4514}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}body{overflow-x:hidden}.app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:218px;background:linear-gradient(180deg,#07182b,#0b223c 55%,#071728);color:#dbe8f6;padding:18px 12px;display:flex;flex-direction:column;z-index:10;box-shadow:8px 0 30px #05142625}.brand{display:flex;align-items:center;gap:8px;padding:5px 8px 21px}.brand-mark{width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:linear-gradient(135deg,#34b8ff,#347eff);font-weight:900;box-shadow:0 7px 20px #347eff42}.brand-copy b{display:block;font-size:11px;letter-spacing:.08em}.brand-copy small{display:block;font-size:7px;letter-spacing:.15em;color:#6f86a1;margin-top:3px}.brand-live{margin-left:auto;font-size:7px;color:#61dfc7;border:1px solid #61dfc72a;border-radius:10px;padding:4px 6px}.brand-live i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#61dfc7;margin-right:3px}.side-heading{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#607b99;padding:0 9px 8px}.nav{display:flex;flex-direction:column;gap:3px}.nav>a,.nav>details>summary{display:flex;align-items:center;gap:9px;min-height:44px;padding:7px 9px;border-radius:10px;color:#91a6c0;text-decoration:none;font-size:10px;cursor:pointer;list-style:none}.nav>a:hover,.nav>details[open]>summary,.nav>details>summary:hover{background:#ffffff0c;color:#eaf4ff}.nav-icon{width:19px;height:19px;display:grid;place-items:center;flex:0 0 19px;color:#7998b8}.nav-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav-copy{display:flex;flex-direction:column;gap:2px;flex:1;font-weight:800}.nav-copy small{font-size:7px;color:#627b99;font-weight:500}.nav-live{font-size:6px;color:#61dfc7}.nav-chevron{font-size:14px;color:#6e88a4}.nav>details>summary::-webkit-details-marker{display:none}.subnav{display:flex;flex-direction:column;gap:2px;margin:1px 0 5px 28px;padding:3px 0 3px 9px;border-left:1px solid #ffffff1a}.subnav a{display:flex;flex-direction:column;gap:2px;padding:6px 8px;border-radius:7px;color:#8fa5be;text-decoration:none;font-size:8px}.subnav a:hover{background:#ffffff0c;color:#f0f7ff}.subnav a span{font-weight:800}.subnav a small{font-size:7px;color:#607994}.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff10;padding:15px 5px 0}.back-link{color:#7892af;text-decoration:none;font-size:8px;display:flex;gap:6px;align-items:center}.back-link svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8}.side-sign{font-size:7px;color:#5e7692;margin-top:16px;line-height:1.5}.side-sign b{display:block;color:#9ab0c6}.main{margin-left:218px;min-height:100vh}.topbar{height:62px;padding:0 34px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#ffffffc9;backdrop-filter:blur(16px);position:sticky;top:0;z-index:5}.crumb{font-size:9px;color:#91a0b0}.crumb strong{color:#17263a;font-size:12px;margin-left:6px}.top-actions{display:flex;align-items:center;gap:12px}.status{font-size:8px;color:#71849a}.status i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#41cfaa;margin-right:4px}.exit{border:0;background:#eaf0f6;color:#526982;border-radius:8px;padding:8px 11px;font-size:9px;font-weight:800;cursor:pointer}.content{padding:28px 34px 50px;max-width:1450px;margin:auto}.eyebrow{color:#347eff;font-size:8px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.hero{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:23px}.hero h1{margin:6px 0 6px;font-size:31px;letter-spacing:-.05em}.hero p{margin:0;color:var(--muted);font-size:12px}.hero-action{display:flex;gap:8px}.primary,.secondary{border:0;border-radius:9px;padding:10px 14px;font-size:9px;font-weight:900;cursor:pointer}.primary{background:linear-gradient(135deg,#347eff,#245fd3);color:#fff;box-shadow:0 8px 22px #347eff35}.secondary{background:#fff;color:#466079;border:1px solid var(--line)}.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.metric,.panel,.filter-panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.metric{padding:17px 18px}.metric small{font-size:8px;color:#8b9aad;display:block}.metric b{display:block;font-size:25px;letter-spacing:-.05em;margin:8px 0 2px}.metric span{font-size:8px;color:#25ae9a;font-weight:800}.filter-panel{padding:18px;margin-bottom:17px}.filter-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.filter-head h3{margin:0;font-size:12px}.filter-head p{margin:4px 0 0;color:#8a99aa;font-size:8px}.filter-controls{display:grid;grid-template-columns:1fr 180px auto;gap:9px;margin-top:15px}.input,.select{width:100%;border:1px solid #dfe7ef;border-radius:8px;padding:10px 11px;background:#fbfdff;color:#304762;font-size:9px;outline:none}.input:focus,.select:focus{border-color:#76a7ff;box-shadow:0 0 0 3px #347eff12}.panel{padding:18px}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.panel-title{font-weight:900;font-size:13px}.panel-sub{font-size:8px;color:#8c9aab;margin-top:4px}.pill{background:#eaf2ff;color:#3470dd;border-radius:12px;padding:5px 8px;font-size:8px;font-weight:900;white-space:nowrap}.table-wrap{overflow:auto;border:1px solid #edf1f5;border-radius:10px}.table{width:100%;border-collapse:collapse;min-width:780px}.table th{background:#f7fafd;color:#7c8da0;font-size:8px;text-align:left;letter-spacing:.05em;text-transform:uppercase;padding:12px}.table td{border-top:1px solid #edf1f5;padding:12px;font-size:9px;color:#3d526b;white-space:nowrap}.table tr:hover td{background:#fbfdff}.empty{text-align:center;padding:45px;color:#8192a6;font-size:10px}.status-ok{color:#13a88f;font-weight:800}.status-warn{color:#c78324;font-weight:800}.status-muted{color:#8795a6;font-weight:800}.module-empty{display:grid;place-items:center;min-height:360px;text-align:center}.module-empty .empty-icon{width:66px;height:66px;border-radius:18px;display:grid;place-items:center;background:#e9f1ff;color:#347eff;margin-bottom:15px}.empty-icon svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.module-empty h2{font-size:20px;margin:0 0 8px}.module-empty p{font-size:11px;color:#8090a4;max-width:470px;line-height:1.7;margin:0}.tag{display:inline-flex;padding:5px 8px;border-radius:9px;background:#fff4df;color:#b4741b;font-size:8px;font-weight:900;margin-top:14px}@media(max-width:1000px){.sidebar{width:190px}.main{margin-left:190px}.content{padding:24px}.metric-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.sidebar{width:66px;padding:15px 8px}.brand-copy,.brand-live,.side-heading,.nav-copy,.nav-live,.nav-chevron,.sidebar-bottom{display:none}.brand{justify-content:center;padding:5px 0 20px}.nav>a,.nav>details>summary{justify-content:center;padding:10px 0}.subnav{margin-left:0;padding-left:0;border:0}.subnav a span,.subnav a small{display:none}.subnav a{text-align:center;padding:8px}.main{margin-left:66px}.topbar{padding:0 17px}.content{padding:20px 15px}.hero{display:block}.hero-action{margin-top:15px}.metric-grid{grid-template-columns:1fr 1fr}.filter-controls{grid-template-columns:1fr}.table{min-width:680px}}
 </style>
 <style id="wv-navigation-style">.wv-occupancy-nav,.wv-expedition-nav{display:block;margin:0;padding:0}.wv-occupancy-nav>summary,.wv-expedition-nav>summary{display:flex;align-items:center;gap:9px;min-height:42px;padding:7px 9px;border-radius:10px;color:#91a6c0;font-size:10px;cursor:pointer;list-style:none}.wv-occupancy-nav>summary::-webkit-details-marker,.wv-expedition-nav>summary::-webkit-details-marker{display:none}.wv-occupancy-nav>summary:hover,.wv-expedition-nav>summary:hover,.wv-occupancy-nav[open]>summary,.wv-expedition-nav[open]>summary{background:#ffffff0c;color:#fff}.wv-occupancy-nav .subnav,.wv-expedition-nav .subnav{margin-left:28px}.wv-brand-image{display:block}</style>
-<style id="wv-logo-style">.brand-logo{display:block;width:186px;height:73px;object-fit:contain;filter:drop-shadow(0 8px 18px #1680ff38)}.logo-login{display:block;width:360px;max-width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 15px 28px #2585ff44)}@media(max-width:700px){.brand-logo{width:50px;height:45px}.logo-login{width:270px}}</style>  <link rel="stylesheet" href="sidebar.css">
-</head><body><div class="app"><div id="sidebar-container"></div><main class="main"><header class="topbar"><div class="crumb">WAREHOUSE VISION / <strong>Cargas em andamento</strong></div><div class="top-actions"><div class="status"><i></i>Supabase conectado</div><button class="exit" onclick="location.href='index.html'">Sair</button></div></header><section class="content"><div class="hero"><div><div class="eyebrow">Inbound / live loads</div><h1>Cargas em andamento</h1><p>O acompanhamento de cargas em andamento será ativado em uma próxima etapa.</p></div></div><div class="panel module-empty"><div><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8m0-12.8-2.8 2.8m-7.2 7.2-2.8 2.8"/></svg></div><h2>Módulo em preparação</h2><p>O acompanhamento de cargas em andamento será ativado em uma próxima etapa. A estrutura visual e a rota já estão prontas para receber a próxima regra operacional sem alterar o menu do WMS.</p><span class="tag">SEM FUNÇÃO POR ENQUANTO</span></div></div></section></main></div>  <script src="sidebar.js" defer></script>
-</body></html>
+<style id="wv-logo-style">.brand-logo{display:block;width:186px;height:73px;object-fit:contain;filter:drop-shadow(0 8px 18px #1680ff38)}.logo-login{display:block;width:360px;max-width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 15px 28px #2585ff44)}@media(max-width:700px){.brand-logo{width:50px;height:45px}.logo-login{width:270px}}</style>
+
+<!-- ===== estilos exclusivos do módulo Cargas em andamento ===== -->
+<style>
+  .doca-cell{display:flex;align-items:center;gap:8px}
+  .doca-badge{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:#eaf2ff;color:#3470dd;font-weight:900;font-size:9px;flex:0 0 26px}
+  .doca-cell b{font-size:10px;letter-spacing:-.02em}
+  .chip-ocupado{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;background:#e8fbf5;color:#0f9b80;font-size:8px;font-weight:900;letter-spacing:.04em}
+  .chip-ocupado i{width:6px;height:6px;border-radius:50%;background:#13c39f;animation:wvPulse 1.6s infinite}
+  @keyframes wvPulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:9px;letter-spacing:.02em}
+  .cell-strong{color:#17263a;font-weight:800}
+  .cell-muted{color:#8795a6}
+  .wv-error{background:#fff5f5;border:1px solid #ffd9d9;color:#b13c3c;border-radius:10px;padding:14px;font-size:9px;line-height:1.6;text-align:left;white-space:pre-wrap}
+  .wv-error b{display:block;font-size:10px;margin-bottom:5px}
+  .wv-hint{background:#fffaf0;border:1px solid #ffe6bf;color:#9a6b18;border-radius:10px;padding:12px 14px;font-size:9px;line-height:1.6;text-align:left;margin-top:10px}
+  .spin{display:inline-block;width:11px;height:11px;border:2px solid #cfe0ff;border-top-color:#347eff;border-radius:50%;animation:wvSpin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes wvSpin{to{transform:rotate(360deg)}}
+  .is-off{opacity:.55}
+</style>
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+<div class="app">
+  <div id="sidebar-container"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">WAREHOUSE VISION / <strong>Cargas em andamento</strong></div>
+      <div class="top-actions">
+        <div class="status"><i></i>Supabase conectado</div>
+        <button class="exit" onclick="location.href='index.html'">Sair</button>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Inbound / live loads</div>
+          <h1>Cargas em andamento</h1>
+          <p>Docas com <b>STATUS = OCUPADO</b> — dados ao vivo da tabela <b>DISPON. DOCAS</b>.</p>
+        </div>
+        <div class="hero-action">
+          <button class="secondary" id="btnAuto" title="Liga/desliga atualização automática">Auto: 30s</button>
+          <button class="primary" id="btnRefresh">Atualizar agora</button>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric">
+          <small>DOCAS OCUPADAS</small>
+          <b id="mDocas">—</b>
+          <span>STATUS = OCUPADO</span>
+        </div>
+        <div class="metric">
+          <small>CARGAS EM ANDAMENTO</small>
+          <b id="mCargas">—</b>
+          <span>registros ativos</span>
+        </div>
+        <div class="metric">
+          <small>CATEGORIAS</small>
+          <b id="mCategorias">—</b>
+          <span>distintas</span>
+        </div>
+        <div class="metric">
+          <small>ÚLTIMA ATUALIZAÇÃO</small>
+          <b id="mUpdate" style="font-size:17px">—</b>
+          <span id="mStatus" class="cell-muted">aguardando</span>
+        </div>
+      </div>
+
+      <div class="filter-panel">
+        <div class="filter-head">
+          <div>
+            <h3>Filtro rápido</h3>
+            <p>Busque por doca, senha, carga, categoria ou fornecedor.</p>
+          </div>
+          <span class="pill" id="pillCount">0 registros</span>
+        </div>
+        <div class="filter-controls">
+          <input class="input" id="q" type="search" placeholder="Ex.: DOCA 04, senha 1234, fornecedor..." autocomplete="off">
+          <select class="select" id="cat">
+            <option value="">Todas as categorias</option>
+          </select>
+          <button class="secondary" id="btnClear">Limpar</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Docas ocupadas</div>
+            <div class="panel-sub" id="panelSub">Carregando dados do Supabase...</div>
+          </div>
+          <span class="pill">DISPON. DOCAS · STATUS = OCUPADO</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Doca</th>
+                <th>Senha</th>
+                <th>Carga</th>
+                <th>Tempo</th>
+                <th>Categoria</th>
+                <th>Fornecedor</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <tr><td colspan="6" class="empty"><span class="spin"></span>Carregando registros...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="sidebar.js" defer></script>
+
+<script>
+/* =========================================================================
+   CARGAS EM ANDAMENTO · DISPON. DOCAS
+   -------------------------------------------------------------------------
+   ⚠️  Cole a MESMA anon key que o resto do WMS já usa (sidebar.js / login).
+   Se ela já estiver exposta globalmente (window.SUPABASE_ANON_KEY ou
+   window.SUPABASE_KEY), o script usa automaticamente.
+   ========================================================================= */
+const SUPABASE_URL      = 'https://jgtisruauiajjfoesvol.supabase.co';
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || window.SUPABASE_KEY || 'COLE_AQUI_SUA_ANON_KEY';
+
+/* Nome exato da tabela como está no banco (com o ponto e o espaço). */
+const TABELA = 'DISPON. DOCAS';
+/* Schema onde a tabela vive. Se "DISPON." for um SCHEMA (e não parte do
+   nome), troque para 'dispon' e mude TABELA para 'DOCAS'. */
+const SCHEMA = 'public';
+
+/* Colunas pedidas */
+const CAMPOS = ['DOCA', 'SENHA', 'CARGA', 'TEMPO', 'CATEGORIA', 'FORNECEDOR'];
+
+const INTERVALO_MS = 30000;   // auto-refresh
+
+let dados    = [];
+let filtrados = [];
+let timerId  = null;
+let autoOn   = true;
+let carregando = false;
+
+/* ------------------------------- helpers -------------------------------- */
+const $ = (id) => document.getElementById(id);
+
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => (
+  { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+));
+
+const val = (v) => (v === null || v === undefined || String(v).trim() === '')
+  ? '<span class="cell-muted">—</span>'
+  : esc(v);
+
+function fmtHora(d) {
+  return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+/* TEMPO: aceita segundos (número), HH:MM:SS ou timestamp ISO */
+function fmtTempo(v) {
+  if (v === null || v === undefined || String(v).trim() === '') return '<span class="cell-muted">—</span>';
+  const s = String(v).trim();
+
+  if (/^\d+$/.test(s)) {                       // segundos puros
+    const t = parseInt(s, 10);
+    const h = Math.floor(t / 3600);
+    const m = Math.floor((t % 3600) / 60);
+    const sec = t % 60;
+    const p = (n) => String(n).padStart(2, '0');
+    return '<span class="mono cell-strong">' + (h ? p(h) + ':' : '') + p(m) + ':' + p(sec) + '</span>';
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {         // timestamp
+    const d = new Date(s);
+    if (!isNaN(d)) {
+      return '<span class="mono cell-strong">' + fmtHora(d) + '</span>'
+           + ' <span class="cell-muted">' + d.toLocaleDateString('pt-BR') + '</span>';
+    }
+  }
+
+  return '<span class="mono cell-strong">' + esc(s) + '</span>'; // "01:20:00" etc.
+}
+
+/* ------------------------------- fetch ---------------------------------- */
+async function carregar() {
+  if (carregando) return;
+  carregando = true;
+  $('mStatus').innerHTML = '<span class="spin"></span>sincronizando';
+  $('mStatus').className = 'cell-muted';
+
+  try {
+    const params = new URLSearchParams();
+    params.set('select', [...CAMPOS, 'STATUS'].join(','));
+    params.set('STATUS', 'ilike.ocupado');   // case-insensitive: OCUPADO / Ocupado
+    params.set('order', 'DOCA.asc');
+
+    const url = SUPABASE_URL + '/rest/v1/' + encodeURI(TABELA) + '?' + params.toString();
+
+    const res = await fetch(url, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Accept': 'application/json',
+        'Accept-Profile': SCHEMA,
+        'Range-Unit': 'items'
+      }
+    });
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => '');
+      throw new Error('HTTP ' + res.status + ' ' + res.statusText + '\n' + txt.slice(0, 400));
+    }
+
+    const json = await res.json();
+    dados = Array.isArray(json) ? json : [];
+    popularCategorias();
+    aplicarFiltro();
+    atualizarMetricas();
+
+    $('mUpdate').textContent = fmtHora(new Date());
+    $('mStatus').textContent = 'sincronizado';
+    $('mStatus').className = 'status-ok';
+    $('panelSub').textContent = dados.length + ' doca(s) ocupada(s) · atualizado às ' + fmtHora(new Date());
+
+  } catch (err) {
+    console.error('[Cargas em andamento]', err);
+    $('mDocas').textContent = '—';
+    $('mCargas').textContent = '—';
+    $('mCategorias').textContent = '—';
+    $('mUpdate').textContent = '—';
+    $('mStatus').textContent = 'erro na conexão';
+    $('mStatus').className = 'status-warn';
+    $('panelSub').textContent = 'Falha ao consultar DISPON. DOCAS';
+    $('pillCount').textContent = '0 registros';
+    $('tbody').innerHTML = '<tr><td colspan="6">' +
+      '<div class="wv-error"><b>Não foi possível carregar os dados.</b>' + esc(err.message) +
+      '<div class="wv-hint">Confira: (1) a <b>anon key</b> preenchida no topo do script; ' +
+      '(2) o nome exato da tabela (<b>DISPON. DOCAS</b>) e o schema (<b>' + SCHEMA + '</b>); ' +
+      '(3) as políticas de <b>RLS</b> permitindo SELECT para o role anon.</div></div></td></tr>';
+  } finally {
+    carregando = false;
+  }
+}
+
+/* ------------------------------ render ---------------------------------- */
+function popularCategorias() {
+  const sel = $('cat');
+  const atual = sel.value;
+  const cats = [...new Set(dados.map(r => (r.CATEGORIA ?? '').toString().trim()).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+  sel.innerHTML = '<option value="">Todas as categorias</option>' +
+    cats.map(c => '<option value="' + esc(c) + '">' + esc(c) + '</option>').join('');
+
+  if (cats.includes(atual)) sel.value = atual;
+}
+
+function atualizarMetricas() {
+  const docas = new Set(dados.map(r => (r.DOCA ?? '').toString().trim()).filter(Boolean));
+  const cats  = new Set(dados.map(r => (r.CATEGORIA ?? '').toString().trim()).filter(Boolean));
+  $('mDocas').textContent = docas.size;
+  $('mCargas').textContent = dados.length;
+  $('mCategorias').textContent = cats.size;
+}
+
+function aplicarFiltro() {
+  const q   = ($('q').value || '').trim().toLowerCase();
+  const cat = $('cat').value;
+
+  filtrados = dados.filter((r) => {
+    if (cat && String(r.CATEGORIA ?? '').trim() !== cat) return false;
+    if (!q) return true;
+    return CAMPOS.some(c => String(r[c] ?? '').toLowerCase().includes(q));
+  });
+
+  renderTabela();
+}
+
+function renderTabela() {
+  const tb = $('tbody');
+  $('pillCount').textContent = filtrados.length + (filtrados.length === 1 ? ' registro' : ' registros');
+
+  if (!filtrados.length) {
+    if (!dados.length) {
+      tb.innerHTML = '<tr><td colspan="6">' +
+        '<div class="wv-error" style="background:#f7fafd;border-color:#e6edf4;color:#8192a6">' +
+        '<b style="color:#526982">Nenhuma doca ocupada agora</b>' +
+        'A consulta foi feita com sucesso, mas nenhum registro retornou com STATUS = OCUPADO.' +
+        '<div class="wv-hint">Se você sabe que existem cargas em andamento, verifique se o valor ' +
+        'gravado em <b>STATUS</b> é realmente "ocupado" (ex.: "OCUPADO", "Ocupado", "EM ANDAMENTO") ' +
+        'e ajuste o filtro no script.</div></div></td></tr>';
+    } else {
+      tb.innerHTML = '<tr><td colspan="6" class="empty">Nenhum registro corresponde ao filtro aplicado.</td></tr>';
+    }
+    return;
+  }
+
+  tb.innerHTML = filtrados.map((r) => {
+    const doca = String(r.DOCA ?? '').trim();
+    const num  = doca.replace(/\D/g, '').slice(-2) || '—';
+    return '<tr>' +
+      '<td><div class="doca-cell">' +
+        '<span class="doca-badge">' + esc(num) + '</span>' +
+        '<b>' + val(r.DOCA) + '</b>' +
+      '</div></td>' +
+      '<td><span class="mono cell-strong">' + val(r.SENHA) + '</span></td>' +
+      '<td><span class="cell-strong">' + val(r.CARGA) + '</span></td>' +
+      '<td>' + fmtTempo(r.TEMPO) + '</td>' +
+      '<td>' + (r.CATEGORIA ? '<span class="pill">' + esc(r.CATEGORIA) + '</span>' : '<span class="cell-muted">—</span>') + '</td>' +
+      '<td>' + val(r.FORNECEDOR) + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+/* ---------------------------- auto refresh ------------------------------ */
+function ligaAuto() {
+  clearInterval(timerId);
+  if (autoOn) timerId = setInterval(() => { if (!document.hidden) carregar(); }, INTERVALO_MS);
+}
+
+function toggleAuto() {
+  autoOn = !autoOn;
+  const b = $('btnAuto');
+  b.textContent = autoOn ? 'Auto: 30s' : 'Auto: off';
+  b.classList.toggle('is-off', !autoOn);
+  ligaAuto();
+}
+
+/* ------------------------------- eventos -------------------------------- */
+$('btnRefresh').addEventListener('click', carregar);
+$('btnAuto').addEventListener('click', toggleAuto);
+$('q').addEventListener('input', aplicarFiltro);
+$('cat').addEventListener('change', aplicarFiltro);
+$('btnClear').addEventListener('click', () => {
+  $('q').value = '';
+  $('cat').value = '';
+  aplicarFiltro();
+});
+
+/* primeira carga + auto refresh */
+carregar();
+ligaAuto();
+</script>
+</body>
+</html>
