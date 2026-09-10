@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Warehouse Vision | Recepção</title>
+  <title>WAREHOUSE VISION | RECEPÇÃO</title>
   <style>
     /* ============================================================
        TOKENS DE DESIGN
@@ -26,15 +26,15 @@
       --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
       /* Escala tipográfica */
-      --fs-2xs: 11px;   /* micro-texto, hints, badges, uppercase labels */
-      --fs-xs:  12px;   /* tabelas, botões, labels de formulário */
-      --fs-sm:  13px;   /* notices, textos auxiliares */
-      --fs-base:14px;   /* inputs, corpo padrão */
-      --fs-md:  15px;   /* subtítulos, crumb ativo */
-      --fs-lg:  16px;   /* títulos de painel */
-      --fs-xl:  18px;   /* títulos de seção */
-      --fs-2xl: 20px;   /* título de modal */
-      --fs-3xl: 32px;   /* H1 */
+      --fs-2xs: 11px;
+      --fs-xs:  12px;
+      --fs-sm:  13px;
+      --fs-base:14px;
+      --fs-md:  15px;
+      --fs-lg:  16px;
+      --fs-xl:  18px;
+      --fs-2xl: 20px;
+      --fs-3xl: 32px;
 
       /* Pesos */
       --fw-regular:  400;
@@ -50,11 +50,11 @@
       --lh-relaxed:1.6;
 
       /* Espaçamentos tipográficos */
-      --ls-tight:  -0.02em;
+      --ls-tight:  -0.01em;
       --ls-normal: 0;
       --ls-wide:   0.05em;
       --ls-wider:  0.08em;
-      --ls-widest: 0.16em;
+      --ls-widest: 0.12em;
     }
 
     * { box-sizing: border-box; }
@@ -67,14 +67,19 @@
       font-size: var(--fs-base);
       font-weight: var(--fw-regular);
       line-height: var(--lh-normal);
+      text-transform: uppercase;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+
+    /* Tudo em maiúsculo por padrão; onde quisermos forçar minúsculo */
+    .no-uppercase { text-transform: none; }
 
     button, input, select {
       font-family: inherit;
       font-size: inherit;
       line-height: inherit;
+      text-transform: inherit;
     }
     button { cursor: pointer; }
     .app { min-height: 100vh; }
@@ -109,7 +114,6 @@
       font-size: var(--fs-2xs);
       font-weight: var(--fw-medium);
       letter-spacing: var(--ls-wider);
-      text-transform: uppercase;
       color: #91a0b0;
       line-height: var(--lh-snug);
     }
@@ -118,8 +122,7 @@
       color: var(--ink);
       font-size: var(--fs-md);
       font-weight: var(--fw-semibold);
-      letter-spacing: var(--ls-normal);
-      text-transform: none;
+      letter-spacing: var(--ls-wide);
       margin-top: 4px;
       line-height: var(--lh-snug);
     }
@@ -159,7 +162,6 @@
       font-size: var(--fs-2xs);
       font-weight: var(--fw-black);
       letter-spacing: var(--ls-widest);
-      text-transform: uppercase;
       color: var(--blue);
       line-height: var(--lh-snug);
     }
@@ -300,7 +302,7 @@
       font-size: var(--fs-xs);
       font-weight: var(--fw-regular);
       line-height: var(--lh-snug);
-      min-width: 640px;
+      min-width: 680px;
     }
     .data-table th {
       background: #f7fafd;
@@ -309,7 +311,6 @@
       font-weight: var(--fw-bold);
       text-align: left;
       letter-spacing: var(--ls-wider);
-      text-transform: uppercase;
       padding: 12px 11px;
       white-space: nowrap;
     }
@@ -425,7 +426,6 @@
       font-size: var(--fs-xs);
       font-weight: var(--fw-bold);
       color: #526982;
-      text-transform: uppercase;
       letter-spacing: var(--ls-wider);
       line-height: var(--lh-snug);
     }
@@ -441,6 +441,7 @@
       font-weight: var(--fw-medium);
       outline: none;
       width: 100%;
+      letter-spacing: var(--ls-wide);
       transition: border-color .15s ease, box-shadow .15s ease;
     }
     .field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
@@ -499,7 +500,7 @@
       .hero { display: block; }
       .actions { margin-top: 14px; }
       .form-grid { grid-template-columns: 1fr; }
-      .data-table { min-width: 600px; }
+      .data-table { min-width: 640px; }
       h1 { font-size: 26px; }
     }
   </style>
@@ -511,27 +512,27 @@
 
   <main class="main">
     <header class="topbar">
-      <div class="crumb">WAREHOUSE VISION / <strong>Recepção de motorista</strong></div>
-      <div class="top-status"><i></i>Supabase conectado</div>
+      <div class="crumb">WAREHOUSE VISION / <strong>RECEPÇÃO DE MOTORISTA</strong></div>
+      <div class="top-status"><i></i>SUPABASE CONECTADO</div>
     </header>
 
     <section class="content">
       <div class="hero">
         <div>
-          <div class="eyebrow">Inbound / driver check-in</div>
-          <h1>Recepção de motorista</h1>
-          <p>Registre a chegada do motorista e atualize a agenda com os dados do veículo.</p>
+          <div class="eyebrow">INBOUND / DRIVER CHECK-IN</div>
+          <h1>RECEPÇÃO DE MOTORISTA</h1>
+          <p>REGISTRE A CHEGADA DO MOTORISTA E ATUALIZE A AGENDA COM OS DADOS DO VEÍCULO.</p>
         </div>
         <div class="actions">
-          <button class="btn primary" id="openModalBtn">＋ Nova recepção</button>
+          <button class="btn primary" id="openModalBtn">＋ NOVA RECEPÇÃO</button>
         </div>
       </div>
 
       <section class="panel">
         <div class="panel-head">
           <div>
-            <div class="panel-title">Últimas recepções</div>
-            <div class="panel-sub">Registros mais recentes na AGENDA.</div>
+            <div class="panel-title">ÚLTIMAS RECEPÇÕES</div>
+            <div class="panel-sub">REGISTROS MAIS RECENTES NA AGENDA.</div>
           </div>
           <span class="pill" id="totalRegistros">0</span>
         </div>
@@ -539,22 +540,22 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>Senha</th>
-                <th>Fornecedor</th>
-                <th>Chegada</th>
-                <th>Status</th>
-                <th>Visualizado</th>
-                <th>Acionamento</th>
+                <th>SENHA</th>
+                <th>FORNECEDOR</th>
+                <th>CHEGADA</th>
+                <th>STATUS</th>
+                <th>VISUALIZADO</th>
+                <th>ACIONAMENTO</th>
               </tr>
             </thead>
             <tbody id="historicoBody">
-              <tr><td colspan="6" class="empty-table">Carregando histórico...</td></tr>
+              <tr><td colspan="6" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <div class="notice" id="notice">Clique em "Nova recepção" para iniciar.</div>
+      <div class="notice" id="notice">CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.</div>
     </section>
   </main>
 </div>
@@ -564,64 +565,64 @@
   <div class="modal-content">
     <div class="modal-head">
       <div>
-        <div class="modal-title">Registrar recepção</div>
-        <div class="modal-sub">Preencha a senha e os dados do motorista. A chegada será registrada na AGENDA.</div>
+        <div class="modal-title">REGISTRAR RECEPÇÃO</div>
+        <div class="modal-sub">PREENCHA A SENHA E OS DADOS DO MOTORISTA. A CHEGADA SERÁ REGISTRADA NA AGENDA.</div>
       </div>
-      <button class="modal-close" id="closeModalBtn">Fechar</button>
+      <button class="modal-close" id="closeModalBtn">FECHAR</button>
     </div>
     <form id="formRecepcao">
       <div class="form-grid">
         <div class="field">
           <label for="senha">SENHA <span style="color:var(--red);">*</span></label>
-          <input id="senha" type="text" required placeholder="Digite a senha para consultar" autocomplete="off">
-          <small>Pressione Enter ou aguarde para buscar na AGENDA.</small>
+          <input id="senha" type="text" required placeholder="DIGITE A SENHA PARA CONSULTAR" autocomplete="off">
+          <small>PRESSIONE ENTER OU AGUARDE PARA BUSCAR NA AGENDA.</small>
         </div>
 
         <div class="field">
           <label for="fornecedor">FORNECEDOR</label>
-          <input id="fornecedor" type="text" disabled placeholder="Preenchido automaticamente">
+          <input id="fornecedor" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE">
         </div>
         <div class="field">
           <label for="categoria">CATEGORIA</label>
-          <input id="categoria" type="text" disabled placeholder="Preenchido automaticamente">
+          <input id="categoria" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE">
         </div>
         <div class="field">
           <label for="carga">CARGA</label>
-          <input id="carga" type="text" disabled placeholder="Preenchido automaticamente">
+          <input id="carga" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE">
         </div>
 
         <div class="field">
           <label for="rg">RG <span style="color:var(--red);">*</span></label>
-          <input id="rg" type="text" required disabled placeholder="Ex.: 12.345.678-9">
+          <input id="rg" type="text" required disabled placeholder="EX.: 12.345.678-9">
         </div>
         <div class="field">
           <label for="cpf">CPF <span style="color:var(--red);">*</span></label>
-          <input id="cpf" type="text" required disabled placeholder="Ex.: 123.456.789-00" maxlength="14">
-          <span class="mask-hint">Formato automático 000.000.000-00</span>
+          <input id="cpf" type="text" required disabled placeholder="EX.: 123.456.789-00" maxlength="14">
+          <span class="mask-hint">FORMATO AUTOMÁTICO 000.000.000-00</span>
         </div>
         <div class="field">
           <label for="nome">NOME <span style="color:var(--red);">*</span></label>
-          <input id="nome" type="text" required disabled placeholder="Nome completo do motorista">
+          <input id="nome" type="text" required disabled placeholder="NOME COMPLETO DO MOTORISTA">
         </div>
         <div class="field">
           <label for="telefone">TELEFONE <span style="color:var(--red);">*</span></label>
-          <input id="telefone" type="text" required disabled placeholder="Ex.: (11) 99999-9999" maxlength="15">
-          <span class="mask-hint">Formato automático (XX) XXXXX-XXXX</span>
+          <input id="telefone" type="text" required disabled placeholder="EX.: (11) 99999-9999" maxlength="15">
+          <span class="mask-hint">FORMATO AUTOMÁTICO (XX) XXXXX-XXXX</span>
         </div>
         <div class="field">
           <label for="placa">PLACA <span style="color:var(--red);">*</span></label>
-          <input id="placa" type="text" required disabled placeholder="Ex.: ABC-1234">
-          <span class="mask-hint">Formato automático ABC-1234 ou ABC1D23</span>
+          <input id="placa" type="text" required disabled placeholder="EX.: ABC-1234">
+          <span class="mask-hint">FORMATO AUTOMÁTICO ABC-1234 OU ABC1D23</span>
         </div>
         <div class="field">
           <label for="nfs">Nº NF´S <span style="color:var(--red);">*</span></label>
-          <input id="nfs" type="text" required disabled placeholder="Números separados por vírgula">
+          <input id="nfs" type="text" required disabled placeholder="NÚMEROS SEPARADOS POR VÍRGULA">
         </div>
       </div>
 
       <div class="form-actions">
-        <span class="form-state" id="formState">Aguardando senha.</span>
-        <button class="btn primary" type="submit" id="btnSalvar" disabled>Registrar chegada</button>
+        <span class="form-state" id="formState">AGUARDANDO SENHA.</span>
+        <button class="btn primary" type="submit" id="btnSalvar" disabled>REGISTRAR CHEGADA</button>
       </div>
     </form>
   </div>
@@ -662,8 +663,14 @@
     let dadosAgenda = null;
 
     // ===== AUXILIARES =====
+    // Tudo que for exibido como texto é normalizado para maiúsculo
+    function upper(v) {
+      if (v === null || v === undefined) return '';
+      return String(v).toUpperCase();
+    }
+
     function setNotice(msg, tipo = '') {
-      notice.textContent = msg;
+      notice.textContent = upper(msg);
       notice.className = 'notice ' + tipo;
     }
 
@@ -686,9 +693,9 @@
     }
 
     function preencherDadosAgenda(row) {
-      fornecedor.value = row.FORNECEDOR || '';
-      categoria.value = row.CATEGORIA || '';
-      carga.value = row.CARGA || '';
+      fornecedor.value = upper(row.FORNECEDOR);
+      categoria.value = upper(row.CATEGORIA);
+      carga.value = upper(row.CARGA);
     }
 
     function resetarModal() {
@@ -700,7 +707,7 @@
       habilitarCampos(false);
       senhaEncontrada = false;
       dadosAgenda = null;
-      formState.textContent = 'Aguardando senha.';
+      formState.textContent = 'AGUARDANDO SENHA.';
     }
 
     function formatarDataHora(valor) {
@@ -764,12 +771,26 @@
       });
     }
 
+    // Força todos os inputs de texto a ficarem em maiúsculo ao digitar
+    function setupUppercaseInputs() {
+      [senha, rg, nome, nfs].forEach(el => {
+        el.addEventListener('input', function() {
+          const pos = this.selectionStart;
+          const upperVal = this.value.toUpperCase();
+          if (this.value !== upperVal) {
+            this.value = upperVal;
+            try { this.setSelectionRange(pos, pos); } catch (_) {}
+          }
+        });
+      });
+    }
+
     // ===== BUSCA SENHA =====
     let timeoutBusca = null;
 
     async function buscarSenha(senhaValor) {
       if (!senhaValor || senhaValor.length < 2) return;
-      formState.textContent = 'Buscando...';
+      formState.textContent = 'BUSCANDO...';
       try {
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}&select=*`;
         const resp = await fetch(url, {
@@ -787,8 +808,8 @@
           senhaEncontrada = true;
           preencherDadosAgenda(row);
           habilitarCampos(true);
-          formState.textContent = 'Senha válida. Preencha os dados.';
-          setNotice('Senha encontrada! Preencha os dados do motorista.', 'success');
+          formState.textContent = 'SENHA VÁLIDA. PREENCHA OS DADOS.';
+          setNotice('SENHA ENCONTRADA! PREENCHA OS DADOS DO MOTORISTA.', 'success');
           limparCamposMotorista();
           rg.focus();
         } else {
@@ -799,13 +820,13 @@
           fornecedor.value = '';
           categoria.value = '';
           carga.value = '';
-          formState.textContent = 'Senha não encontrada.';
-          setNotice('Senha não localizada na AGENDA. Verifique.', 'error');
+          formState.textContent = 'SENHA NÃO ENCONTRADA.';
+          setNotice('SENHA NÃO LOCALIZADA NA AGENDA. VERIFIQUE.', 'error');
         }
       } catch (err) {
         console.error(err);
-        formState.textContent = 'Erro na consulta.';
-        setNotice('Falha ao consultar AGENDA: ' + err.message, 'error');
+        formState.textContent = 'ERRO NA CONSULTA.';
+        setNotice('FALHA AO CONSULTAR AGENDA: ' + err.message, 'error');
       }
     }
 
@@ -823,8 +844,8 @@
         fornecedor.value = '';
         categoria.value = '';
         carga.value = '';
-        formState.textContent = 'Aguardando senha.';
-        setNotice('Digite a senha para consultar.', '');
+        formState.textContent = 'AGUARDANDO SENHA.';
+        setNotice('DIGITE A SENHA PARA CONSULTAR.', '');
       }
     });
 
@@ -844,14 +865,14 @@
       e.preventDefault();
 
       if (!senhaEncontrada) {
-        setNotice('Valide a senha antes de salvar.', 'error');
+        setNotice('VALIDE A SENHA ANTES DE SALVAR.', 'error');
         return;
       }
 
       const campos = [rg, cpf, nome, telefone, placa, nfs];
       for (const campo of campos) {
         if (!campo.value.trim()) {
-          setNotice(`Preencha o campo ${campo.labels?.[0]?.textContent || campo.id.toUpperCase()}.`, 'error');
+          setNotice(`PREENCHA O CAMPO ${campo.labels?.[0]?.textContent || campo.id.toUpperCase()}.`, 'error');
           campo.focus();
           return;
         }
@@ -867,12 +888,12 @@
 
       const payload = {
         CHEGADA: chegadaStr,
-        RG: rg.value.trim(),
+        RG: upper(rg.value.trim()),
         CPF: cpf.value.trim(),
-        NOME: nome.value.trim(),
+        NOME: upper(nome.value.trim()),
         TELEFONE: telefone.value.trim(),
-        PLACA: placa.value.trim(),
-        NF: nfs.value.trim()
+        PLACA: upper(placa.value.trim()),
+        NF: upper(nfs.value.trim())
       };
 
       try {
@@ -890,15 +911,15 @@
         });
         if (!resp.ok) throw new Error('Falha ao atualizar: ' + resp.status);
 
-        setNotice(`Chegada registrada com sucesso às ${chegadaStr}.`, 'success');
-        formState.textContent = 'Salvo!';
+        setNotice(`CHEGADA REGISTRADA COM SUCESSO ÀS ${chegadaStr}.`, 'success');
+        formState.textContent = 'SALVO!';
         closeModal();
         resetarModal();
         carregarHistorico();
       } catch (err) {
         console.error(err);
-        setNotice('Erro ao salvar: ' + err.message, 'error');
-        formState.textContent = 'Erro no salvamento.';
+        setNotice('ERRO AO SALVAR: ' + err.message, 'error');
+        formState.textContent = 'ERRO NO SALVAMENTO.';
       }
     });
 
@@ -950,17 +971,17 @@
 
         if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
 
-        botao.textContent = '✓ Acionado';
+        botao.textContent = '✓ ACIONADO';
         botao.classList.remove('btn', 'success');
         botao.classList.add('btn', 'success');
         botao.disabled = true;
 
-        setNotice(`Acionamento registrado para a senha ${senhaValor} às ${acionamentoStr}.`, 'success');
+        setNotice(`ACIONAMENTO REGISTRADO PARA A SENHA ${senhaValor} ÀS ${acionamentoStr}.`, 'success');
         carregarHistorico();
       } catch (err) {
         console.error(err);
-        setNotice('Erro ao registrar acionamento: ' + err.message, 'error');
-        botao.textContent = 'Tentar novamente';
+        setNotice('ERRO AO REGISTRAR ACIONAMENTO: ' + err.message, 'error');
+        botao.textContent = 'TENTAR NOVAMENTE';
         botao.disabled = false;
       }
     }
@@ -980,12 +1001,12 @@
         totalRegistros.textContent = data.length;
 
         if (!data.length) {
-          historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">Nenhum registro de chegada ainda.</td></tr>';
+          historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">NENHUM REGISTRO DE CHEGADA AINDA.</td></tr>';
           return;
         }
 
         historicoBody.innerHTML = data.map(row => {
-          const senhaVal = row.SENHA || '—';
+          const senhaVal = upper(row.SENHA) || '—';
           const acionamento = row["ACIONAMENTO ENTRADA"] || null;
           const visualizado = row["ACIONAMENTO VISUALIZADO"] || null;
 
@@ -996,23 +1017,23 @@
           if (jaAcionado) {
             btnHtml = `<button class="btn success small" disabled>✓ ${acionamento}</button>`;
           } else {
-            btnHtml = `<button class="btn small" data-senha="${senhaVal}">Acionar</button>`;
+            btnHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
           }
 
           let viewedHtml = '';
           if (jaVisualizado) {
             const dataFmt = formatarDataHora(visualizado);
-            viewedHtml = `<span class="badge-viewed ok">✓ Visualizado <small>${dataFmt}</small></span>`;
+            viewedHtml = `<span class="badge-viewed ok">✓ VISUALIZADO <small>${dataFmt}</small></span>`;
           } else {
-            viewedHtml = `<span class="badge-viewed nok">✕ Não visualizado</span>`;
+            viewedHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
           }
 
           return `
             <tr>
               <td>${senhaVal}</td>
-              <td>${row.FORNECEDOR || '—'}</td>
+              <td>${upper(row.FORNECEDOR) || '—'}</td>
               <td>${row.CHEGADA || '—'}</td>
-              <td>${row.STATUS || '—'}</td>
+              <td>${upper(row.STATUS) || '—'}</td>
               <td>${viewedHtml}</td>
               <td>${btnHtml}</td>
             </tr>
@@ -1030,16 +1051,17 @@
 
       } catch (err) {
         console.error(err);
-        historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">Erro ao carregar histórico.</td></tr>';
+        historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">ERRO AO CARREGAR HISTÓRICO.</td></tr>';
       }
     }
 
     // ===== INIT =====
     function init() {
       setupMasks();
+      setupUppercaseInputs();
       resetarModal();
       carregarHistorico();
-      setNotice('Clique em "Nova recepção" para iniciar.', '');
+      setNotice('CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.', '');
     }
 
     init();
