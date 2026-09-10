@@ -207,7 +207,6 @@
     .btn.success { border-color: var(--green); color: var(--green); }
     .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    /* Ícone de refresh que gira */
     .btn.refresh .icon-refresh {
       display: inline-block;
       font-size: 13px;
@@ -222,7 +221,6 @@
       to   { transform: rotate(360deg); }
     }
 
-    /* Botão X para remover acionamento */
     .btn-x {
       border: 1px solid #ffe0e4;
       background: #fff5f6;
@@ -300,6 +298,70 @@
       white-space: nowrap;
       line-height: 1;
     }
+
+    /* ===== BARRA DE BUSCA ===== */
+    .search-bar {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .search-bar input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #dfe7ef;
+      border-radius: 10px;
+      padding: 0 40px 0 42px;
+      background: #fff;
+      color: #253e59;
+      font-size: var(--fs-base);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-wide);
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .search-bar input::placeholder {
+      color: #9aabbf;
+      font-weight: var(--fw-regular);
+      letter-spacing: var(--ls-wide);
+    }
+    .search-bar input:focus {
+      border-color: #75a6ff;
+      box-shadow: 0 0 0 3px #347eff12;
+    }
+    .search-bar .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: #70839a;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .search-bar .search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #9aabbf;
+      font-size: 14px;
+      font-weight: var(--fw-black);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+    }
+    .search-bar .search-clear:hover {
+      background: #f3f7fb;
+      color: #526982;
+    }
+    .search-bar.has-value .search-clear { display: inline-flex; }
 
     /* ===== FILTROS ===== */
     .filters {
@@ -450,6 +512,15 @@
       min-width: 150px;
       max-width: 200px;
       line-height: var(--lh-normal);
+    }
+
+    /* Realce do termo buscado */
+    .hl {
+      background: #fff3b0;
+      color: #6b4d00;
+      padding: 0 2px;
+      border-radius: 3px;
+      font-weight: var(--fw-bold);
     }
 
     .empty-table {
@@ -664,6 +735,19 @@
           <span class="pill" id="totalRegistros">0</span>
         </div>
 
+        <!-- ===== BARRA DE BUSCA ===== -->
+        <div class="search-bar" id="searchBar">
+          <span class="search-icon">🔍</span>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="BUSCAR POR SENHA, FORNECEDOR OU Nº DE CARGA..."
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button class="search-clear" id="searchClear" type="button" title="Limpar busca">✕</button>
+        </div>
+
         <!-- ===== FILTROS ===== -->
         <div class="filters">
           <div class="filter-field">
@@ -690,6 +774,7 @@
               <tr>
                 <th>SENHA</th>
                 <th>FORNECEDOR</th>
+                <th>CARGA</th>
                 <th>STATUS</th>
                 <th>AGENDA</th>
                 <th>CHEGADA</th>
@@ -703,7 +788,7 @@
               </tr>
             </thead>
             <tbody id="historicoBody">
-              <tr><td colspan="12" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
+              <tr><td colspan="13" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
             </tbody>
           </table>
         </div>
@@ -791,7 +876,6 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
 
-    // Intervalo do auto-refresh (60 segundos = 60.000 ms)
     const AUTO_REFRESH_MS = 60 * 1000;
 
     // ============================================================
@@ -800,6 +884,7 @@
     const COLS = {
       SENHA:        'SENHA',
       FORNECEDOR:   'FORNECEDOR',
+      CARGA:        'CARGA',
       AGENDA:       'DTA HR AGENDA',
       STATUS:       'STATUS',
       CHEGADA:      'CHEGADA',
@@ -839,16 +924,19 @@
     const clearFilters = $('clearFilters');
     const filterInfo = $('filterInfo');
     const refreshBtn = $('refreshBtn');
+    const searchBar = $('searchBar');
+    const searchInput = $('searchInput');
+    const searchClear = $('searchClear');
 
     let senhaEncontrada = false;
     let dadosAgenda = null;
 
-    // Cache do último fetch completo
     let allData = [];
-
-    // Controle do auto-refresh
     let autoRefreshTimer = null;
     let isLoading = false;
+
+    // Termo atual de busca (mantido entre os refreshes)
+    let currentSearch = '';
 
     // ===== UTILITÁRIOS =====
     function upper(v) {
@@ -862,6 +950,45 @@
     }
 
     function pad2(n) { return String(n).padStart(2, '0'); }
+
+    // Normaliza texto para comparação (remove acentos, uppercase, trim)
+    function normalize(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .trim();
+    }
+
+    // Escapa HTML para evitar injeção quando o usuário digita caracteres especiais
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Escapa regex
+    function escapeRegex(str) {
+      return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Realça o termo buscado dentro de uma string já renderizada
+    function highlight(text, term) {
+      const safe = escapeHtml(text);
+      if (!term) return safe;
+      const normTerm = normalize(term);
+      if (!normTerm) return safe;
+
+      // Para realce robusto com acentos, buscamos por índice de forma simples
+      // (busca direta case-insensitive com acentos normalizados).
+      const safeRegex = escapeRegex(term);
+      const re = new RegExp(`(${safeRegex})`, 'gi');
+      return safe.replace(re, '<span class="hl">$1</span>');
+    }
 
     // ============================================================
     // PARSER FLEXÍVEL DE DATA
@@ -938,16 +1065,18 @@
       return isNaN(d.getTime()) ? null : d;
     }
 
-    function renderDate(valor) {
+    function renderDate(valor, searchTerm) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
       const p = parseFlexibleDate(valor);
       if (!p) return upper(valor);
       return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
     }
 
-    function renderText(valor) {
+    function renderText(valor, searchTerm) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
-      return upper(valor);
+      const txt = upper(valor);
+      if (searchTerm) return highlight(txt, searchTerm);
+      return escapeHtml(txt);
     }
 
     // ===== AUXILIARES DO FORM =====
@@ -1035,6 +1164,40 @@
       });
     }
 
+    // ===== BARRA DE BUSCA =====
+    function setupSearch() {
+      // Ao digitar, atualiza o filtro (com debounce leve)
+      let debounce = null;
+      searchInput.addEventListener('input', function() {
+        const val = this.value;
+        searchBar.classList.toggle('has-value', val.length > 0);
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          currentSearch = val.trim();
+          applyFilters();
+        }, 180);
+      });
+
+      // Botão X limpa a busca
+      searchClear.addEventListener('click', function() {
+        searchInput.value = '';
+        searchBar.classList.remove('has-value');
+        currentSearch = '';
+        applyFilters();
+        searchInput.focus();
+      });
+
+      // ESC limpa a busca quando o campo está focado
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          this.value = '';
+          searchBar.classList.remove('has-value');
+          currentSearch = '';
+          applyFilters();
+        }
+      });
+    }
+
     // ============================================================
     // POPULA O DROPDOWN DE MÊS/ANO
     // ============================================================
@@ -1064,9 +1227,12 @@
     }
 
     // ============================================================
-    // FILTROS  (mês/ano aplicado sobre DTA HR AGENDA)
+    // FILTROS  (busca + mês/ano + intervalo)
     // ============================================================
     function applyFilters() {
+      const term     = currentSearch.trim();
+      const normTerm = normalize(term);
+
       const monthStr = filterMonth.value;
       const fromStr  = filterFrom.value;
       const toStr    = filterTo.value;
@@ -1088,6 +1254,21 @@
       }
 
       const filtered = allData.filter(row => {
+        // --- Busca textual (SENHA, FORNECEDOR, CARGA) ---
+        if (normTerm) {
+          const alvoSenha      = normalize(row[COLS.SENHA]);
+          const alvoFornecedor = normalize(row[COLS.FORNECEDOR]);
+          const alvoCarga      = normalize(row[COLS.CARGA]);
+
+          const bateu =
+            alvoSenha.includes(normTerm) ||
+            alvoFornecedor.includes(normTerm) ||
+            alvoCarga.includes(normTerm);
+
+          if (!bateu) return false;
+        }
+
+        // --- Filtro de mês/ano (AGENDA) ---
         const dt = toDateObj(row[COLS.AGENDA]);
         if (!dt) {
           return !monthNum && !fromLimit && !toLimit;
@@ -1100,14 +1281,20 @@
         return true;
       });
 
-      renderHistorico(filtered);
+      renderHistorico(filtered, term);
 
       const total = allData.length;
       const shown = filtered.length;
-      if (monthNum || fromLimit || toLimit) {
-        filterInfo.textContent = `MOSTRANDO ${shown} DE ${total}`;
+
+      const partes = [];
+      if (normTerm) partes.push(`BUSCA "${upper(term)}"`);
+      if (monthNum) partes.push(`${monthStr}`);
+      if (fromLimit || toLimit) partes.push('INTERVALO');
+
+      if (partes.length) {
+        filterInfo.innerHTML = `MOSTRANDO ${shown} DE ${total}`;
       } else {
-        filterInfo.textContent = '';
+        filterInfo.innerHTML = '';
       }
 
       totalRegistros.textContent = shown;
@@ -1121,20 +1308,27 @@
         filterMonth.value = '';
         filterFrom.value = '';
         filterTo.value = '';
+        searchInput.value = '';
+        searchBar.classList.remove('has-value');
+        currentSearch = '';
         applyFilters();
       });
     }
 
     // ===== RENDER DA TABELA =====
-    function renderHistorico(data) {
+    function renderHistorico(data, term) {
       if (!data.length) {
-        historicoBody.innerHTML = '<tr><td colspan="12" class="empty-table">NENHUM REGISTRO ENCONTRADO COM OS FILTROS APLICADOS.</td></tr>';
+        const temFiltro = currentSearch || filterMonth.value || filterFrom.value || filterTo.value;
+        historicoBody.innerHTML = temFiltro
+          ? '<tr><td colspan="13" class="empty-table">NENHUM REGISTRO ENCONTRADO COM OS FILTROS APLICADOS.</td></tr>'
+          : '<tr><td colspan="13" class="empty-table">NENHUM REGISTRO DE CHEGADA AINDA.</td></tr>';
         return;
       }
 
       historicoBody.innerHTML = data.map(row => {
-        const senhaVal    = renderText(row[COLS.SENHA]);
-        const fornecedorV = renderText(row[COLS.FORNECEDOR]);
+        const senhaVal    = renderText(row[COLS.SENHA], term);
+        const fornecedorV = renderText(row[COLS.FORNECEDOR], term);
+        const cargaV      = renderText(row[COLS.CARGA], term);
         const statusV     = renderText(row[COLS.STATUS]);
         const agendaV     = renderDate(row[COLS.AGENDA]);
         const chegadaV    = renderDate(row[COLS.CHEGADA]);
@@ -1152,15 +1346,18 @@
         const jaVisualizado =
           visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
 
+        // Para o botão data-senha, usar o valor bruto (sem HTML)
+        const senhaRaw = row[COLS.SENHA] != null ? String(row[COLS.SENHA]) : '';
+
         let acionamentoHtml = '';
         if (jaAcionado) {
           acionamentoHtml = `
             <div class="acionamento-cell">
               <span>${formatarDataHora(acionamentoRaw)}</span>
-              <button class="btn-x" data-remover-senha="${senhaVal}" title="Remover acionamento" aria-label="Remover acionamento">✕</button>
+              <button class="btn-x" data-remover-senha="${escapeHtml(senhaRaw)}" title="Remover acionamento" aria-label="Remover acionamento">✕</button>
             </div>`;
         } else {
-          acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
+          acionamentoHtml = `<button class="btn small" data-senha="${escapeHtml(senhaRaw)}">ACIONAR</button>`;
         }
 
         let visualizacaoHtml = '';
@@ -1174,6 +1371,7 @@
           <tr>
             <td>${senhaVal}</td>
             <td>${fornecedorV}</td>
+            <td>${cargaV}</td>
             <td>${statusV}</td>
             <td class="col-date">${agendaV}</td>
             <td class="col-date">${chegadaV}</td>
@@ -1207,7 +1405,7 @@
       });
     }
 
-    // ===== BUSCA SENHA =====
+    // ===== BUSCA SENHA (do modal) =====
     let timeoutBusca = null;
 
     async function buscarSenha(senhaValor) {
@@ -1424,11 +1622,9 @@
     // HISTÓRICO
     // ============================================================
     async function carregarHistorico() {
-      // Evita requisições concorrentes (ex.: auto-refresh + click manual)
       if (isLoading) return;
       isLoading = true;
 
-      // Marca o botão como "carregando"
       refreshBtn.classList.add('loading');
       refreshBtn.disabled = true;
 
@@ -1469,16 +1665,14 @@
         allData = data;
         applyFilters();
 
-        // Mostra horário da última atualização
         const agora = new Date();
         const horaFmt = `${pad2(agora.getHours())}:${pad2(agora.getMinutes())}:${pad2(agora.getSeconds())}`;
-        // Se já existe filterInfo com "MOSTRANDO X DE Y", anexa o horário
-        const existingInfo = filterInfo.textContent || '';
+        const existingInfo = filterInfo.innerHTML || '';
         filterInfo.innerHTML = `${existingInfo ? existingInfo + ' · ' : ''}<span class="last-update">ATUALIZADO ${horaFmt}</span>`;
 
       } catch (err) {
         console.error('[HISTÓRICO] Erro:', err);
-        historicoBody.innerHTML = `<tr><td colspan="12" class="empty-table">ERRO AO CARREGAR HISTÓRICO: ${upper(err.message)}</td></tr>`;
+        historicoBody.innerHTML = `<tr><td colspan="13" class="empty-table">ERRO AO CARREGAR HISTÓRICO: ${upper(err.message)}</td></tr>`;
       } finally {
         isLoading = false;
         refreshBtn.classList.remove('loading');
@@ -1492,7 +1686,6 @@
     function startAutoRefresh() {
       if (autoRefreshTimer) clearInterval(autoRefreshTimer);
       autoRefreshTimer = setInterval(() => {
-        // Não recarrega se a aba estiver oculta (economiza banda)
         if (document.hidden) return;
         carregarHistorico();
       }, AUTO_REFRESH_MS);
@@ -1505,14 +1698,12 @@
       }
     }
 
-    // Quando a aba volta a ficar visível, força um refresh imediato
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) {
         carregarHistorico();
       }
     });
 
-    // Botão de refresh manual
     refreshBtn.addEventListener('click', function() {
       carregarHistorico();
     });
@@ -1521,12 +1712,13 @@
     function init() {
       setupMasks();
       setupUppercaseInputs();
+      setupSearch();
       populateMonthFilter();
       setupFilters();
       resetarModal();
       carregarHistorico();
       startAutoRefresh();
-      setNotice('ATUALIZAÇÃO AUTOMÁTICA ATIVA (A CADA 1 MINUTO). CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.', '');
+      setNotice('BUSQUE POR SENHA, FORNECEDOR OU Nº DE CARGA. ATUALIZAÇÃO AUTOMÁTICA A CADA 1 MINUTO.', '');
     }
 
     init();
