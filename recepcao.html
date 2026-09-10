@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Warehouse Vision | Recepção</title>
   <style>
-    /* ===== ESTILOS GLOBAIS (mesmos do modelo) ===== */
+    /* ============================================================
+       TOKENS DE DESIGN
+       ============================================================ */
     :root {
+      /* Cores */
       --navy: #071426;
       --ink: #15283f;
       --muted: #71849b;
@@ -18,19 +21,65 @@
       --red: #e34b60;
       --amber: #efa83a;
       --shadow: 0 18px 55px #10254112;
+
+      /* Família tipográfica */
+      --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+      /* Escala tipográfica */
+      --fs-2xs: 11px;   /* micro-texto, hints, badges, uppercase labels */
+      --fs-xs:  12px;   /* tabelas, botões, labels de formulário */
+      --fs-sm:  13px;   /* notices, textos auxiliares */
+      --fs-base:14px;   /* inputs, corpo padrão */
+      --fs-md:  15px;   /* subtítulos, crumb ativo */
+      --fs-lg:  16px;   /* títulos de painel */
+      --fs-xl:  18px;   /* títulos de seção */
+      --fs-2xl: 20px;   /* título de modal */
+      --fs-3xl: 32px;   /* H1 */
+
+      /* Pesos */
+      --fw-regular:  400;
+      --fw-medium:   500;
+      --fw-semibold: 600;
+      --fw-bold:     700;
+      --fw-black:    800;
+
+      /* Alturas de linha */
+      --lh-tight:  1.2;
+      --lh-snug:   1.35;
+      --lh-normal: 1.5;
+      --lh-relaxed:1.6;
+
+      /* Espaçamentos tipográficos */
+      --ls-tight:  -0.02em;
+      --ls-normal: 0;
+      --ls-wide:   0.05em;
+      --ls-wider:  0.08em;
+      --ls-widest: 0.16em;
     }
+
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       background: var(--bg);
       color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
+      font-size: var(--fs-base);
+      font-weight: var(--fw-regular);
+      line-height: var(--lh-normal);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    button, input, select { font: inherit; }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+    }
     button { cursor: pointer; }
     .app { min-height: 100vh; }
 
-    /* ===== SIDEBAR (carregado via sidebar.js) ===== */
+    /* ===== SIDEBAR ===== */
     #sidebar-container {
       position: fixed;
       inset: 0 auto 0 0;
@@ -38,7 +87,7 @@
       z-index: 10;
     }
 
-    /* ===== MAIN ===== */
+    /* ===== LAYOUT PRINCIPAL ===== */
     .main {
       margin-left: 236px;
       min-height: 100vh;
@@ -57,18 +106,29 @@
       z-index: 5;
     }
     .crumb {
-      font-size: 9px;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-wider);
+      text-transform: uppercase;
       color: #91a0b0;
+      line-height: var(--lh-snug);
     }
     .crumb strong {
       display: block;
       color: var(--ink);
-      font-size: 12px;
+      font-size: var(--fs-md);
+      font-weight: var(--fw-semibold);
+      letter-spacing: var(--ls-normal);
+      text-transform: none;
       margin-top: 4px;
+      line-height: var(--lh-snug);
     }
     .top-status {
-      font-size: 8px;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-medium);
       color: #70839a;
+      letter-spacing: var(--ls-wide);
+      line-height: var(--lh-snug);
     }
     .top-status i {
       display: inline-block;
@@ -77,77 +137,96 @@
       background: var(--cyan);
       border-radius: 50%;
       margin-right: 4px;
+      vertical-align: middle;
     }
+
     .content {
       padding: 28px 34px 50px;
       max-width: 1500px;
       margin: auto;
     }
+
+    /* ===== HERO ===== */
     .hero {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       margin-bottom: 21px;
       flex-wrap: wrap;
+      gap: 14px;
     }
     .eyebrow {
-      font-size: 8px;
-      letter-spacing: .16em;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--ls-widest);
       text-transform: uppercase;
       color: var(--blue);
-      font-weight: 900;
+      line-height: var(--lh-snug);
     }
     h1 {
-      font-size: 30px;
-      letter-spacing: -.055em;
+      font-size: var(--fs-3xl);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--ls-tight);
+      line-height: var(--lh-tight);
       margin: 7px 0 6px;
       color: var(--navy);
     }
     .hero p {
       margin: 0;
       color: var(--muted);
-      font-size: 12px;
+      font-size: var(--fs-md);
+      font-weight: var(--fw-regular);
+      line-height: var(--lh-normal);
     }
     .actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
+
+    /* ===== BOTÕES ===== */
     .btn {
       border: 1px solid var(--line);
       background: #fff;
       color: #526982;
       border-radius: 9px;
       padding: 10px 14px;
-      font-size: 9px;
-      font-weight: 900;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wide);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      line-height: 1;
+      transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
     }
+    .btn:hover { border-color: #cfdbe8; }
     .btn.primary {
       border: 0;
       color: #fff;
       background: linear-gradient(135deg, #2d7bff, #16bda9);
       box-shadow: 0 8px 22px #347eff35;
     }
+    .btn.primary:hover { box-shadow: 0 10px 26px #347eff4a; }
     .btn:active { transform: scale(.98); }
     .btn.small {
-      padding: 4px 10px;
-      font-size: 7px;
+      padding: 5px 10px;
+      font-size: var(--fs-2xs);
       border-radius: 6px;
+      letter-spacing: var(--ls-wide);
     }
     .btn.success {
       border-color: var(--green);
       color: var(--green);
     }
     .btn.success:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
     }
 
+    /* ===== PAINÉIS ===== */
     .panel {
       background: #fff;
       border: 1px solid var(--line);
@@ -165,40 +244,51 @@
       margin-bottom: 14px;
     }
     .panel-title {
-      font-size: 13px;
-      font-weight: 900;
+      font-size: var(--fs-lg);
+      font-weight: var(--fw-bold);
+      color: var(--navy);
+      letter-spacing: var(--ls-tight);
+      line-height: var(--lh-snug);
     }
     .panel-sub {
-      font-size: 8px;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-regular);
       color: #8c9aab;
       margin-top: 4px;
-      line-height: 1.5;
+      line-height: var(--lh-normal);
     }
     .pill {
       display: inline-flex;
+      align-items: center;
       background: #edf5ff;
       color: #3470dd;
       border-radius: 20px;
-      padding: 6px 9px;
-      font-size: 8px;
-      font-weight: 900;
+      padding: 5px 10px;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wide);
       white-space: nowrap;
+      line-height: 1;
     }
+
+    /* ===== NOTICES ===== */
     .notice {
       padding: 12px 13px;
       border-radius: 9px;
       background: #f5f9ff;
       color: #607691;
-      font-size: 10px;
-      line-height: 1.5;
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
+      line-height: var(--lh-normal);
       margin-top: 16px;
     }
     .notice.success { background: #effcf5; color: #137b57; }
-    .notice.error { background: #fff1f2; color: #b73f52; }
+    .notice.error   { background: #fff1f2; color: #b73f52; }
     .notice.warning { background: #fff8e5; color: #9e7a1a; }
+
     .hidden { display: none !important; }
 
-    /* ===== TABELA DE HISTÓRICO ===== */
+    /* ===== TABELA ===== */
     .table-wrap {
       overflow: auto;
       border: 1px solid #edf1f5;
@@ -207,23 +297,27 @@
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 9px;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-regular);
+      line-height: var(--lh-snug);
       min-width: 640px;
     }
     .data-table th {
       background: #f7fafd;
       color: #7c8da0;
-      font-size: 8px;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-bold);
       text-align: left;
-      letter-spacing: .05em;
+      letter-spacing: var(--ls-wider);
       text-transform: uppercase;
-      padding: 11px;
+      padding: 12px 11px;
       white-space: nowrap;
     }
     .data-table td {
       border-top: 1px solid #edf1f5;
-      padding: 11px;
+      padding: 12px 11px;
       color: #3d526b;
+      font-size: var(--fs-xs);
       white-space: nowrap;
     }
     .data-table tbody tr:hover { background: #f8fbff; }
@@ -231,23 +325,31 @@
       padding: 42px;
       text-align: center;
       color: #8192a6;
-      font-size: 10px;
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
     }
 
     /* ===== BADGE VISUALIZADO ===== */
     .badge-viewed {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
+      gap: 5px;
+      padding: 4px 9px;
       border-radius: 20px;
-      font-size: 7px;
-      font-weight: 900;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wide);
       white-space: nowrap;
+      line-height: 1;
     }
-    .badge-viewed.ok   { background: #effcf5; color: #137b57; }
-    .badge-viewed.nok  { background: #fff1f2; color: #b73f52; }
-    .badge-viewed small { font-weight: 700; opacity: .8; margin-left: 2px; }
+    .badge-viewed.ok  { background: #effcf5; color: #137b57; }
+    .badge-viewed.nok { background: #fff1f2; color: #b73f52; }
+    .badge-viewed small {
+      font-weight: var(--fw-semibold);
+      letter-spacing: var(--ls-normal);
+      opacity: .85;
+      margin-left: 2px;
+    }
 
     /* ===== MODAL ===== */
     .modal-overlay {
@@ -278,25 +380,41 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
-    .modal-title { font-size: 16px; font-weight: 900; }
-    .modal-sub { font-size: 9px; color: #8c9aab; margin-top: 4px; }
+    .modal-title {
+      font-size: var(--fs-2xl);
+      font-weight: var(--fw-black);
+      color: var(--navy);
+      letter-spacing: var(--ls-tight);
+      line-height: var(--lh-tight);
+    }
+    .modal-sub {
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-regular);
+      color: #8c9aab;
+      margin-top: 6px;
+      line-height: var(--lh-normal);
+    }
     .modal-close {
       border: 1px solid var(--line);
       background: #fff;
       border-radius: 9px;
-      padding: 6px 12px;
-      font-size: 9px;
-      font-weight: 900;
+      padding: 7px 13px;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wide);
       color: #526982;
-      cursor: pointer;
+      line-height: 1;
+      transition: border-color .15s ease;
     }
+    .modal-close:hover { border-color: #cfdbe8; }
 
+    /* ===== FORMULÁRIO ===== */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 14px;
     }
     .field {
       display: flex;
@@ -304,24 +422,30 @@
       gap: 6px;
     }
     .field label {
-      font-size: 9px;
-      font-weight: 900;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-bold);
       color: #526982;
       text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: var(--ls-wider);
+      line-height: var(--lh-snug);
     }
-    .field input, .field select {
-      height: 38px;
+    .field input,
+    .field select {
+      height: 40px;
       border: 1px solid #dfe7ef;
       border-radius: 8px;
-      padding: 0 11px;
+      padding: 0 12px;
       background: #fbfdff;
       color: #253e59;
-      font-size: 11px;
+      font-size: var(--fs-base);
+      font-weight: var(--fw-medium);
       outline: none;
       width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease;
     }
-    .field input:focus, .field select:focus {
+    .field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
+    .field input:focus,
+    .field select:focus {
       border-color: #75a6ff;
       box-shadow: 0 0 0 3px #347eff12;
     }
@@ -330,20 +454,34 @@
       color: #8a9aad;
       cursor: not-allowed;
     }
-    .field small { font-size: 8px; color: #8998a9; line-height: 1.4; }
-    .field .mask-hint { font-size: 7px; color: #9aabbf; margin-top: 2px; }
+    .field small {
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-regular);
+      color: #8998a9;
+      line-height: var(--lh-normal);
+    }
+    .field .mask-hint {
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-medium);
+      color: #9aabbf;
+      letter-spacing: var(--ls-wide);
+      margin-top: 2px;
+      line-height: var(--lh-snug);
+    }
 
     .form-actions {
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 20px;
     }
     .form-state {
       margin-right: auto;
       color: var(--muted);
-      font-size: 10px;
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
+      line-height: var(--lh-snug);
     }
 
     /* ===== RESPONSIVO ===== */
@@ -362,13 +500,13 @@
       .actions { margin-top: 14px; }
       .form-grid { grid-template-columns: 1fr; }
       .data-table { min-width: 600px; }
+      h1 { font-size: 26px; }
     }
   </style>
   <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
 <div class="app">
-  <!-- Sidebar container (carregado via sidebar.js) -->
   <div id="sidebar-container"></div>
 
   <main class="main">
@@ -389,7 +527,6 @@
         </div>
       </div>
 
-      <!-- Painel de histórico -->
       <section class="panel">
         <div class="panel-head">
           <div>
@@ -434,14 +571,12 @@
     </div>
     <form id="formRecepcao">
       <div class="form-grid">
-        <!-- SENHA -->
         <div class="field">
           <label for="senha">SENHA <span style="color:var(--red);">*</span></label>
           <input id="senha" type="text" required placeholder="Digite a senha para consultar" autocomplete="off">
           <small>Pressione Enter ou aguarde para buscar na AGENDA.</small>
         </div>
 
-        <!-- Campos informativos -->
         <div class="field">
           <label for="fornecedor">FORNECEDOR</label>
           <input id="fornecedor" type="text" disabled placeholder="Preenchido automaticamente">
@@ -455,7 +590,6 @@
           <input id="carga" type="text" disabled placeholder="Preenchido automaticamente">
         </div>
 
-        <!-- Dados do motorista -->
         <div class="field">
           <label for="rg">RG <span style="color:var(--red);">*</span></label>
           <input id="rg" type="text" required disabled placeholder="Ex.: 12.345.678-9">
@@ -527,7 +661,7 @@
     let senhaEncontrada = false;
     let dadosAgenda = null;
 
-    // ===== FUNÇÕES AUXILIARES =====
+    // ===== AUXILIARES =====
     function setNotice(msg, tipo = '') {
       notice.textContent = msg;
       notice.className = 'notice ' + tipo;
@@ -569,13 +703,10 @@
       formState.textContent = 'Aguardando senha.';
     }
 
-    // Formata valor de data vindo do Supabase (ISO ou já formatado) para DD/MM/AAAA HH:MM
     function formatarDataHora(valor) {
       if (!valor) return '';
       const str = String(valor).trim();
-      // Se já está no formato DD/MM/AAAA HH:MM, retorna como está
       if (/^\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}/.test(str)) return str;
-      // Tenta interpretar como ISO
       const d = new Date(str);
       if (isNaN(d.getTime())) return str;
       const dia = String(d.getDate()).padStart(2, '0');
@@ -771,7 +902,7 @@
       }
     });
 
-    // ===== CONTROLE DO MODAL =====
+    // ===== MODAL =====
     function openModal() {
       resetarModal();
       modal.classList.remove('hidden');
@@ -789,7 +920,7 @@
       if (e.target === this) closeModal();
     });
 
-    // ===== FUNÇÃO PARA REGISTRAR ACIONAMENTO =====
+    // ===== ACIONAMENTO =====
     async function registrarAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
 
@@ -825,7 +956,6 @@
         botao.disabled = true;
 
         setNotice(`Acionamento registrado para a senha ${senhaValor} às ${acionamentoStr}.`, 'success');
-
         carregarHistorico();
       } catch (err) {
         console.error(err);
@@ -835,10 +965,9 @@
       }
     }
 
-    // ===== CARREGAR HISTÓRICO =====
+    // ===== HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        // Seleciona também as colunas de acionamento e visualização
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS,"ACIONAMENTO ENTRADA","ACIONAMENTO VISUALIZADO"&order=CHEGADA.desc.nullslast&limit=20`;
         const resp = await fetch(url, {
           headers: {
@@ -863,7 +992,6 @@
           const jaAcionado = acionamento !== null && String(acionamento).trim() !== '';
           const jaVisualizado = visualizado !== null && String(visualizado).trim() !== '';
 
-          // Botão de acionamento
           let btnHtml = '';
           if (jaAcionado) {
             btnHtml = `<button class="btn success small" disabled>✓ ${acionamento}</button>`;
@@ -871,7 +999,6 @@
             btnHtml = `<button class="btn small" data-senha="${senhaVal}">Acionar</button>`;
           }
 
-          // Badge de visualização
           let viewedHtml = '';
           if (jaVisualizado) {
             const dataFmt = formatarDataHora(visualizado);
@@ -892,7 +1019,6 @@
           `;
         }).join('');
 
-        // Adiciona eventos para os botões "Acionar"
         document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
           btn.addEventListener('click', function() {
             const senhaVal = this.dataset.senha;
@@ -908,7 +1034,7 @@
       }
     }
 
-    // ===== INICIALIZAÇÃO =====
+    // ===== INIT =====
     function init() {
       setupMasks();
       resetarModal();
@@ -921,7 +1047,6 @@
   })();
 </script>
 
-<!-- ===== SIDEBAR JS ===== -->
 <script src="sidebar.js" defer></script>
 </body>
 </html>
