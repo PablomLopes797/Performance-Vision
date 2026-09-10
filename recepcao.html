@@ -76,7 +76,6 @@
     button { cursor: pointer; }
     .app { min-height: 100vh; }
 
-    /* ===== SIDEBAR ===== */
     #sidebar-container {
       position: fixed;
       inset: 0 auto 0 0;
@@ -84,7 +83,6 @@
       z-index: 10;
     }
 
-    /* ===== LAYOUT PRINCIPAL ===== */
     .main { margin-left: 236px; min-height: 100vh; }
     .topbar {
       height: 66px;
@@ -134,7 +132,6 @@
 
     .content { padding: 28px 34px 50px; max-width: 100%; }
 
-    /* ===== HERO ===== */
     .hero {
       display: flex;
       justify-content: space-between;
@@ -166,7 +163,6 @@
     }
     .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* ===== BOTÕES ===== */
     .btn {
       border: 1px solid var(--line);
       background: #fff;
@@ -200,13 +196,9 @@
       letter-spacing: var(--ls-wide);
       white-space: normal;
     }
-    .btn.success {
-      border-color: var(--green);
-      color: var(--green);
-    }
+    .btn.success { border-color: var(--green); color: var(--green); }
     .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    /* ===== PAINÉIS ===== */
     .panel {
       background: #fff;
       border: 1px solid var(--line);
@@ -250,7 +242,6 @@
       line-height: 1;
     }
 
-    /* ===== NOTICES ===== */
     .notice {
       padding: 12px 13px;
       border-radius: 9px;
@@ -274,6 +265,7 @@
       overflow: auto;
       border: 1px solid #edf1f5;
       border-radius: 10px;
+      max-height: 70vh;
     }
     .data-table {
       width: 100%;
@@ -281,7 +273,7 @@
       font-size: var(--fs-xs);
       font-weight: var(--fw-regular);
       line-height: var(--lh-snug);
-      min-width: 1500px;   /* 12 colunas — scroll horizontal em telas menores */
+      min-width: 1600px;
     }
     .data-table th {
       background: #f7fafd;
@@ -310,14 +302,14 @@
       letter-spacing: var(--ls-wide);
     }
 
-    /* Colunas com quebra de texto (ACIONAMENTO ADM e VISUALIZAÇÃO ACIONAMENTO) */
+    /* Colunas com quebra de texto */
     .data-table th.cell-wrap,
     .data-table td.cell-wrap {
       white-space: normal;
       word-break: break-word;
       overflow-wrap: anywhere;
       min-width: 150px;
-      max-width: 190px;
+      max-width: 200px;
       line-height: var(--lh-normal);
     }
 
@@ -329,7 +321,6 @@
       font-weight: var(--fw-medium);
     }
 
-    /* ===== BADGE VISUALIZADO ===== */
     .badge-viewed {
       display: inline-flex;
       align-items: center;
@@ -410,7 +401,6 @@
     }
     .modal-close:hover { border-color: #cfdbe8; }
 
-    /* ===== FORMULÁRIO ===== */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -479,7 +469,6 @@
       line-height: var(--lh-snug);
     }
 
-    /* ===== RESPONSIVO ===== */
     @media (max-width: 1050px) {
       #sidebar-container { width: 200px; }
       .main { margin-left: 200px; }
@@ -636,21 +625,26 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
 
-    // ===== MAPA DE COLUNAS (ajuste aqui se os nomes no Supabase forem diferentes) =====
+    // ============================================================
+    // MAPA DE COLUNAS (nome exato no Supabase)
+    // ============================================================
     const COLS = {
-      SENHA:            'SENHA',
-      FORNECEDOR:       'FORNECEDOR',
-      AGENDA:           'AGENDA',
-      STATUS:           'STATUS',
-      CHEGADA:          'CHEGADA',
-      ACIONAMENTO_ADM:  'ACIONAMENTO ADM',
-      VISUALIZACAO:     'ACIONAMENTO VISUALIZADO',
-      ENCOSTA_ADM:      'ENCOSTA ADM',
-      INICIO_CONF:      'INICIO CONF',
-      FIM_CONF:         'FIM CONF',
-      TERMO:            'TERMO',
-      PAGAMENTO:        'PAGAMENTO'
+      SENHA:        'SENHA',
+      FORNECEDOR:   'FORNECEDOR',
+      AGENDA:       'DTA HR AGENDA',
+      STATUS:       'STATUS',
+      CHEGADA:      'CHEGADA',
+      ACIONAMENTO:  'ACIONAMENTO ENTRADA',
+      VISUALIZACAO: 'ACIONAMENTO VISUALIZADO',
+      ENCOSTA:      'ENCOSTA ADM',
+      INICIO:       'INICIO CONF',
+      FIM:          'FIM CONF',
+      TERMO:        'TERMO LIBERAÇÃO',
+      PAGAMENTO:    'PAGAMENTO'
     };
+
+    // Helper para citar nomes de coluna com espaço
+    const quote = name => name.includes(' ') ? `"${name}"` : name;
 
     // ===== ELEMENTOS =====
     const $ = id => document.getElementById(id);
@@ -688,11 +682,11 @@
       notice.className = 'notice ' + tipo;
     }
 
-    // ============================================================
-    // NORMALIZADOR DE DATA/HORA → SEMPRE "DD/MM/AAAA HH:MM"
-    // ============================================================
     function pad2(n) { return String(n).padStart(2, '0'); }
 
+    // ============================================================
+    // NORMALIZADOR DE DATA/HORA → "DD/MM/AAAA HH:MM"
+    // ============================================================
     function formatarDataHora(valor) {
       if (valor === null || valor === undefined || valor === '') return '';
 
@@ -726,7 +720,6 @@
         return `${dia}/${mes}/${ano} ${hora}:${min}`;
       }
 
-      // Fallback
       const d = new Date(str);
       if (!isNaN(d.getTime())) {
         return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
@@ -734,16 +727,30 @@
       return str;
     }
 
-    // Formata apenas se parecer data; senão devolve uppercase
+    // Formata como data se parecer data; senão uppercase
     function formatCell(valor) {
       if (valor === null || valor === undefined || valor === '') return '—';
       const s = String(valor).trim();
       if (!s) return '—';
-      // Detecta padrão de data (BR ou ISO)
       if (/^\d{2}\/\d{2}\/\d{4}/.test(s) || /^\d{4}-\d{2}-\d{2}/.test(s)) {
         return formatarDataHora(s);
       }
       return upper(s);
+    }
+
+    // Converte string de data em Date para ordenação
+    function parseDateForSort(valor) {
+      if (!valor) return null;
+      const s = String(valor).trim();
+      if (!s) return null;
+      const br = s.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?/);
+      if (br) {
+        const [, d, m, y, h = '00', mi = '00'] = br;
+        const dt = new Date(Number(y), Number(m) - 1, Number(d), Number(h), Number(mi));
+        return isNaN(dt.getTime()) ? null : dt;
+      }
+      const dt = new Date(s);
+      return isNaN(dt.getTime()) ? null : dt;
     }
 
     // ===== AUXILIARES DO FORM =====
@@ -921,7 +928,7 @@
       const chegadaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
 
       const payload = {
-        CHEGADA: chegadaStr,
+        [COLS.CHEGADA]: chegadaStr,
         RG: upper(rg.value.trim()),
         CPF: cpf.value.trim(),
         NOME: upper(nome.value.trim()),
@@ -993,8 +1000,7 @@
             'Content-Type': 'application/json',
             'Prefer': 'return=minimal'
           },
-          // ⚠️ Ajuste o nome da coluna se no Supabase for diferente
-          body: JSON.stringify({ [COLS.ACIONAMENTO_ADM]: acionamentoStr })
+          body: JSON.stringify({ [COLS.ACIONAMENTO]: acionamentoStr })
         });
 
         if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
@@ -1012,19 +1018,40 @@
     // ===== HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        // Monta o select dinamicamente com todos os nomes de coluna, entre aspas quando tiver espaço
-        const quote = name => name.includes(' ') ? `"${name}"` : name;
-        const select = Object.values(COLS).map(quote).join(',');
-
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=${encodeURIComponent(select)}&order=${quote(COLS.CHEGADA)}.desc.nullslast&limit=50`;
+        // select=* é à prova de erro por nome de coluna; ordenamos em JS
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=200`;
         const resp = await fetch(url, {
           headers: {
             'apikey': SUPABASE_ANON,
             'Authorization': `Bearer ${SUPABASE_ANON}`
           }
         });
-        if (!resp.ok) throw new Error('Erro ao carregar histórico: ' + resp.status);
-        const data = await resp.json();
+
+        if (!resp.ok) {
+          let detalhe = '';
+          try {
+            const errBody = await resp.json();
+            detalhe = errBody.message || errBody.details || errBody.hint || JSON.stringify(errBody);
+          } catch (_) {
+            detalhe = await resp.text().catch(() => '');
+          }
+          throw new Error(`${resp.status}${detalhe ? ' — ' + detalhe : ''}`);
+        }
+
+        let data = await resp.json();
+        if (!Array.isArray(data)) data = [];
+
+        // Ordena por CHEGADA desc (em JS, tolerante a formatos)
+        data.sort((a, b) => {
+          const va = parseDateForSort(a[COLS.CHEGADA]);
+          const vb = parseDateForSort(b[COLS.CHEGADA]);
+          if (vb && va) return vb - va;
+          if (vb) return 1;
+          if (va) return -1;
+          return 0;
+        });
+        data = data.slice(0, 50);
+
         totalRegistros.textContent = data.length;
 
         if (!data.length) {
@@ -1035,22 +1062,24 @@
         historicoBody.innerHTML = data.map(row => {
           const senhaVal = upper(row[COLS.SENHA]) || '—';
 
-          const agendaFmt       = formatCell(row[COLS.AGENDA]);
-          const chegadaFmt      = formatCell(row[COLS.CHEGADA]);
-          const statusVal       = upper(row[COLS.STATUS]) || '—';
-          const encostaFmt      = formatCell(row[COLS.ENCOSTA_ADM]);
-          const inicioFmt       = formatCell(row[COLS.INICIO_CONF]);
-          const fimFmt          = formatCell(row[COLS.FIM_CONF]);
-          const termoVal        = upper(row[COLS.TERMO]) || '—';
-          const pagamentoVal    = upper(row[COLS.PAGAMENTO]) || '—';
+          const agendaFmt    = formatCell(row[COLS.AGENDA]);
+          const chegadaFmt   = formatCell(row[COLS.CHEGADA]);
+          const statusVal    = upper(row[COLS.STATUS]) || '—';
+          const encostaFmt   = formatCell(row[COLS.ENCOSTA]);
+          const inicioFmt    = formatCell(row[COLS.INICIO]);
+          const fimFmt       = formatCell(row[COLS.FIM]);
+          const termoVal     = upper(row[COLS.TERMO]) || '—';
+          const pagamentoVal = upper(row[COLS.PAGAMENTO]) || '—';
 
-          const acionamentoRaw  = row[COLS.ACIONAMENTO_ADM];
+          const acionamentoRaw  = row[COLS.ACIONAMENTO];
           const visualizacaoRaw = row[COLS.VISUALIZACAO];
 
-          const jaAcionado    = acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
-          const jaVisualizado = visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
+          const jaAcionado =
+            acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
+          const jaVisualizado =
+            visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
 
-          // Coluna ACIONAMENTO ADM (com quebra de texto)
+          // ACIONAMENTO ADM (quebra de texto)
           let acionamentoHtml = '';
           if (jaAcionado) {
             acionamentoHtml = `<span>${formatCell(acionamentoRaw)}</span>`;
@@ -1058,7 +1087,7 @@
             acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
           }
 
-          // Coluna VISUALIZAÇÃO ACIONAMENTO (com quebra de texto)
+          // VISUALIZAÇÃO ACIONAMENTO (quebra de texto)
           let visualizacaoHtml = '';
           if (jaVisualizado) {
             visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatCell(visualizacaoRaw)}</small></span>`;
@@ -1094,7 +1123,7 @@
         });
 
       } catch (err) {
-        console.error(err);
+        console.error('[HISTÓRICO] Erro:', err);
         historicoBody.innerHTML = `<tr><td colspan="12" class="empty-table">ERRO AO CARREGAR HISTÓRICO: ${upper(err.message)}</td></tr>`;
       }
     }
