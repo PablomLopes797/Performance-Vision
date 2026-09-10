@@ -66,10 +66,6 @@
     .btn.step-acionar   { background: #fff; color: #526982; }
     .btn.step-doca      { background: #e8f5ff; border-color: #b8daff; color: #1e6db5; }
     .btn.step-doca:hover{ background: #d4ebff; border-color: #8fc3f5; }
-    .btn.step-iniciar   { background: #eafaf1; border-color: #b1ebca; color: #137b57; }
-    .btn.step-iniciar:hover { background: #d6f5e3; border-color: #8fd9b1; }
-    .btn.step-finalizar { background: #fff5e5; border-color: #f3d9a5; color: #9e6b17; }
-    .btn.step-finalizar:hover { background: #ffefd6; border-color: #edc880; }
     .btn.step-termo     { background: #e5fbf9; border-color: #a8e6e0; color: #0e7b73; }
     .btn.step-termo:hover { background: #d3f7f3; border-color: #7dd5cc; }
     .btn.step-pag       { background: #f1eaff; border-color: #ccb8f5; color: #5b32b5; }
@@ -116,6 +112,14 @@
       font-variant-numeric: tabular-nums;
       color: #3d526b;
     }
+
+    /* Célula externa (read-only, só exibe valor do Supabase) */
+    .readonly-cell {
+      color: #3d526b;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--ls-wide);
+    }
+    .readonly-cell.empty { color: #b5c1ce; }
 
     .panel {
       background: #fff; border: 1px solid var(--line); border-radius: 14px;
@@ -178,27 +182,14 @@
       overflow: hidden;
       background: #fff;
     }
-
-    /* Cabeçalho — sem scroll próprio, mas com scrollLeft sincronizado por JS */
-    .table-head-wrap {
-      overflow: hidden;
-      background: #f7fafd;
-    }
-
-    /* Barra de scroll horizontal — fica ENTRE cabeçalho e corpo */
+    .table-head-wrap { overflow: hidden; background: #f7fafd; }
     .table-scrollbar {
-      overflow-x: auto;
-      overflow-y: hidden;
-      height: 15px;
-      background: #eef2f7;
+      overflow-x: auto; overflow-y: hidden;
+      height: 15px; background: #eef2f7;
       border-top: 1px solid #edf1f5;
       border-bottom: 1px solid #edf1f5;
     }
-    .table-scrollbar-inner {
-      height: 1px;
-      width: var(--table-total-width);
-    }
-    /* Barra customizada (Chrome/Safari) */
+    .table-scrollbar-inner { height: 1px; width: var(--table-total-width); }
     .table-scrollbar::-webkit-scrollbar,
     .table-body-wrap::-webkit-scrollbar { height: 10px; width: 10px; }
     .table-scrollbar::-webkit-scrollbar-track,
@@ -207,14 +198,8 @@
     .table-body-wrap::-webkit-scrollbar-thumb { background: #b9c8d8; border-radius: 5px; }
     .table-scrollbar::-webkit-scrollbar-thumb:hover,
     .table-body-wrap::-webkit-scrollbar-thumb:hover { background: #93a7bc; }
+    .table-body-wrap { overflow: auto; max-height: 60vh; }
 
-    /* Corpo — com scroll vertical e horizontal */
-    .table-body-wrap {
-      overflow: auto;
-      max-height: 60vh;
-    }
-
-    /* Tabela — layout fixo para alinhar thead e tbody */
     .data-table {
       width: var(--table-total-width);
       min-width: var(--table-total-width);
@@ -225,36 +210,25 @@
       line-height: var(--lh-snug);
     }
     .data-table th {
-      background: #f7fafd;
-      color: #7c8da0;
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-bold);
-      text-align: left;
-      letter-spacing: var(--ls-wider);
-      padding: 12px 11px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      background: #f7fafd; color: #7c8da0;
+      font-size: var(--fs-2xs); font-weight: var(--fw-bold);
+      text-align: left; letter-spacing: var(--ls-wider);
+      padding: 12px 11px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
     }
     .data-table td {
       border-top: 1px solid #edf1f5;
-      padding: 12px 11px;
-      color: #3d526b;
-      font-size: var(--fs-xs);
-      white-space: nowrap;
-      vertical-align: middle;
-      overflow: hidden;
+      padding: 12px 11px; color: #3d526b;
+      font-size: var(--fs-xs); white-space: nowrap;
+      vertical-align: middle; overflow: hidden;
     }
     .data-table tbody tr:hover { background: #f8fbff; }
     .data-table .col-date { font-variant-numeric: tabular-nums; letter-spacing: var(--ls-wide); }
 
-    /* Colunas com quebra de texto (sobrescreve o overflow:hidden) */
     .data-table th.cell-wrap,
     .data-table td.cell-wrap {
-      white-space: normal;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      line-height: var(--lh-normal);
+      white-space: normal; word-break: break-word;
+      overflow-wrap: anywhere; line-height: var(--lh-normal);
       overflow: visible;
     }
 
@@ -267,7 +241,7 @@
     .badge-viewed small { font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal); opacity: .85; font-variant-numeric: tabular-nums; }
 
     /* ============================================================
-       DOCK MAP (modal de alocação)
+       DOCK MAP
        ============================================================ */
     .dock-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; width: 100%; margin-top: 6px; }
     .dock-square {
@@ -404,7 +378,7 @@
         <div class="panel-head">
           <div>
             <div class="panel-title">ÚLTIMAS RECEPÇÕES</div>
-            <div class="panel-sub">PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA. INÍCIO/FIM CONF SÃO INDEPENDENTES.</div>
+            <div class="panel-sub">INÍCIO E FIM CONF SÃO CONSULTADOS NO SUPABASE (SOMENTE LEITURA). PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA.</div>
           </div>
           <span class="pill" id="totalRegistros">0</span>
         </div>
@@ -439,19 +413,19 @@
           <div class="table-head-wrap" id="tableHeadWrap">
             <table class="data-table" id="headTable">
               <colgroup>
-                <col style="width: 80px;">   <!-- SENHA -->
-                <col style="width: 200px;">  <!-- FORNECEDOR -->
-                <col style="width: 100px;">  <!-- CARGA -->
-                <col style="width: 110px;">  <!-- STATUS -->
-                <col style="width: 140px;">  <!-- AGENDA -->
-                <col style="width: 140px;">  <!-- CHEGADA -->
-                <col style="width: 190px;">  <!-- ACIONAMENTO -->
-                <col style="width: 200px;">  <!-- VISUALIZAÇÃO -->
-                <col style="width: 190px;">  <!-- ENCOSTA -->
-                <col style="width: 130px;">  <!-- INÍCIO -->
-                <col style="width: 130px;">  <!-- FIM -->
-                <col style="width: 140px;">  <!-- TERMO -->
-                <col style="width: 150px;">  <!-- PAGAMENTO -->
+                <col style="width: 80px;">
+                <col style="width: 200px;">
+                <col style="width: 100px;">
+                <col style="width: 110px;">
+                <col style="width: 140px;">
+                <col style="width: 140px;">
+                <col style="width: 190px;">
+                <col style="width: 200px;">
+                <col style="width: 190px;">
+                <col style="width: 130px;">
+                <col style="width: 130px;">
+                <col style="width: 140px;">
+                <col style="width: 150px;">
               </colgroup>
               <thead>
                 <tr>
@@ -473,7 +447,6 @@
             </table>
           </div>
 
-          <!-- Barra de scroll horizontal, LOGO ABAIXO do cabeçalho -->
           <div class="table-scrollbar" id="tableScrollbar">
             <div class="table-scrollbar-inner"></div>
           </div>
@@ -654,12 +627,10 @@
     const searchInput = $('searchInput');
     const searchClear = $('searchClear');
 
-    // Scroll sync
     const tableHeadWrap = $('tableHeadWrap');
     const tableScrollbar = $('tableScrollbar');
     const tableBodyWrap = $('tableBodyWrap');
 
-    // Dock allocation elements
     const dockAllocModal = $('dockAllocModal');
     const closeDockAlloc = $('closeDockAlloc');
     const reloadDocksBtn = $('reloadDocksBtn');
@@ -1033,27 +1004,23 @@
           encostaHtml = `<span class="step-locked">AGUARDA ACIONAMENTO</span>`;
         }
 
-        // ---------- INÍCIO CONF (SEM BARREIRA) ----------
+        // ---------- INÍCIO CONF (SOMENTE LEITURA — vem do Supabase) ----------
         let inicioHtml = '';
         if (s.hasInicio) {
-          inicioHtml = `<span class="col-date">${formatarDataHora(row[COLS.INICIO])}</span>`;
-        } else if (s.hasSenha) {
-          inicioHtml = `<button class="btn small step-iniciar" data-acao="iniciar" data-senha="${escapeHtml(senhaRaw)}">INICIAR</button>`;
+          inicioHtml = `<span class="readonly-cell col-date">${formatarDataHora(row[COLS.INICIO])}</span>`;
         } else {
-          inicioHtml = '—';
+          inicioHtml = `<span class="readonly-cell empty">—</span>`;
         }
 
-        // ---------- FIM CONF (SEM BARREIRA) ----------
+        // ---------- FIM CONF (SOMENTE LEITURA — vem do Supabase) ----------
         let fimHtml = '';
         if (s.hasFim) {
-          fimHtml = `<span class="col-date">${formatarDataHora(row[COLS.FIM])}</span>`;
-        } else if (s.hasSenha) {
-          fimHtml = `<button class="btn small step-finalizar" data-acao="finalizar" data-senha="${escapeHtml(senhaRaw)}">FINALIZAR</button>`;
+          fimHtml = `<span class="readonly-cell col-date">${formatarDataHora(row[COLS.FIM])}</span>`;
         } else {
-          fimHtml = '—';
+          fimHtml = `<span class="readonly-cell empty">—</span>`;
         }
 
-        // ---------- TERMO (requer FIM) ----------
+        // ---------- TERMO (requer FIM CONF) ----------
         let termoHtml = '';
         if (s.hasTermo) {
           termoHtml = `<span class="col-date">${formatarDataHora(row[COLS.TERMO])}</span>`;
@@ -1128,24 +1095,19 @@
         });
       });
 
-      // Sincroniza o scroll horizontal (caso o usuário já esteja deslocado)
       tableHeadWrap.scrollLeft = tableBodyWrap.scrollLeft;
       tableScrollbar.scrollLeft = tableBodyWrap.scrollLeft;
     }
 
     // ============================================================
-    // REGISTRO DE ETAPAS
+    // REGISTRO DE ETAPAS (TERMO e PAGAMENTO)
     // ============================================================
     async function registrarEtapa(acao, senhaValor, botao) {
       const colMap = {
-        iniciar:   COLS.INICIO,
-        finalizar: COLS.FIM,
         termo:     COLS.TERMO,
         pagamento: COLS.PAGAMENTO
       };
       const labelMap = {
-        iniciar: 'INÍCIO CONF',
-        finalizar: 'FIM CONF',
         termo: 'TERMO',
         pagamento: 'PAGAMENTO'
       };
@@ -1187,7 +1149,6 @@
         }
 
         setNotice(`${labelMap[acao]} REGISTRADO PARA A SENHA ${senhaValor} EM ${valor}.`, 'success');
-        // Recarrega do Supabase para mostrar o valor REAL gravado no banco
         carregarHistorico();
       } catch (err) {
         console.error(err);
@@ -1663,7 +1624,7 @@
       resetarModal();
       carregarHistorico();
       startAutoRefresh();
-      setNotice('INÍCIO/FIM SÃO INDEPENDENTES. PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA.', '');
+      setNotice('INÍCIO/FIM CONF SÃO CONSULTADOS NO SUPABASE. PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA.', '');
     }
 
     init();
