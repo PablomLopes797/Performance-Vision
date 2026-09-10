@@ -198,8 +198,64 @@
       padding: 6px 10px;
     }
     .btn.ghost:hover { background: #f3f7fb; }
+    .btn.refresh {
+      border-color: #cfe4ff;
+      background: #f0f7ff;
+      color: #2d6bd1;
+    }
+    .btn.refresh:hover { background: #e3efff; border-color: #a8cdf7; }
     .btn.success { border-color: var(--green); color: var(--green); }
     .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    /* Ícone de refresh que gira */
+    .btn.refresh .icon-refresh {
+      display: inline-block;
+      font-size: 13px;
+      line-height: 1;
+      transition: transform .4s ease;
+    }
+    .btn.refresh.loading .icon-refresh {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Botão X para remover acionamento */
+    .btn-x {
+      border: 1px solid #ffe0e4;
+      background: #fff5f6;
+      color: #b73f52;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: var(--fw-black);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      padding: 0;
+      flex: 0 0 auto;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .08s ease;
+      font-family: inherit;
+    }
+    .btn-x:hover {
+      background: #ffe0e4;
+      border-color: #ffc4cb;
+    }
+    .btn-x:active { transform: scale(.94); }
+    .btn-x:disabled { opacity: .5; cursor: not-allowed; }
+
+    .acionamento-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .acionamento-cell span { flex: 1 1 auto; }
 
     .panel {
       background: #fff;
@@ -261,7 +317,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      min-width: 130px;
+      min-width: 180px;
     }
     .filter-field label {
       font-size: var(--fs-2xs);
@@ -270,7 +326,8 @@
       letter-spacing: var(--ls-wider);
       line-height: var(--lh-snug);
     }
-    .filter-field input {
+    .filter-field input,
+    .filter-field select {
       height: 34px;
       border: 1px solid #dfe7ef;
       border-radius: 8px;
@@ -284,12 +341,19 @@
       width: 100%;
       transition: border-color .15s ease, box-shadow .15s ease;
       font-variant-numeric: tabular-nums;
+      cursor: pointer;
     }
-    .filter-field input:focus {
+    .filter-field input:focus,
+    .filter-field select:focus {
       border-color: #75a6ff;
       box-shadow: 0 0 0 3px #347eff12;
     }
     .filter-field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
+    .filter-field select option { padding: 4px; }
+    .filter-field select optgroup {
+      font-weight: var(--fw-black);
+      color: #526982;
+    }
     .filters .btn.small { height: 34px; }
     .filters .filter-info {
       margin-left: auto;
@@ -298,6 +362,24 @@
       font-weight: var(--fw-bold);
       letter-spacing: var(--ls-wide);
       padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .last-update {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #5a7ea8;
+      font-variant-numeric: tabular-nums;
+    }
+    .last-update::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
     }
 
     .notice {
@@ -543,7 +625,7 @@
       h1 { font-size: 26px; }
       .filters { flex-direction: column; align-items: stretch; }
       .filter-field { min-width: 0; }
-      .filters .filter-info { margin-left: 0; text-align: center; }
+      .filters .filter-info { margin-left: 0; text-align: center; justify-content: center; }
     }
   </style>
   <link rel="stylesheet" href="sidebar.css">
@@ -566,6 +648,9 @@
           <p>REGISTRE A CHEGADA DO MOTORISTA E ATUALIZE A AGENDA COM OS DADOS DO VEÍCULO.</p>
         </div>
         <div class="actions">
+          <button class="btn refresh small" id="refreshBtn" type="button" title="Atualizar agora">
+            <span class="icon-refresh">⟳</span> ATUALIZAR
+          </button>
           <button class="btn primary" id="openModalBtn">＋ NOVA RECEPÇÃO</button>
         </div>
       </div>
@@ -582,8 +667,10 @@
         <!-- ===== FILTROS ===== -->
         <div class="filters">
           <div class="filter-field">
-            <label for="filterMonth">MÊS (MM/AAAA)</label>
-            <input id="filterMonth" type="text" placeholder="MM/AAAA" maxlength="7" autocomplete="off" inputmode="numeric">
+            <label for="filterMonth">MÊS / ANO (AGENDA)</label>
+            <select id="filterMonth">
+              <option value="">TODOS OS MESES</option>
+            </select>
           </div>
           <div class="filter-field">
             <label for="filterFrom">DE</label>
@@ -704,6 +791,9 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
 
+    // Intervalo do auto-refresh (60 segundos = 60.000 ms)
+    const AUTO_REFRESH_MS = 60 * 1000;
+
     // ============================================================
     // MAPA DE COLUNAS
     // ============================================================
@@ -748,12 +838,17 @@
     const filterTo = $('filterTo');
     const clearFilters = $('clearFilters');
     const filterInfo = $('filterInfo');
+    const refreshBtn = $('refreshBtn');
 
     let senhaEncontrada = false;
     let dadosAgenda = null;
 
     // Cache do último fetch completo
     let allData = [];
+
+    // Controle do auto-refresh
+    let autoRefreshTimer = null;
+    let isLoading = false;
 
     // ===== UTILITÁRIOS =====
     function upper(v) {
@@ -770,8 +865,6 @@
 
     // ============================================================
     // PARSER FLEXÍVEL DE DATA
-    // Aceita:  "1/3/26 15:00", "13/3/26 15:00", "1/13/26 15:00",
-    //          "15/01/2025 14:32", ISO com/sem timezone, etc.
     // ============================================================
     function parseFlexibleDate(valor) {
       if (valor === null || valor === undefined || valor === '') return null;
@@ -788,7 +881,6 @@
       const str = String(valor).trim();
       if (!str) return null;
 
-      // 1) Formato curto BR/US: D/M/YY[YY] [H:MM[:SS]]
       const br = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
       if (br) {
         let [, a, b, year, hour = '0', min = '0'] = br;
@@ -796,15 +888,14 @@
         if (year < 100) year = 2000 + year;
 
         let day, month;
-        if (a > 12 && b <= 12) { day = a; month = b; }        // D/M
-        else if (b > 12 && a <= 12) { day = b; month = a; }   // M/D
-        else { day = a; month = b; }                          // assume D/M (pt-BR)
+        if (a > 12 && b <= 12) { day = a; month = b; }
+        else if (b > 12 && a <= 12) { day = b; month = a; }
+        else { day = a; month = b; }
 
         if (month < 1 || month > 12 || day < 1 || day > 31) return null;
         return { day, month, year, hour: Number(hour), min: Number(min) };
       }
 
-      // 2) ISO 8601
       const iso = str.match(
         /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/
       );
@@ -824,7 +915,6 @@
         };
       }
 
-      // 3) Fallback
       const d = new Date(str);
       if (!isNaN(d.getTime())) {
         return {
@@ -835,14 +925,12 @@
       return null;
     }
 
-    // Formata qualquer valor de data para "DD/MM/AAAA HH:MM"
     function formatarDataHora(valor) {
       const p = parseFlexibleDate(valor);
       if (!p) return valor ? String(valor) : '';
       return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
     }
 
-    // Retorna um objeto Date (para ordenação e comparação)
     function toDateObj(valor) {
       const p = parseFlexibleDate(valor);
       if (!p) return null;
@@ -850,7 +938,6 @@
       return isNaN(d.getTime()) ? null : d;
     }
 
-    // Renderiza célula de data
     function renderDate(valor) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
       const p = parseFlexibleDate(valor);
@@ -858,7 +945,6 @@
       return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
     }
 
-    // Renderiza célula de texto
     function renderText(valor) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
       return upper(valor);
@@ -949,34 +1035,41 @@
       });
     }
 
-    // ===== MÁSCARA DO FILTRO MM/AAAA =====
-    function setupMonthMask() {
-      filterMonth.addEventListener('input', function() {
-        let v = this.value.replace(/\D/g, '');
-        if (v.length > 6) v = v.slice(0, 6);
-        if (v.length <= 2) {
-          this.value = v;
-        } else {
-          this.value = v.slice(0, 2) + '/' + v.slice(2);
+    // ============================================================
+    // POPULA O DROPDOWN DE MÊS/ANO
+    // ============================================================
+    function populateMonthFilter() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const startYear = currentYear - 2;
+      const endYear = currentYear + 2;
+
+      const monthNames = [
+        'JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO',
+        'JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'
+      ];
+
+      let html = '<option value="">TODOS OS MESES</option>';
+
+      for (let y = endYear; y >= startYear; y--) {
+        html += `<optgroup label="${y}">`;
+        for (let m = 12; m >= 1; m--) {
+          const val = `${pad2(m)}/${y}`;
+          html += `<option value="${val}">${monthNames[m - 1]} / ${y}</option>`;
         }
-      });
-      filterMonth.addEventListener('blur', function() {
-        const v = this.value.trim();
-        if (v && !/^\d{2}\/\d{4}$/.test(v)) {
-          const digits = v.replace(/\D/g, '');
-          if (digits.length !== 6) this.value = '';
-        }
-      });
+        html += '</optgroup>';
+      }
+
+      filterMonth.innerHTML = html;
     }
 
     // ============================================================
-    // FILTROS
-    // (usa toDateObj() — não confundir com variável local)
+    // FILTROS  (mês/ano aplicado sobre DTA HR AGENDA)
     // ============================================================
     function applyFilters() {
-      const monthStr = filterMonth.value.trim();      // "MM/AAAA"
-      const fromStr  = filterFrom.value;              // "YYYY-MM-DD"
-      const toStr    = filterTo.value;                // "YYYY-MM-DD"
+      const monthStr = filterMonth.value;
+      const fromStr  = filterFrom.value;
+      const toStr    = filterTo.value;
 
       let monthNum = null, yearNum = null;
       if (/^\d{2}\/\d{4}$/.test(monthStr)) {
@@ -995,7 +1088,7 @@
       }
 
       const filtered = allData.filter(row => {
-        const dt = toDateObj(row[COLS.CHEGADA]);
+        const dt = toDateObj(row[COLS.AGENDA]);
         if (!dt) {
           return !monthNum && !fromLimit && !toLimit;
         }
@@ -1021,7 +1114,7 @@
     }
 
     function setupFilters() {
-      filterMonth.addEventListener('input', applyFilters);
+      filterMonth.addEventListener('change', applyFilters);
       filterFrom.addEventListener('change', applyFilters);
       filterTo.addEventListener('change', applyFilters);
       clearFilters.addEventListener('click', function() {
@@ -1061,7 +1154,11 @@
 
         let acionamentoHtml = '';
         if (jaAcionado) {
-          acionamentoHtml = `<span>${formatarDataHora(acionamentoRaw)}</span>`;
+          acionamentoHtml = `
+            <div class="acionamento-cell">
+              <span>${formatarDataHora(acionamentoRaw)}</span>
+              <button class="btn-x" data-remover-senha="${senhaVal}" title="Remover acionamento" aria-label="Remover acionamento">✕</button>
+            </div>`;
         } else {
           acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
         }
@@ -1096,6 +1193,15 @@
           const senhaVal = this.dataset.senha;
           if (senhaVal && !this.disabled) {
             registrarAcionamento(senhaVal, this);
+          }
+        });
+      });
+
+      document.querySelectorAll('#historicoBody button[data-remover-senha]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const senhaVal = this.dataset.removerSenha;
+          if (senhaVal && !this.disabled) {
+            removerAcionamento(senhaVal, this);
           }
         });
       });
@@ -1243,7 +1349,7 @@
       if (e.target === this) closeModal();
     });
 
-    // ===== ACIONAMENTO =====
+    // ===== ACIONAMENTO (REGISTRAR) =====
     async function registrarAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
 
@@ -1278,8 +1384,54 @@
       }
     }
 
-    // ===== HISTÓRICO =====
+    // ===== ACIONAMENTO (REMOVER) =====
+    async function removerAcionamento(senhaValor, botao) {
+      if (!senhaValor) return;
+
+      const confirmar = window.confirm(`REMOVER O ACIONAMENTO DA SENHA ${senhaValor}?`);
+      if (!confirmar) return;
+
+      botao.disabled = true;
+      const original = botao.textContent;
+      botao.textContent = '…';
+
+      try {
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
+        const resp = await fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ [COLS.ACIONAMENTO]: null })
+        });
+
+        if (!resp.ok) throw new Error('Falha ao remover acionamento: ' + resp.status);
+
+        setNotice(`ACIONAMENTO DA SENHA ${senhaValor} REMOVIDO.`, 'success');
+        carregarHistorico();
+      } catch (err) {
+        console.error(err);
+        setNotice('ERRO AO REMOVER ACIONAMENTO: ' + err.message, 'error');
+        botao.textContent = original;
+        botao.disabled = false;
+      }
+    }
+
+    // ============================================================
+    // HISTÓRICO
+    // ============================================================
     async function carregarHistorico() {
+      // Evita requisições concorrentes (ex.: auto-refresh + click manual)
+      if (isLoading) return;
+      isLoading = true;
+
+      // Marca o botão como "carregando"
+      refreshBtn.classList.add('loading');
+      refreshBtn.disabled = true;
+
       try {
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=500`;
         const resp = await fetch(url, {
@@ -1317,21 +1469,64 @@
         allData = data;
         applyFilters();
 
+        // Mostra horário da última atualização
+        const agora = new Date();
+        const horaFmt = `${pad2(agora.getHours())}:${pad2(agora.getMinutes())}:${pad2(agora.getSeconds())}`;
+        // Se já existe filterInfo com "MOSTRANDO X DE Y", anexa o horário
+        const existingInfo = filterInfo.textContent || '';
+        filterInfo.innerHTML = `${existingInfo ? existingInfo + ' · ' : ''}<span class="last-update">ATUALIZADO ${horaFmt}</span>`;
+
       } catch (err) {
         console.error('[HISTÓRICO] Erro:', err);
         historicoBody.innerHTML = `<tr><td colspan="12" class="empty-table">ERRO AO CARREGAR HISTÓRICO: ${upper(err.message)}</td></tr>`;
+      } finally {
+        isLoading = false;
+        refreshBtn.classList.remove('loading');
+        refreshBtn.disabled = false;
       }
     }
+
+    // ============================================================
+    // AUTO-REFRESH
+    // ============================================================
+    function startAutoRefresh() {
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(() => {
+        // Não recarrega se a aba estiver oculta (economiza banda)
+        if (document.hidden) return;
+        carregarHistorico();
+      }, AUTO_REFRESH_MS);
+    }
+
+    function stopAutoRefresh() {
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
+    }
+
+    // Quando a aba volta a ficar visível, força um refresh imediato
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        carregarHistorico();
+      }
+    });
+
+    // Botão de refresh manual
+    refreshBtn.addEventListener('click', function() {
+      carregarHistorico();
+    });
 
     // ===== INIT =====
     function init() {
       setupMasks();
       setupUppercaseInputs();
-      setupMonthMask();
+      populateMonthFilter();
       setupFilters();
       resetarModal();
       carregarHistorico();
-      setNotice('CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.', '');
+      startAutoRefresh();
+      setNotice('ATUALIZAÇÃO AUTOMÁTICA ATIVA (A CADA 1 MINUTO). CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.', '');
     }
 
     init();
