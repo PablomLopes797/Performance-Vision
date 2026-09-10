@@ -6,552 +6,247 @@
   <title>WAREHOUSE VISION | RECEPÇÃO</title>
   <style>
     :root {
-      --navy: #071426;
-      --ink: #15283f;
-      --muted: #71849b;
-      --line: #e4ebf3;
-      --bg: #f3f7fb;
-      --blue: #2877ff;
-      --cyan: #1fc4b1;
-      --green: #1db889;
-      --red: #e34b60;
-      --amber: #efa83a;
-      --shadow: 0 18px 55px #10254112;
-
+      --navy:#071426; --ink:#15283f; --muted:#71849b; --line:#e4ebf3; --bg:#f3f7fb;
+      --blue:#2877ff; --cyan:#1fc4b1; --green:#1db889; --red:#e34b60; --amber:#efa83a;
+      --shadow:0 18px 55px #10254112;
       --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-
-      --fs-2xs: 11px;
-      --fs-xs:  12px;
-      --fs-sm:  13px;
-      --fs-base:14px;
-      --fs-md:  15px;
-      --fs-lg:  16px;
-      --fs-xl:  18px;
-      --fs-2xl: 20px;
-      --fs-3xl: 32px;
-
-      --fw-regular:  400;
-      --fw-medium:   500;
-      --fw-semibold: 600;
-      --fw-bold:     700;
-      --fw-black:    800;
-
-      --lh-tight:  1.2;
-      --lh-snug:   1.35;
-      --lh-normal: 1.5;
-
-      --ls-tight:  -0.01em;
-      --ls-normal: 0;
-      --ls-wide:   0.05em;
-      --ls-wider:  0.08em;
-      --ls-widest: 0.12em;
+      --fs-2xs:11px; --fs-xs:12px; --fs-sm:13px; --fs-base:14px; --fs-md:15px;
+      --fs-lg:16px; --fs-xl:18px; --fs-2xl:20px; --fs-3xl:32px;
+      --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700; --fw-black:800;
+      --lh-tight:1.2; --lh-snug:1.35; --lh-normal:1.5;
+      --ls-tight:-0.01em; --ls-normal:0; --ls-wide:0.05em; --ls-wider:0.08em; --ls-widest:0.12em;
     }
-
     * { box-sizing: border-box; }
-
     html, body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--font-sans);
-      font-size: var(--fs-base);
-      font-weight: var(--fw-regular);
-      line-height: var(--lh-normal);
-      text-transform: uppercase;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--font-sans); font-size: var(--fs-base); font-weight: var(--fw-regular);
+      line-height: var(--lh-normal); text-transform: uppercase;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
-
-    button, input, select {
-      font-family: inherit;
-      font-size: inherit;
-      line-height: inherit;
-      text-transform: inherit;
-    }
+    button, input, select { font-family: inherit; font-size: inherit; line-height: inherit; text-transform: inherit; }
     button { cursor: pointer; }
     .app { min-height: 100vh; }
-
-    #sidebar-container {
-      position: fixed;
-      inset: 0 auto 0 0;
-      width: 236px;
-      z-index: 10;
-    }
-
+    #sidebar-container { position: fixed; inset: 0 auto 0 0; width: 236px; z-index: 10; }
     .main { margin-left: 236px; min-height: 100vh; }
     .topbar {
-      height: 66px;
-      padding: 0 34px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--line);
-      background: #ffffffdc;
-      backdrop-filter: blur(15px);
-      position: sticky;
-      top: 0;
-      z-index: 5;
+      height: 66px; padding: 0 34px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--line); background: #ffffffdc; backdrop-filter: blur(15px);
+      position: sticky; top: 0; z-index: 5;
     }
-    .crumb {
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-medium);
-      letter-spacing: var(--ls-wider);
-      color: #91a0b0;
-      line-height: var(--lh-snug);
-    }
-    .crumb strong {
-      display: block;
-      color: var(--ink);
-      font-size: var(--fs-md);
-      font-weight: var(--fw-semibold);
-      letter-spacing: var(--ls-wide);
-      margin-top: 4px;
-      line-height: var(--lh-snug);
-    }
-    .top-status {
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-medium);
-      color: #70839a;
-      letter-spacing: var(--ls-wide);
-      line-height: var(--lh-snug);
-    }
-    .top-status i {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background: var(--cyan);
-      border-radius: 50%;
-      margin-right: 4px;
-      vertical-align: middle;
-    }
-
+    .crumb { font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: var(--ls-wider); color: #91a0b0; line-height: var(--lh-snug); }
+    .crumb strong { display: block; color: var(--ink); font-size: var(--fs-md); font-weight: var(--fw-semibold); letter-spacing: var(--ls-wide); margin-top: 4px; line-height: var(--lh-snug); }
+    .top-status { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: #70839a; letter-spacing: var(--ls-wide); line-height: var(--lh-snug); }
+    .top-status i { display: inline-block; width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; margin-right: 4px; vertical-align: middle; }
     .content { padding: 28px 34px 50px; max-width: 100%; }
-
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 21px;
-      flex-wrap: wrap;
-      gap: 14px;
-    }
-    .eyebrow {
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-black);
-      letter-spacing: var(--ls-widest);
-      color: var(--blue);
-      line-height: var(--lh-snug);
-    }
-    h1 {
-      font-size: var(--fs-3xl);
-      font-weight: var(--fw-black);
-      letter-spacing: var(--ls-tight);
-      line-height: var(--lh-tight);
-      margin: 7px 0 6px;
-      color: var(--navy);
-    }
-    .hero p {
-      margin: 0;
-      color: var(--muted);
-      font-size: var(--fs-md);
-      line-height: var(--lh-normal);
-    }
+    .hero { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 21px; flex-wrap: wrap; gap: 14px; }
+    .eyebrow { font-size: var(--fs-2xs); font-weight: var(--fw-black); letter-spacing: var(--ls-widest); color: var(--blue); line-height: var(--lh-snug); }
+    h1 { font-size: var(--fs-3xl); font-weight: var(--fw-black); letter-spacing: var(--ls-tight); line-height: var(--lh-tight); margin: 7px 0 6px; color: var(--navy); }
+    .hero p { margin: 0; color: var(--muted); font-size: var(--fs-md); line-height: var(--lh-normal); }
     .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
     .btn {
-      border: 1px solid var(--line);
-      background: #fff;
-      color: #526982;
-      border-radius: 9px;
-      padding: 10px 14px;
-      font-size: var(--fs-xs);
-      font-weight: var(--fw-bold);
-      letter-spacing: var(--ls-wide);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      line-height: 1;
+      border: 1px solid var(--line); background: #fff; color: #526982; border-radius: 9px;
+      padding: 10px 14px; font-size: var(--fs-xs); font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wide); text-decoration: none; display: inline-flex;
+      align-items: center; justify-content: center; gap: 6px; line-height: 1;
       transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
     }
     .btn:hover { border-color: #cfdbe8; }
-    .btn.primary {
-      border: 0;
-      color: #fff;
-      background: linear-gradient(135deg, #2d7bff, #16bda9);
-      box-shadow: 0 8px 22px #347eff35;
-    }
+    .btn.primary { border: 0; color: #fff; background: linear-gradient(135deg, #2d7bff, #16bda9); box-shadow: 0 8px 22px #347eff35; }
     .btn.primary:hover { box-shadow: 0 10px 26px #347eff4a; }
     .btn:active { transform: scale(.98); }
-    .btn.small {
-      padding: 6px 11px;
-      font-size: var(--fs-2xs);
-      border-radius: 6px;
-      letter-spacing: var(--ls-wide);
-      white-space: normal;
-    }
-    .btn.ghost {
-      background: transparent;
-      border-color: transparent;
-      color: #70839a;
-      padding: 6px 10px;
-    }
+    .btn.small { padding: 6px 11px; font-size: var(--fs-2xs); border-radius: 6px; letter-spacing: var(--ls-wide); white-space: normal; }
+    .btn.ghost { background: transparent; border-color: transparent; color: #70839a; padding: 6px 10px; }
     .btn.ghost:hover { background: #f3f7fb; }
-    .btn.refresh {
-      border-color: #cfe4ff;
-      background: #f0f7ff;
-      color: #2d6bd1;
-    }
+    .btn.refresh { border-color: #cfe4ff; background: #f0f7ff; color: #2d6bd1; }
     .btn.refresh:hover { background: #e3efff; border-color: #a8cdf7; }
     .btn.success { border-color: var(--green); color: var(--green); }
     .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    .btn.refresh .icon-refresh {
-      display: inline-block;
-      font-size: 13px;
-      line-height: 1;
-      transition: transform .4s ease;
-    }
-    .btn.refresh.loading .icon-refresh {
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
+    .btn.dock { background: #e8f5ff; border-color: #b8daff; color: #1e6db5; }
+    .btn.dock:hover { background: #d4ebff; border-color: #8fc3f5; }
+    .btn.refresh .icon-refresh { display: inline-block; font-size: 13px; line-height: 1; transition: transform .4s ease; }
+    .btn.refresh.loading .icon-refresh { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     .btn-x {
-      border: 1px solid #ffe0e4;
-      background: #fff5f6;
-      color: #b73f52;
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: var(--fw-black);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      padding: 0;
-      flex: 0 0 auto;
-      cursor: pointer;
+      border: 1px solid #ffe0e4; background: #fff5f6; color: #b73f52;
+      width: 22px; height: 22px; border-radius: 6px; font-size: 11px; font-weight: var(--fw-black);
+      display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+      padding: 0; flex: 0 0 auto; cursor: pointer;
       transition: background .15s ease, border-color .15s ease, transform .08s ease;
-      font-family: inherit;
     }
-    .btn-x:hover {
-      background: #ffe0e4;
-      border-color: #ffc4cb;
-    }
+    .btn-x:hover { background: #ffe0e4; border-color: #ffc4cb; }
     .btn-x:active { transform: scale(.94); }
     .btn-x:disabled { opacity: .5; cursor: not-allowed; }
-
-    .acionamento-cell {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
+    .acionamento-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .acionamento-cell span { flex: 1 1 auto; }
 
     .panel {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-      width: 100%;
-      margin-bottom: 17px;
+      background: #fff; border: 1px solid var(--line); border-radius: 14px;
+      box-shadow: var(--shadow); padding: 18px; width: 100%; margin-bottom: 17px;
     }
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .panel-title {
-      font-size: var(--fs-lg);
-      font-weight: var(--fw-bold);
-      color: var(--navy);
-      letter-spacing: var(--ls-tight);
-      line-height: var(--lh-snug);
-    }
-    .panel-sub {
-      font-size: var(--fs-xs);
-      color: #8c9aab;
-      margin-top: 4px;
-      line-height: var(--lh-normal);
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      background: #edf5ff;
-      color: #3470dd;
-      border-radius: 20px;
-      padding: 5px 10px;
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-bold);
-      letter-spacing: var(--ls-wide);
-      white-space: nowrap;
-      line-height: 1;
-    }
+    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .panel-title { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--navy); letter-spacing: var(--ls-tight); line-height: var(--lh-snug); }
+    .panel-sub { font-size: var(--fs-xs); color: #8c9aab; margin-top: 4px; line-height: var(--lh-normal); }
+    .pill { display: inline-flex; align-items: center; background: #edf5ff; color: #3470dd; border-radius: 20px; padding: 5px 10px; font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); white-space: nowrap; line-height: 1; }
 
-    /* ===== BARRA DE BUSCA ===== */
-    .search-bar {
-      position: relative;
-      margin-bottom: 12px;
-    }
+    .search-bar { position: relative; margin-bottom: 12px; }
     .search-bar input {
-      width: 100%;
-      height: 44px;
-      border: 1px solid #dfe7ef;
-      border-radius: 10px;
-      padding: 0 40px 0 42px;
-      background: #fff;
-      color: #253e59;
-      font-size: var(--fs-base);
-      font-weight: var(--fw-medium);
-      letter-spacing: var(--ls-wide);
-      outline: none;
+      width: 100%; height: 44px; border: 1px solid #dfe7ef; border-radius: 10px;
+      padding: 0 40px 0 42px; background: #fff; color: #253e59;
+      font-size: var(--fs-base); font-weight: var(--fw-medium); letter-spacing: var(--ls-wide); outline: none;
       transition: border-color .15s ease, box-shadow .15s ease;
     }
-    .search-bar input::placeholder {
-      color: #9aabbf;
-      font-weight: var(--fw-regular);
-      letter-spacing: var(--ls-wide);
-    }
-    .search-bar input:focus {
-      border-color: #75a6ff;
-      box-shadow: 0 0 0 3px #347eff12;
-    }
-    .search-bar .search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 16px;
-      color: #70839a;
-      pointer-events: none;
-      line-height: 1;
-    }
+    .search-bar input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); letter-spacing: var(--ls-wide); }
+    .search-bar input:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
+    .search-bar .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #70839a; pointer-events: none; line-height: 1; }
     .search-bar .search-clear {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      color: #9aabbf;
-      font-size: 14px;
-      font-weight: var(--fw-black);
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0;
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      border: 0; background: transparent; color: #9aabbf; font-size: 14px; font-weight: var(--fw-black);
+      width: 24px; height: 24px; border-radius: 50%; display: none; align-items: center; justify-content: center;
+      cursor: pointer; line-height: 1; padding: 0;
     }
-    .search-bar .search-clear:hover {
-      background: #f3f7fb;
-      color: #526982;
-    }
+    .search-bar .search-clear:hover { background: #f3f7fb; color: #526982; }
     .search-bar.has-value .search-clear { display: inline-flex; }
 
-    /* ===== FILTROS ===== */
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: flex-end;
-      padding: 12px 14px;
-      background: #f8fbff;
-      border: 1px solid #e8f0fa;
-      border-radius: 10px;
-      margin-bottom: 14px;
+    .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding: 12px 14px; background: #f8fbff; border: 1px solid #e8f0fa; border-radius: 10px; margin-bottom: 14px; }
+    .filter-field { display: flex; flex-direction: column; gap: 5px; min-width: 180px; }
+    .filter-field label { font-size: var(--fs-2xs); font-weight: var(--fw-bold); color: #526982; letter-spacing: var(--ls-wider); line-height: var(--lh-snug); }
+    .filter-field input, .filter-field select {
+      height: 34px; border: 1px solid #dfe7ef; border-radius: 8px; padding: 0 10px;
+      background: #fff; color: #253e59; font-size: var(--fs-xs); font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-wide); outline: none; width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease; font-variant-numeric: tabular-nums; cursor: pointer;
     }
-    .filter-field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      min-width: 180px;
-    }
-    .filter-field label {
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-bold);
-      color: #526982;
-      letter-spacing: var(--ls-wider);
-      line-height: var(--lh-snug);
-    }
-    .filter-field input,
-    .filter-field select {
-      height: 34px;
-      border: 1px solid #dfe7ef;
-      border-radius: 8px;
-      padding: 0 10px;
-      background: #fff;
-      color: #253e59;
-      font-size: var(--fs-xs);
-      font-weight: var(--fw-medium);
-      letter-spacing: var(--ls-wide);
-      outline: none;
-      width: 100%;
-      transition: border-color .15s ease, box-shadow .15s ease;
-      font-variant-numeric: tabular-nums;
-      cursor: pointer;
-    }
-    .filter-field input:focus,
-    .filter-field select:focus {
-      border-color: #75a6ff;
-      box-shadow: 0 0 0 3px #347eff12;
-    }
+    .filter-field input:focus, .filter-field select:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
     .filter-field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
     .filter-field select option { padding: 4px; }
-    .filter-field select optgroup {
-      font-weight: var(--fw-black);
-      color: #526982;
-    }
+    .filter-field select optgroup { font-weight: var(--fw-black); color: #526982; }
     .filters .btn.small { height: 34px; }
-    .filters .filter-info {
-      margin-left: auto;
-      font-size: var(--fs-2xs);
-      color: #70839a;
-      font-weight: var(--fw-bold);
-      letter-spacing: var(--ls-wide);
-      padding-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .last-update {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #5a7ea8;
-      font-variant-numeric: tabular-nums;
-    }
-    .last-update::before {
-      content: '';
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background: var(--green);
-      border-radius: 50%;
-    }
+    .filters .filter-info { margin-left: auto; font-size: var(--fs-2xs); color: #70839a; font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); padding-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .last-update { display: inline-flex; align-items: center; gap: 4px; color: #5a7ea8; font-variant-numeric: tabular-nums; }
+    .last-update::before { content: ''; display: inline-block; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
 
-    .notice {
-      padding: 12px 13px;
-      border-radius: 9px;
-      background: #f5f9ff;
-      color: #607691;
-      font-size: var(--fs-sm);
-      font-weight: var(--fw-medium);
-      line-height: var(--lh-normal);
-      margin-top: 16px;
-    }
+    .notice { padding: 12px 13px; border-radius: 9px; background: #f5f9ff; color: #607691; font-size: var(--fs-sm); font-weight: var(--fw-medium); line-height: var(--lh-normal); margin-top: 16px; }
     .notice.success { background: #effcf5; color: #137b57; }
-    .notice.error   { background: #fff1f2; color: #b73f52; }
+    .notice.error { background: #fff1f2; color: #b73f52; }
     .notice.warning { background: #fff8e5; color: #9e7a1a; }
-
     .hidden { display: none !important; }
 
-    /* ============================================================
-       TABELA
-       ============================================================ */
-    .table-wrap {
-      overflow: auto;
-      border: 1px solid #edf1f5;
-      border-radius: 10px;
-      max-height: 70vh;
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: var(--fs-xs);
-      font-weight: var(--fw-regular);
-      line-height: var(--lh-snug);
-      min-width: 1700px;
-    }
-    .data-table th {
-      background: #f7fafd;
-      color: #7c8da0;
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-bold);
-      text-align: left;
-      letter-spacing: var(--ls-wider);
-      padding: 12px 11px;
-      white-space: nowrap;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    .data-table td {
-      border-top: 1px solid #edf1f5;
-      padding: 12px 11px;
-      color: #3d526b;
-      font-size: var(--fs-xs);
-      white-space: nowrap;
-      vertical-align: top;
-    }
+    .table-wrap { overflow: auto; border: 1px solid #edf1f5; border-radius: 10px; max-height: 70vh; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); font-weight: var(--fw-regular); line-height: var(--lh-snug); min-width: 1800px; }
+    .data-table th { background: #f7fafd; color: #7c8da0; font-size: var(--fs-2xs); font-weight: var(--fw-bold); text-align: left; letter-spacing: var(--ls-wider); padding: 12px 11px; white-space: nowrap; position: sticky; top: 0; z-index: 1; }
+    .data-table td { border-top: 1px solid #edf1f5; padding: 12px 11px; color: #3d526b; font-size: var(--fs-xs); white-space: nowrap; vertical-align: top; }
     .data-table tbody tr:hover { background: #f8fbff; }
-    .data-table .col-date {
-      font-variant-numeric: tabular-nums;
-      letter-spacing: var(--ls-wide);
-    }
+    .data-table .col-date { font-variant-numeric: tabular-nums; letter-spacing: var(--ls-wide); }
+    .data-table th.cell-wrap, .data-table td.cell-wrap { white-space: normal; word-break: break-word; overflow-wrap: anywhere; min-width: 150px; max-width: 200px; line-height: var(--lh-normal); }
+    .hl { background: #fff3b0; color: #6b4d00; padding: 0 2px; border-radius: 3px; font-weight: var(--fw-bold); }
+    .empty-table { padding: 42px; text-align: center; color: #8192a6; font-size: var(--fs-sm); font-weight: var(--fw-medium); }
 
-    .data-table th.cell-wrap,
-    .data-table td.cell-wrap {
-      white-space: normal;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      min-width: 150px;
-      max-width: 200px;
-      line-height: var(--lh-normal);
-    }
-
-    /* Realce do termo buscado */
-    .hl {
-      background: #fff3b0;
-      color: #6b4d00;
-      padding: 0 2px;
-      border-radius: 3px;
-      font-weight: var(--fw-bold);
-    }
-
-    .empty-table {
-      padding: 42px;
-      text-align: center;
-      color: #8192a6;
-      font-size: var(--fs-sm);
-      font-weight: var(--fw-medium);
-    }
-
-    .badge-viewed {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 9px;
-      border-radius: 20px;
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-bold);
-      letter-spacing: var(--ls-wide);
-      white-space: normal;
-      line-height: var(--lh-snug);
-      max-width: 100%;
-    }
-    .badge-viewed.ok  { background: #effcf5; color: #137b57; }
+    .badge-viewed { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 20px; font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); white-space: normal; line-height: var(--lh-snug); max-width: 100%; }
+    .badge-viewed.ok { background: #effcf5; color: #137b57; }
     .badge-viewed.nok { background: #fff1f2; color: #b73f52; }
-    .badge-viewed small {
-      font-weight: var(--fw-semibold);
-      letter-spacing: var(--ls-normal);
-      opacity: .85;
-      font-variant-numeric: tabular-nums;
+    .badge-viewed small { font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal); opacity: .85; font-variant-numeric: tabular-nums; }
+
+    /* ============================================================
+       DOCK MAP (para o modal de alocação)
+       ============================================================ */
+    .dock-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+      gap: 8px;
+      width: 100%;
+      margin-top: 6px;
     }
+    .dock-square {
+      aspect-ratio: 1;
+      background: var(--green);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--fw-black);
+      color: #fff;
+      font-size: 12px;
+      transition: transform .15s, box-shadow .15s;
+      border: 2px solid transparent;
+      cursor: pointer;
+      position: relative;
+      padding: 3px;
+      min-height: 68px;
+      user-select: none;
+    }
+    .dock-square:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 18px #10254125;
+      z-index: 2;
+    }
+    .dock-square.ocupado { background: var(--red); cursor: not-allowed; }
+    .dock-square.bloqueado { background: #8a8a8a; border-color: #f5c542; cursor: not-allowed; }
+    .dock-square .dock-number {
+      font-size: 18px;
+      line-height: 1.2;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .dock-square .dock-tempo {
+      font-size: 9px;
+      font-weight: var(--fw-semibold);
+      margin-top: 1px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .dock-square .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #071426;
+      color: #e4edf6;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 9px;
+      font-weight: var(--fw-medium);
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      text-align: left;
+      line-height: 1.6;
+    }
+    .dock-square .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #071426;
+    }
+    .dock-square:hover .tooltip { display: block; }
+    .dock-square .tooltip strong { color: #fff; font-weight: var(--fw-black); }
+    .dock-square .tooltip .label { color: #8aa3c0; }
+    .dock-square .tooltip .motivo { color: #f5c542; }
+    .dock-square .tooltip .senha { color: #6fc9ff; }
+    .dock-square .tooltip .carga { color: #b7e6a0; }
+    .dock-square.sua-doca {
+      box-shadow: 0 0 0 3px #ffd700, 0 0 20px #ffd70080;
+      border-color: #ffd700;
+    }
+
+    .dock-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; color: var(--muted); font-size: var(--fs-2xs); }
+    .dock-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .dock-legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+    .dock-legend .green { background: var(--green); }
+    .dock-legend .red { background: var(--red); }
+    .dock-legend .gray { background: #8a8a8a; border: 1px solid #f5c542; }
+
+    .dock-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+    .dock-metric { background: #f8fbff; border: 1px solid #e8f0fa; border-radius: 10px; padding: 10px 12px; }
+    .dock-metric small { display: block; font-size: var(--fs-2xs); color: #71849b; font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); }
+    .dock-metric b { display: block; font-size: 18px; color: var(--navy); font-weight: var(--fw-black); margin-top: 4px; letter-spacing: var(--ls-tight); }
 
     /* ===== MODAL ===== */
     .modal-overlay {
@@ -577,113 +272,40 @@
       overflow-y: auto;
       border: 1px solid var(--line);
     }
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .modal-title {
-      font-size: var(--fs-2xl);
-      font-weight: var(--fw-black);
-      color: var(--navy);
-      letter-spacing: var(--ls-tight);
-      line-height: var(--lh-tight);
-    }
-    .modal-sub {
-      font-size: var(--fs-xs);
-      color: #8c9aab;
-      margin-top: 6px;
-      line-height: var(--lh-normal);
-    }
+    .modal-content.wide { max-width: 980px; }
+    .modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+    .modal-title { font-size: var(--fs-2xl); font-weight: var(--fw-black); color: var(--navy); letter-spacing: var(--ls-tight); line-height: var(--lh-tight); }
+    .modal-sub { font-size: var(--fs-xs); color: #8c9aab; margin-top: 6px; line-height: var(--lh-normal); }
     .modal-close {
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 9px;
-      padding: 7px 13px;
-      font-size: var(--fs-xs);
-      font-weight: var(--fw-bold);
-      letter-spacing: var(--ls-wide);
-      color: #526982;
-      line-height: 1;
-      transition: border-color .15s ease;
+      border: 1px solid var(--line); background: #fff; border-radius: 9px; padding: 7px 13px;
+      font-size: var(--fs-xs); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide);
+      color: #526982; line-height: 1; transition: border-color .15s ease;
     }
     .modal-close:hover { border-color: #cfdbe8; }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .field { display: flex; flex-direction: column; gap: 6px; }
-    .field label {
-      font-size: var(--fs-xs);
-      font-weight: var(--fw-bold);
-      color: #526982;
-      letter-spacing: var(--ls-wider);
-      line-height: var(--lh-snug);
-    }
-    .field input,
-    .field select {
-      height: 40px;
-      border: 1px solid #dfe7ef;
-      border-radius: 8px;
-      padding: 0 12px;
-      background: #fbfdff;
-      color: #253e59;
-      font-size: var(--fs-base);
-      font-weight: var(--fw-medium);
-      outline: none;
-      width: 100%;
-      letter-spacing: var(--ls-wide);
-      transition: border-color .15s ease, box-shadow .15s ease;
+    .field label { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: #526982; letter-spacing: var(--ls-wider); line-height: var(--lh-snug); }
+    .field input, .field select {
+      height: 40px; border: 1px solid #dfe7ef; border-radius: 8px; padding: 0 12px;
+      background: #fbfdff; color: #253e59; font-size: var(--fs-base);
+      font-weight: var(--fw-medium); outline: none; width: 100%;
+      letter-spacing: var(--ls-wide); transition: border-color .15s ease, box-shadow .15s ease;
     }
     .field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
-    .field input:focus,
-    .field select:focus {
-      border-color: #75a6ff;
-      box-shadow: 0 0 0 3px #347eff12;
-    }
-    .field input:disabled {
-      background: #f0f4f9;
-      color: #8a9aad;
-      cursor: not-allowed;
-    }
-    .field small {
-      font-size: var(--fs-2xs);
-      color: #8998a9;
-      line-height: var(--lh-normal);
-    }
-    .field .mask-hint {
-      font-size: var(--fs-2xs);
-      font-weight: var(--fw-medium);
-      color: #9aabbf;
-      letter-spacing: var(--ls-wide);
-      margin-top: 2px;
-      line-height: var(--lh-snug);
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .form-state {
-      margin-right: auto;
-      color: var(--muted);
-      font-size: var(--fs-sm);
-      font-weight: var(--fw-medium);
-      line-height: var(--lh-snug);
-    }
+    .field input:focus, .field select:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
+    .field input:disabled { background: #f0f4f9; color: #8a9aad; cursor: not-allowed; }
+    .field small { font-size: var(--fs-2xs); color: #8998a9; line-height: var(--lh-normal); }
+    .field .mask-hint { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: #9aabbf; letter-spacing: var(--ls-wide); margin-top: 2px; line-height: var(--lh-snug); }
+    .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 20px; }
+    .form-state { margin-right: auto; color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-medium); line-height: var(--lh-snug); }
 
     @media (max-width: 1050px) {
       #sidebar-container { width: 200px; }
       .main { margin-left: 200px; }
       .content { padding: 24px; }
       .form-grid { grid-template-columns: 1fr; }
+      .dock-metrics { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 700px) {
       #sidebar-container { width: 67px; }
@@ -697,6 +319,10 @@
       .filters { flex-direction: column; align-items: stretch; }
       .filter-field { min-width: 0; }
       .filters .filter-info { margin-left: 0; text-align: center; justify-content: center; }
+      .dock-map { grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; }
+      .dock-square { min-height: 56px; font-size: 10px; }
+      .dock-square .dock-number { font-size: 15px; }
+      .dock-metrics { grid-template-columns: 1fr 1fr; }
     }
   </style>
   <link rel="stylesheet" href="sidebar.css">
@@ -735,26 +361,16 @@
           <span class="pill" id="totalRegistros">0</span>
         </div>
 
-        <!-- ===== BARRA DE BUSCA ===== -->
         <div class="search-bar" id="searchBar">
           <span class="search-icon">🔍</span>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="BUSCAR POR SENHA, FORNECEDOR OU Nº DE CARGA..."
-            autocomplete="off"
-            spellcheck="false"
-          >
+          <input id="searchInput" type="text" placeholder="BUSCAR POR SENHA, FORNECEDOR OU Nº DE CARGA..." autocomplete="off" spellcheck="false">
           <button class="search-clear" id="searchClear" type="button" title="Limpar busca">✕</button>
         </div>
 
-        <!-- ===== FILTROS ===== -->
         <div class="filters">
           <div class="filter-field">
             <label for="filterMonth">MÊS / ANO (AGENDA)</label>
-            <select id="filterMonth">
-              <option value="">TODOS OS MESES</option>
-            </select>
+            <select id="filterMonth"><option value="">TODOS OS MESES</option></select>
           </div>
           <div class="filter-field">
             <label for="filterFrom">DE</label>
@@ -816,33 +432,16 @@
           <input id="senha" type="text" required placeholder="DIGITE A SENHA PARA CONSULTAR" autocomplete="off">
           <small>PRESSIONE ENTER OU AGUARDE PARA BUSCAR NA AGENDA.</small>
         </div>
-
-        <div class="field">
-          <label for="fornecedor">FORNECEDOR</label>
-          <input id="fornecedor" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE">
-        </div>
-        <div class="field">
-          <label for="categoria">CATEGORIA</label>
-          <input id="categoria" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE">
-        </div>
-        <div class="field">
-          <label for="carga">CARGA</label>
-          <input id="carga" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE">
-        </div>
-
-        <div class="field">
-          <label for="rg">RG <span style="color:var(--red);">*</span></label>
-          <input id="rg" type="text" required disabled placeholder="EX.: 12.345.678-9">
-        </div>
+        <div class="field"><label for="fornecedor">FORNECEDOR</label><input id="fornecedor" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE"></div>
+        <div class="field"><label for="categoria">CATEGORIA</label><input id="categoria" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE"></div>
+        <div class="field"><label for="carga">CARGA</label><input id="carga" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE"></div>
+        <div class="field"><label for="rg">RG <span style="color:var(--red);">*</span></label><input id="rg" type="text" required disabled placeholder="EX.: 12.345.678-9"></div>
         <div class="field">
           <label for="cpf">CPF <span style="color:var(--red);">*</span></label>
           <input id="cpf" type="text" required disabled placeholder="EX.: 123.456.789-00" maxlength="14">
           <span class="mask-hint">FORMATO AUTOMÁTICO 000.000.000-00</span>
         </div>
-        <div class="field">
-          <label for="nome">NOME <span style="color:var(--red);">*</span></label>
-          <input id="nome" type="text" required disabled placeholder="NOME COMPLETO DO MOTORISTA">
-        </div>
+        <div class="field"><label for="nome">NOME <span style="color:var(--red);">*</span></label><input id="nome" type="text" required disabled placeholder="NOME COMPLETO DO MOTORISTA"></div>
         <div class="field">
           <label for="telefone">TELEFONE <span style="color:var(--red);">*</span></label>
           <input id="telefone" type="text" required disabled placeholder="EX.: (11) 99999-9999" maxlength="15">
@@ -853,17 +452,50 @@
           <input id="placa" type="text" required disabled placeholder="EX.: ABC-1234">
           <span class="mask-hint">FORMATO AUTOMÁTICO ABC-1234 OU ABC1D23</span>
         </div>
-        <div class="field">
-          <label for="nfs">Nº NF´S <span style="color:var(--red);">*</span></label>
-          <input id="nfs" type="text" required disabled placeholder="NÚMEROS SEPARADOS POR VÍRGULA">
-        </div>
+        <div class="field"><label for="nfs">Nº NF´S <span style="color:var(--red);">*</span></label><input id="nfs" type="text" required disabled placeholder="NÚMEROS SEPARADOS POR VÍRGULA"></div>
       </div>
-
       <div class="form-actions">
         <span class="form-state" id="formState">AGUARDANDO SENHA.</span>
         <button class="btn primary" type="submit" id="btnSalvar" disabled>REGISTRAR CHEGADA</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ===== MODAL DE ALOCAÇÃO DE DOCA ===== -->
+<div class="modal-overlay hidden" id="dockAllocModal">
+  <div class="modal-content wide">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">ALOCAR DOCA</div>
+        <div class="modal-sub" id="dockAllocSub">SELECIONE UMA DOCA VERDE PARA ALOCAR</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn refresh small" id="reloadDocksBtn" type="button">
+          <span class="icon-refresh">⟳</span> RECARREGAR
+        </button>
+        <button class="modal-close" id="closeDockAlloc">FECHAR</button>
+      </div>
+    </div>
+
+    <div class="dock-metrics">
+      <div class="dock-metric"><small>TOTAL</small><b id="dmTotal">—</b></div>
+      <div class="dock-metric"><small>DISPONÍVEIS</small><b id="dmAvail">—</b></div>
+      <div class="dock-metric"><small>OCUPADAS</small><b id="dmOcc">—</b></div>
+      <div class="dock-metric"><small>BLOQUEADAS</small><b id="dmBlock">—</b></div>
+    </div>
+
+    <div class="dock-map" id="dockAllocMap">
+      <div class="empty-table">CARREGANDO DOCAS...</div>
+    </div>
+
+    <div class="dock-legend">
+      <span><i class="green"></i>DISPONÍVEL (CLIQUE PARA ALOCAR)</span>
+      <span><i class="red"></i>OCUPADA</span>
+      <span><i class="gray"></i>BLOQUEADA</span>
+    </div>
+
+    <div class="notice" id="dockAllocNotice">CLIQUE EM UMA DOCA DISPONÍVEL PARA ALOCAR A CARGA.</div>
   </div>
 </div>
 
@@ -875,6 +507,7 @@
     const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
+    const DOCAS_TABLE  = encodeURIComponent('DISPON. DOCAS');
 
     const AUTO_REFRESH_MS = 60 * 1000;
 
@@ -928,65 +561,52 @@
     const searchInput = $('searchInput');
     const searchClear = $('searchClear');
 
+    // Dock allocation elements
+    const dockAllocModal = $('dockAllocModal');
+    const closeDockAlloc = $('closeDockAlloc');
+    const reloadDocksBtn = $('reloadDocksBtn');
+    const dockAllocMap = $('dockAllocMap');
+    const dockAllocSub = $('dockAllocSub');
+    const dockAllocNotice = $('dockAllocNotice');
+    const dmTotal = $('dmTotal');
+    const dmAvail = $('dmAvail');
+    const dmOcc = $('dmOcc');
+    const dmBlock = $('dmBlock');
+
     let senhaEncontrada = false;
     let dadosAgenda = null;
-
     let allData = [];
     let autoRefreshTimer = null;
     let isLoading = false;
-
-    // Termo atual de busca (mantido entre os refreshes)
     let currentSearch = '';
 
+    // Contexto da alocação atual: { senha, carga }
+    let dockAllocContext = null;
+    let isLoadingDocks = false;
+
     // ===== UTILITÁRIOS =====
-    function upper(v) {
-      if (v === null || v === undefined) return '';
-      return String(v).toUpperCase();
-    }
-
-    function setNotice(msg, tipo = '') {
-      notice.textContent = upper(msg);
-      notice.className = 'notice ' + tipo;
-    }
-
+    function upper(v) { return v === null || v === undefined ? '' : String(v).toUpperCase(); }
+    function clean(v) { return String(v ?? '').trim(); }
+    function setNotice(msg, tipo = '') { notice.textContent = upper(msg); notice.className = 'notice ' + tipo; }
+    function setDockNotice(msg, tipo = '') { dockAllocNotice.textContent = upper(msg); dockAllocNotice.className = 'notice ' + tipo; }
     function pad2(n) { return String(n).padStart(2, '0'); }
 
-    // Normaliza texto para comparação (remove acentos, uppercase, trim)
     function normalize(str) {
       if (str === null || str === undefined) return '';
-      return String(str)
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toUpperCase()
-        .trim();
+      return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
     }
 
-    // Escapa HTML para evitar injeção quando o usuário digita caracteres especiais
     function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
+    function escapeRegex(str) { return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
-    // Escapa regex
-    function escapeRegex(str) {
-      return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-
-    // Realça o termo buscado dentro de uma string já renderizada
     function highlight(text, term) {
       const safe = escapeHtml(text);
       if (!term) return safe;
       const normTerm = normalize(term);
       if (!normTerm) return safe;
-
-      // Para realce robusto com acentos, buscamos por índice de forma simples
-      // (busca direta case-insensitive com acentos normalizados).
-      const safeRegex = escapeRegex(term);
-      const re = new RegExp(`(${safeRegex})`, 'gi');
+      const re = new RegExp(`(${escapeRegex(term)})`, 'gi');
       return safe.replace(re, '<span class="hl">$1</span>');
     }
 
@@ -995,59 +615,38 @@
     // ============================================================
     function parseFlexibleDate(valor) {
       if (valor === null || valor === undefined || valor === '') return null;
-
       if (typeof valor === 'number' && isFinite(valor)) {
         const d = new Date(valor);
         if (isNaN(d.getTime())) return null;
-        return {
-          day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(),
-          hour: d.getHours(), min: d.getMinutes()
-        };
+        return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(), hour: d.getHours(), min: d.getMinutes() };
       }
-
       const str = String(valor).trim();
       if (!str) return null;
-
       const br = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
       if (br) {
         let [, a, b, year, hour = '0', min = '0'] = br;
         a = Number(a); b = Number(b); year = Number(year);
         if (year < 100) year = 2000 + year;
-
         let day, month;
         if (a > 12 && b <= 12) { day = a; month = b; }
         else if (b > 12 && a <= 12) { day = b; month = a; }
         else { day = a; month = b; }
-
         if (month < 1 || month > 12 || day < 1 || day > 31) return null;
         return { day, month, year, hour: Number(hour), min: Number(min) };
       }
-
-      const iso = str.match(
-        /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/
-      );
+      const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/);
       if (iso) {
         const [, year, month, day, hour = '0', min = '0', , tz] = iso;
         if (tz) {
           const d = new Date(str);
           if (isNaN(d.getTime())) return null;
-          return {
-            day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(),
-            hour: d.getHours(), min: d.getMinutes()
-          };
+          return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(), hour: d.getHours(), min: d.getMinutes() };
         }
-        return {
-          day: Number(day), month: Number(month), year: Number(year),
-          hour: Number(hour), min: Number(min)
-        };
+        return { day: Number(day), month: Number(month), year: Number(year), hour: Number(hour), min: Number(min) };
       }
-
       const d = new Date(str);
       if (!isNaN(d.getTime())) {
-        return {
-          day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(),
-          hour: d.getHours(), min: d.getMinutes()
-        };
+        return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(), hour: d.getHours(), min: d.getMinutes() };
       }
       return null;
     }
@@ -1065,7 +664,7 @@
       return isNaN(d.getTime()) ? null : d;
     }
 
-    function renderDate(valor, searchTerm) {
+    function renderDate(valor) {
       if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
       const p = parseFlexibleDate(valor);
       if (!p) return upper(valor);
@@ -1084,7 +683,6 @@
       rg.value = ''; cpf.value = ''; nome.value = '';
       telefone.value = ''; placa.value = ''; nfs.value = '';
     }
-
     function habilitarCampos(enable) {
       [rg, cpf, nome, telefone, placa, nfs].forEach(campo => {
         campo.disabled = !enable;
@@ -1092,20 +690,15 @@
       });
       btnSalvar.disabled = !enable;
     }
-
     function preencherDadosAgenda(row) {
       fornecedor.value = upper(row.FORNECEDOR);
       categoria.value = upper(row.CATEGORIA);
       carga.value = upper(row.CARGA);
     }
-
     function resetarModal() {
-      senha.value = ''; fornecedor.value = '';
-      categoria.value = ''; carga.value = '';
-      limparCamposMotorista();
-      habilitarCampos(false);
-      senhaEncontrada = false;
-      dadosAgenda = null;
+      senha.value = ''; fornecedor.value = ''; categoria.value = ''; carga.value = '';
+      limparCamposMotorista(); habilitarCampos(false);
+      senhaEncontrada = false; dadosAgenda = null;
       formState.textContent = 'AGUARDANDO SENHA.';
     }
 
@@ -1137,63 +730,37 @@
     }
 
     function setupMasks() {
-      cpf.addEventListener('input', function() {
-        const raw = this.value; const f = formatCPF(raw);
-        if (f !== raw) this.value = f;
-      });
-      telefone.addEventListener('input', function() {
-        const raw = this.value; const f = formatTelefone(raw);
-        if (f !== raw) this.value = f;
-      });
-      placa.addEventListener('input', function() {
-        const raw = this.value; const f = formatPlaca(raw);
-        if (f !== raw) this.value = f;
-      });
+      cpf.addEventListener('input', function() { const raw = this.value; const f = formatCPF(raw); if (f !== raw) this.value = f; });
+      telefone.addEventListener('input', function() { const raw = this.value; const f = formatTelefone(raw); if (f !== raw) this.value = f; });
+      placa.addEventListener('input', function() { const raw = this.value; const f = formatPlaca(raw); if (f !== raw) this.value = f; });
     }
-
     function setupUppercaseInputs() {
       [senha, rg, nome, nfs].forEach(el => {
         el.addEventListener('input', function() {
           const pos = this.selectionStart;
           const up = this.value.toUpperCase();
-          if (this.value !== up) {
-            this.value = up;
-            try { this.setSelectionRange(pos, pos); } catch (_) {}
-          }
+          if (this.value !== up) { this.value = up; try { this.setSelectionRange(pos, pos); } catch (_) {} }
         });
       });
     }
 
     // ===== BARRA DE BUSCA =====
     function setupSearch() {
-      // Ao digitar, atualiza o filtro (com debounce leve)
       let debounce = null;
       searchInput.addEventListener('input', function() {
         const val = this.value;
         searchBar.classList.toggle('has-value', val.length > 0);
         clearTimeout(debounce);
-        debounce = setTimeout(() => {
-          currentSearch = val.trim();
-          applyFilters();
-        }, 180);
+        debounce = setTimeout(() => { currentSearch = val.trim(); applyFilters(); }, 180);
       });
-
-      // Botão X limpa a busca
       searchClear.addEventListener('click', function() {
-        searchInput.value = '';
-        searchBar.classList.remove('has-value');
-        currentSearch = '';
-        applyFilters();
-        searchInput.focus();
+        searchInput.value = ''; searchBar.classList.remove('has-value');
+        currentSearch = ''; applyFilters(); searchInput.focus();
       });
-
-      // ESC limpa a busca quando o campo está focado
       searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-          this.value = '';
-          searchBar.classList.remove('has-value');
-          currentSearch = '';
-          applyFilters();
+          this.value = ''; searchBar.classList.remove('has-value');
+          currentSearch = ''; applyFilters();
         }
       });
     }
@@ -1206,14 +773,8 @@
       const currentYear = now.getFullYear();
       const startYear = currentYear - 2;
       const endYear = currentYear + 2;
-
-      const monthNames = [
-        'JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO',
-        'JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'
-      ];
-
+      const monthNames = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
       let html = '<option value="">TODOS OS MESES</option>';
-
       for (let y = endYear; y >= startYear; y--) {
         html += `<optgroup label="${y}">`;
         for (let m = 12; m >= 1; m--) {
@@ -1222,62 +783,41 @@
         }
         html += '</optgroup>';
       }
-
       filterMonth.innerHTML = html;
     }
 
     // ============================================================
-    // FILTROS  (busca + mês/ano + intervalo)
+    // FILTROS
     // ============================================================
     function applyFilters() {
-      const term     = currentSearch.trim();
+      const term = currentSearch.trim();
       const normTerm = normalize(term);
-
       const monthStr = filterMonth.value;
-      const fromStr  = filterFrom.value;
-      const toStr    = filterTo.value;
+      const fromStr = filterFrom.value;
+      const toStr = filterTo.value;
 
       let monthNum = null, yearNum = null;
       if (/^\d{2}\/\d{4}$/.test(monthStr)) {
-        monthNum = Number(monthStr.slice(0, 2));
-        yearNum  = Number(monthStr.slice(3));
+        monthNum = Number(monthStr.slice(0, 2)); yearNum = Number(monthStr.slice(3));
       }
-
       let fromLimit = null, toLimit = null;
-      if (fromStr) {
-        const [y, m, d] = fromStr.split('-').map(Number);
-        fromLimit = new Date(y, m - 1, d, 0, 0, 0);
-      }
-      if (toStr) {
-        const [y, m, d] = toStr.split('-').map(Number);
-        toLimit = new Date(y, m - 1, d, 23, 59, 59);
-      }
+      if (fromStr) { const [y, m, d] = fromStr.split('-').map(Number); fromLimit = new Date(y, m - 1, d, 0, 0, 0); }
+      if (toStr) { const [y, m, d] = toStr.split('-').map(Number); toLimit = new Date(y, m - 1, d, 23, 59, 59); }
 
       const filtered = allData.filter(row => {
-        // --- Busca textual (SENHA, FORNECEDOR, CARGA) ---
         if (normTerm) {
-          const alvoSenha      = normalize(row[COLS.SENHA]);
-          const alvoFornecedor = normalize(row[COLS.FORNECEDOR]);
-          const alvoCarga      = normalize(row[COLS.CARGA]);
-
-          const bateu =
-            alvoSenha.includes(normTerm) ||
-            alvoFornecedor.includes(normTerm) ||
-            alvoCarga.includes(normTerm);
-
-          if (!bateu) return false;
+          const a = normalize(row[COLS.SENHA]);
+          const b = normalize(row[COLS.FORNECEDOR]);
+          const c = normalize(row[COLS.CARGA]);
+          if (!a.includes(normTerm) && !b.includes(normTerm) && !c.includes(normTerm)) return false;
         }
-
-        // --- Filtro de mês/ano (AGENDA) ---
         const dt = toDateObj(row[COLS.AGENDA]);
-        if (!dt) {
-          return !monthNum && !fromLimit && !toLimit;
-        }
+        if (!dt) return !monthNum && !fromLimit && !toLimit;
         if (monthNum !== null) {
           if (dt.getMonth() + 1 !== monthNum || dt.getFullYear() !== yearNum) return false;
         }
         if (fromLimit && dt < fromLimit) return false;
-        if (toLimit   && dt > toLimit)   return false;
+        if (toLimit && dt > toLimit) return false;
         return true;
       });
 
@@ -1285,18 +825,11 @@
 
       const total = allData.length;
       const shown = filtered.length;
-
-      const partes = [];
-      if (normTerm) partes.push(`BUSCA "${upper(term)}"`);
-      if (monthNum) partes.push(`${monthStr}`);
-      if (fromLimit || toLimit) partes.push('INTERVALO');
-
-      if (partes.length) {
+      if (normTerm || monthNum || fromLimit || toLimit) {
         filterInfo.innerHTML = `MOSTRANDO ${shown} DE ${total}`;
       } else {
         filterInfo.innerHTML = '';
       }
-
       totalRegistros.textContent = shown;
     }
 
@@ -1305,17 +838,15 @@
       filterFrom.addEventListener('change', applyFilters);
       filterTo.addEventListener('change', applyFilters);
       clearFilters.addEventListener('click', function() {
-        filterMonth.value = '';
-        filterFrom.value = '';
-        filterTo.value = '';
-        searchInput.value = '';
-        searchBar.classList.remove('has-value');
-        currentSearch = '';
-        applyFilters();
+        filterMonth.value = ''; filterFrom.value = ''; filterTo.value = '';
+        searchInput.value = ''; searchBar.classList.remove('has-value');
+        currentSearch = ''; applyFilters();
       });
     }
 
-    // ===== RENDER DA TABELA =====
+    // ============================================================
+    // RENDER DA TABELA
+    // ============================================================
     function renderHistorico(data, term) {
       if (!data.length) {
         const temFiltro = currentSearch || filterMonth.value || filterFrom.value || filterTo.value;
@@ -1332,7 +863,8 @@
         const statusV     = renderText(row[COLS.STATUS]);
         const agendaV     = renderDate(row[COLS.AGENDA]);
         const chegadaV    = renderDate(row[COLS.CHEGADA]);
-        const encostaV    = renderDate(row[COLS.ENCOSTA]);
+        const encostaRaw  = row[COLS.ENCOSTA];
+        const encostaV    = renderDate(encostaRaw);
         const inicioV     = renderDate(row[COLS.INICIO]);
         const fimV        = renderDate(row[COLS.FIM]);
         const termoV      = renderDate(row[COLS.TERMO]);
@@ -1341,13 +873,12 @@
         const acionamentoRaw  = row[COLS.ACIONAMENTO];
         const visualizacaoRaw = row[COLS.VISUALIZACAO];
 
-        const jaAcionado =
-          acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
-        const jaVisualizado =
-          visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
+        const jaAcionado = acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
+        const jaVisualizado = visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
+        const encostaPreenchida = encostaRaw !== null && encostaRaw !== undefined && String(encostaRaw).trim() !== '';
 
-        // Para o botão data-senha, usar o valor bruto (sem HTML)
         const senhaRaw = row[COLS.SENHA] != null ? String(row[COLS.SENHA]) : '';
+        const cargaRaw = row[COLS.CARGA] != null ? String(row[COLS.CARGA]) : '';
 
         let acionamentoHtml = '';
         if (jaAcionado) {
@@ -1367,6 +898,16 @@
           visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
         }
 
+        // ENCOSTA ADM — mostra data se preenchida, senão mostra botão "ALOCAR DOCA"
+        let encostaHtml = '';
+        if (encostaPreenchida) {
+          encostaHtml = `<span class="col-date">${encostaV}</span>`;
+        } else if (senhaRaw) {
+          encostaHtml = `<button class="btn small dock" data-alocar-senha="${escapeHtml(senhaRaw)}" data-alocar-carga="${escapeHtml(cargaRaw)}">ALOCAR DOCA</button>`;
+        } else {
+          encostaHtml = '—';
+        }
+
         return `
           <tr>
             <td>${senhaVal}</td>
@@ -1377,7 +918,7 @@
             <td class="col-date">${chegadaV}</td>
             <td class="cell-wrap">${acionamentoHtml}</td>
             <td class="cell-wrap">${visualizacaoHtml}</td>
-            <td class="col-date">${encostaV}</td>
+            <td>${encostaHtml}</td>
             <td class="col-date">${inicioV}</td>
             <td class="col-date">${fimV}</td>
             <td class="col-date">${termoV}</td>
@@ -1386,26 +927,35 @@
         `;
       }).join('');
 
+      // Botões "ACIONAR"
       document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
         btn.addEventListener('click', function() {
           const senhaVal = this.dataset.senha;
-          if (senhaVal && !this.disabled) {
-            registrarAcionamento(senhaVal, this);
-          }
+          if (senhaVal && !this.disabled) registrarAcionamento(senhaVal, this);
         });
       });
 
+      // Botões "✕" (remover acionamento)
       document.querySelectorAll('#historicoBody button[data-remover-senha]').forEach(btn => {
         btn.addEventListener('click', function() {
           const senhaVal = this.dataset.removerSenha;
-          if (senhaVal && !this.disabled) {
-            removerAcionamento(senhaVal, this);
-          }
+          if (senhaVal && !this.disabled) removerAcionamento(senhaVal, this);
+        });
+      });
+
+      // Botões "ALOCAR DOCA"
+      document.querySelectorAll('#historicoBody button[data-alocar-senha]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const s = this.dataset.alocarSenha;
+          const c = this.dataset.alocarCarga || '';
+          if (s) openDockAllocModal(s, c);
         });
       });
     }
 
-    // ===== BUSCA SENHA (do modal) =====
+    // ============================================================
+    // BUSCA SENHA (do modal)
+    // ============================================================
     let timeoutBusca = null;
 
     async function buscarSenha(senhaValor) {
@@ -1413,12 +963,7 @@
       formState.textContent = 'BUSCANDO...';
       try {
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}&select=*`;
-        const resp = await fetch(url, {
-          headers: {
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          }
-        });
+        const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
         if (!resp.ok) throw new Error('Erro na consulta: ' + resp.status);
         const data = await resp.json();
 
@@ -1433,10 +978,7 @@
           limparCamposMotorista();
           rg.focus();
         } else {
-          senhaEncontrada = false;
-          dadosAgenda = null;
-          habilitarCampos(false);
-          limparCamposMotorista();
+          senhaEncontrada = false; dadosAgenda = null; habilitarCampos(false); limparCamposMotorista();
           fornecedor.value = ''; categoria.value = ''; carga.value = '';
           formState.textContent = 'SENHA NÃO ENCONTRADA.';
           setNotice('SENHA NÃO LOCALIZADA NA AGENDA. VERIFIQUE.', 'error');
@@ -1454,8 +996,7 @@
       if (val.length >= 2) {
         timeoutBusca = setTimeout(() => buscarSenha(val), 500);
       } else {
-        senhaEncontrada = false; dadosAgenda = null;
-        habilitarCampos(false); limparCamposMotorista();
+        senhaEncontrada = false; dadosAgenda = null; habilitarCampos(false); limparCamposMotorista();
         fornecedor.value = ''; categoria.value = ''; carga.value = '';
         formState.textContent = 'AGUARDANDO SENHA.';
         setNotice('DIGITE A SENHA PARA CONSULTAR.', '');
@@ -1466,64 +1007,40 @@
       if (e.key === 'Enter') {
         e.preventDefault();
         const val = this.value.trim();
-        if (val.length >= 2) {
-          clearTimeout(timeoutBusca);
-          buscarSenha(val);
-        }
+        if (val.length >= 2) { clearTimeout(timeoutBusca); buscarSenha(val); }
       }
     });
 
     // ===== SUBMISSÃO =====
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
-
-      if (!senhaEncontrada) {
-        setNotice('VALIDE A SENHA ANTES DE SALVAR.', 'error');
-        return;
-      }
-
+      if (!senhaEncontrada) { setNotice('VALIDE A SENHA ANTES DE SALVAR.', 'error'); return; }
       const campos = [rg, cpf, nome, telefone, placa, nfs];
       for (const campo of campos) {
         if (!campo.value.trim()) {
           setNotice(`PREENCHA O CAMPO ${campo.labels?.[0]?.textContent || campo.id.toUpperCase()}.`, 'error');
-          campo.focus();
-          return;
+          campo.focus(); return;
         }
       }
-
       const agora = new Date();
       const chegadaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
-
       const payload = {
         [COLS.CHEGADA]: chegadaStr,
-        RG: upper(rg.value.trim()),
-        CPF: cpf.value.trim(),
-        NOME: upper(nome.value.trim()),
-        TELEFONE: telefone.value.trim(),
-        PLACA: upper(placa.value.trim()),
-        NF: upper(nfs.value.trim())
+        RG: upper(rg.value.trim()), CPF: cpf.value.trim(), NOME: upper(nome.value.trim()),
+        TELEFONE: telefone.value.trim(), PLACA: upper(placa.value.trim()), NF: upper(nfs.value.trim())
       };
-
       try {
         const senhaValor = senha.value.trim();
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
         const resp = await fetch(url, {
           method: 'PATCH',
-          headers: {
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-          },
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
           body: JSON.stringify(payload)
         });
         if (!resp.ok) throw new Error('Falha ao atualizar: ' + resp.status);
-
         setNotice(`CHEGADA REGISTRADA COM SUCESSO ÀS ${chegadaStr}.`, 'success');
         formState.textContent = 'SALVO!';
-        closeModal();
-        resetarModal();
-        carregarHistorico();
+        closeModal(); resetarModal(); carregarHistorico();
       } catch (err) {
         console.error(err);
         setNotice('ERRO AO SALVAR: ' + err.message, 'error');
@@ -1532,89 +1049,358 @@
     });
 
     // ===== MODAL =====
-    function openModal() {
-      resetarModal();
-      modal.classList.remove('hidden');
-      senha.focus();
-    }
-    function closeModal() {
-      modal.classList.add('hidden');
-      resetarModal();
-    }
+    function openModal() { resetarModal(); modal.classList.remove('hidden'); senha.focus(); }
+    function closeModal() { modal.classList.add('hidden'); resetarModal(); }
     openModalBtn.addEventListener('click', openModal);
     closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
+    modal.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
     // ===== ACIONAMENTO (REGISTRAR) =====
     async function registrarAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
-
-      botao.disabled = true;
-      botao.textContent = '...';
-
+      botao.disabled = true; botao.textContent = '...';
       try {
         const agora = new Date();
         const acionamentoStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
-
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
         const resp = await fetch(url, {
           method: 'PATCH',
-          headers: {
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-          },
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
           body: JSON.stringify({ [COLS.ACIONAMENTO]: acionamentoStr })
         });
-
         if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
-
         setNotice(`ACIONAMENTO REGISTRADO PARA A SENHA ${senhaValor} ÀS ${acionamentoStr}.`, 'success');
         carregarHistorico();
       } catch (err) {
         console.error(err);
         setNotice('ERRO AO REGISTRAR ACIONAMENTO: ' + err.message, 'error');
-        botao.textContent = 'TENTAR NOVAMENTE';
-        botao.disabled = false;
+        botao.textContent = 'TENTAR NOVAMENTE'; botao.disabled = false;
       }
     }
 
     // ===== ACIONAMENTO (REMOVER) =====
     async function removerAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
-
-      const confirmar = window.confirm(`REMOVER O ACIONAMENTO DA SENHA ${senhaValor}?`);
-      if (!confirmar) return;
-
+      if (!window.confirm(`REMOVER O ACIONAMENTO DA SENHA ${senhaValor}?`)) return;
       botao.disabled = true;
       const original = botao.textContent;
       botao.textContent = '…';
-
       try {
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
         const resp = await fetch(url, {
           method: 'PATCH',
-          headers: {
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-          },
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
           body: JSON.stringify({ [COLS.ACIONAMENTO]: null })
         });
-
         if (!resp.ok) throw new Error('Falha ao remover acionamento: ' + resp.status);
-
         setNotice(`ACIONAMENTO DA SENHA ${senhaValor} REMOVIDO.`, 'success');
         carregarHistorico();
       } catch (err) {
         console.error(err);
         setNotice('ERRO AO REMOVER ACIONAMENTO: ' + err.message, 'error');
-        botao.textContent = original;
-        botao.disabled = false;
+        botao.textContent = original; botao.disabled = false;
+      }
+    }
+
+    // ============================================================
+    // ============ ALOCAÇÃO DE DOCA ==============================
+    // ============================================================
+
+    function getDocaNumber(doca) {
+      const num = String(doca).replace(/\D/g, '');
+      return num ? num.padStart(2, '0') : String(doca);
+    }
+
+    function formatarDuracao(ms) {
+      if (ms < 0) return '0min';
+      const tot = Math.floor(ms / 1000);
+      const d = Math.floor(tot / 86400);
+      const h = Math.floor((tot % 86400) / 3600);
+      const m = Math.floor((tot % 3600) / 60);
+      const parts = [];
+      if (d > 0) parts.push(d + 'd');
+      if (h > 0 || d > 0) parts.push(h + 'h');
+      parts.push(m + 'min');
+      return parts.join(' ');
+    }
+
+    function calcularDuracao(inicioISO) {
+      if (!inicioISO) return { diff: 0, texto: '0min' };
+      const ini = new Date(inicioISO);
+      if (isNaN(ini.getTime())) return { diff: 0, texto: '0min' };
+      const diff = Date.now() - ini.getTime();
+      if (diff < 0) return { diff: 0, texto: '0min' };
+      return { diff, texto: formatarDuracao(diff) };
+    }
+
+    async function fetchDocks() {
+      const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?select=*&order=DOCA.asc&limit=1000`;
+      const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
+      if (!resp.ok) throw new Error(await resp.text());
+      return resp.json();
+    }
+
+    async function patchDock(doca, payload) {
+      const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?DOCA=eq.${encodeURIComponent(doca)}`;
+      const resp = await fetch(url, {
+        method: 'PATCH',
+        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+      });
+      if (!resp.ok) throw new Error(await resp.text());
+    }
+
+    async function patchAgenda(senhaValor, payload) {
+      const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
+      const resp = await fetch(url, {
+        method: 'PATCH',
+        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+      });
+      if (!resp.ok) throw new Error(await resp.text());
+    }
+
+    function getDockStatus(dock) {
+      const st = upper(dock.STATUS || '').trim();
+      const motivo = clean(dock['MOTIVO BLOQ']);
+      if (motivo && st !== 'DISPONIVEL') return 'BLOQUEADO';
+      if (st === 'OCUPADO') return 'OCUPADO';
+      if (st === 'BLOQUEADO') return 'BLOQUEADO';
+      return 'DISPONIVEL';
+    }
+
+    function renderDockMapInto(container, docks) {
+      if (!docks.length) {
+        container.innerHTML = '<div class="empty-table">NENHUMA DOCA CADASTRADA.</div>';
+        return;
+      }
+
+      container.innerHTML = docks.map(dock => {
+        const docaNome = upper(dock.DOCA).trim();
+        const status = getDockStatus(dock);
+        const isOcc = status === 'OCUPADO';
+        const isBloq = status === 'BLOQUEADO';
+        const motivo = clean(dock['MOTIVO BLOQ']);
+        const senhaDock = clean(dock.SENHA);
+        const cargaDock = clean(dock.CARGA);
+        const inicioDock = clean(dock.INICIO);
+
+        // Marca a doca que já pertence a esta senha
+        const suaDoca = dockAllocContext && senhaDock && senhaDock === clean(dockAllocContext.senha);
+
+        let classe = 'dock-square';
+        let tempoHtml = '';
+        if (isOcc) {
+          classe += ' ocupado';
+          if (inicioDock) {
+            const dur = calcularDuracao(inicioDock);
+            tempoHtml = `<div class="dock-tempo">${dur.texto}</div>`;
+          }
+        } else if (isBloq) {
+          classe += ' bloqueado';
+        }
+        if (suaDoca) classe += ' sua-doca';
+
+        const numDisplay = getDocaNumber(docaNome);
+        const lock = isBloq ? '🔒 ' : '';
+
+        const tooltip = `
+          <strong>${escapeHtml(docaNome)}</strong><br>
+          <span class="label">STATUS:</span> ${escapeHtml(status)}<br>
+          ${isBloq && motivo ? `<span class="label">MOTIVO:</span> <span class="motivo">${escapeHtml(motivo)}</span><br>` : ''}
+          ${isOcc && senhaDock ? `<span class="label">SENHA:</span> <span class="senha">${escapeHtml(senhaDock)}</span><br>` : ''}
+          ${isOcc && cargaDock ? `<span class="label">CARGA:</span> <span class="carga">${escapeHtml(cargaDock)}</span><br>` : ''}
+          ${isOcc && inicioDock ? `<span class="label">INÍCIO:</span> ${formatarDataHora(inicioDock)}<br>` : ''}
+          ${isOcc && inicioDock ? `<span class="label">TEMPO:</span> ${calcularDuracao(inicioDock).texto}` : ''}
+        `;
+
+        return `<div class="${classe}" data-doca="${escapeHtml(docaNome)}" data-status="${status}">
+          <div class="dock-number">${lock}${escapeHtml(numDisplay)}</div>
+          ${tempoHtml}
+          <div class="tooltip">${tooltip}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function computeDockMetrics(docks) {
+      const total = docks.length;
+      let avail = 0, occ = 0, bloq = 0;
+      for (const d of docks) {
+        const st = getDockStatus(d);
+        if (st === 'DISPONIVEL') avail++;
+        else if (st === 'OCUPADO') occ++;
+        else if (st === 'BLOQUEADO') bloq++;
+      }
+      return { total, avail, occ, bloq };
+    }
+
+    async function loadDocksForAllocation() {
+      if (isLoadingDocks) return;
+      isLoadingDocks = true;
+      dockAllocMap.innerHTML = '<div class="empty-table">CARREGANDO DOCAS...</div>';
+      setDockNotice('CARREGANDO DOCAS...', '');
+
+      try {
+        const docks = await fetchDocks();
+        const metrics = computeDockMetrics(docks);
+        dmTotal.textContent = metrics.total;
+        dmAvail.textContent = metrics.avail;
+        dmOcc.textContent = metrics.occ;
+        dmBlock.textContent = metrics.bloq;
+        renderDockMapInto(dockAllocMap, docks);
+
+        if (!dockAllocContext) {
+          setDockNotice('SELECIONE UMA DOCA DISPONÍVEL PARA ALOCAR.', '');
+        } else {
+          const senhaCtx = clean(dockAllocContext.senha);
+          const jaTem = docks.find(d => clean(d.SENHA) === senhaCtx && getDockStatus(d) === 'OCUPADO');
+          if (jaTem) {
+            setDockNotice(`ESTA SENHA JÁ ESTÁ NA DOCA ${upper(jaTem.DOCA)}. CLIQUE EM OUTRA DOCA PARA MOVER, OU FECHE.`, 'warning');
+          } else {
+            setDockNotice(`SENHA ${senhaCtx} PRONTA. CLIQUE EM UMA DOCA VERDE PARA ALOCAR.`, '');
+          }
+        }
+      } catch (err) {
+        console.error('[DOCAS] Erro:', err);
+        dockAllocMap.innerHTML = `<div class="empty-table">ERRO AO CARREGAR DOCAS: ${upper(err.message)}</div>`;
+        setDockNotice('ERRO AO CARREGAR DOCAS.', 'error');
+      } finally {
+        isLoadingDocks = false;
+      }
+    }
+
+    function openDockAllocModal(senhaValor, cargaValor) {
+      dockAllocContext = { senha: clean(senhaValor), carga: clean(cargaValor) };
+      dockAllocSub.textContent = `SENHA ${dockAllocContext.senha} · CARGA ${dockAllocContext.carga || '—'}`;
+      dockAllocModal.classList.remove('hidden');
+      loadDocksForAllocation();
+    }
+
+    function closeDockAllocModal() {
+      dockAllocModal.classList.add('hidden');
+      dockAllocContext = null;
+    }
+
+    async function allocateDock(doca, senhaValor, cargaValor) {
+      const agora = new Date();
+      const encostaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
+      const inicioISO = agora.toISOString();
+      const senhaCtx = clean(senhaValor);
+
+      // 1) Libera qualquer doca que já esteja com esta senha
+      try {
+        const u = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?SENHA=eq.${encodeURIComponent(senhaCtx)}&STATUS=eq.OCUPADO`;
+        await fetch(u, {
+          method: 'PATCH',
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null })
+        });
+      } catch (err) {
+        console.warn('Falha ao liberar doca antiga:', err);
+      }
+
+      // 2) Ocupa a nova doca
+      const payload = {
+        STATUS: 'OCUPADO',
+        SENHA: senhaCtx,
+        CARGA: cargaValor ? Number(cargaValor) : null,
+        INICIO: inicioISO,
+        'MOTIVO BLOQ': null
+      };
+      await patchDock(doca, payload);
+
+      // 3) Atualiza AGENDA com ENCOSTA ADM
+      await patchAgenda(senhaCtx, { [COLS.ENCOSTA]: encostaStr });
+
+      setNotice(`DOCA ${doca} ALOCADA PARA A SENHA ${senhaCtx}${cargaValor ? ' / CARGA ' + cargaValor : ''}.`, 'success');
+    }
+
+    // Click handler no mapa de docas do modal
+    dockAllocMap.addEventListener('click', async function(e) {
+      const sq = e.target.closest('.dock-square');
+      if (!sq) return;
+      if (!dockAllocContext) return;
+
+      const doca = sq.dataset.doca;
+      const status = sq.dataset.status;
+      if (!doca) return;
+
+      if (status !== 'DISPONIVEL') {
+        setDockNotice(`DOCA ${doca} ESTÁ ${status}. ESCOLHA UMA DOCA DISPONÍVEL (VERDE).`, 'warning');
+        return;
+      }
+
+      const confirmMsg = `ALOCAR DOCA ${doca} PARA A SENHA ${dockAllocContext.senha}${dockAllocContext.carga ? ' / CARGA ' + dockAllocContext.carga : ''}?`;
+      if (!window.confirm(confirmMsg)) return;
+
+      sq.style.pointerEvents = 'none';
+      setDockNotice(`ALOCANDO DOCA ${doca}...`, '');
+
+      try {
+        await allocateDock(doca, dockAllocContext.senha, dockAllocContext.carga);
+        closeDockAllocModal();
+        carregarHistorico();
+      } catch (err) {
+        console.error(err);
+        setDockNotice(`ERRO AO ALOCAR: ${upper(err.message)}`, 'error');
+        sq.style.pointerEvents = '';
+      }
+    });
+
+    closeDockAlloc.addEventListener('click', closeDockAllocModal);
+    dockAllocModal.addEventListener('click', function(e) { if (e.target === this) closeDockAllocModal(); });
+    reloadDocksBtn.addEventListener('click', function() { loadDocksForAllocation(); });
+
+    // ============================================================
+    // LIBERAÇÃO AUTOMÁTICA DE DOCAS QUANDO PAGAMENTO FOR PREENCHIDO
+    // ============================================================
+    async function autoReleasePaidDocks() {
+      if (!allData.length) return;
+
+      // Coleta senhas com PAGAMENTO preenchido
+      const senhasPagas = new Set();
+      for (const row of allData) {
+        const pag = row[COLS.PAGAMENTO];
+        const pago = pag !== null && pag !== undefined && String(pag).trim() !== '';
+        if (!pago) continue;
+        const s = clean(row[COLS.SENHA]);
+        if (s) senhasPagas.add(s);
+      }
+      if (senhasPagas.size === 0) return;
+
+      // Busca todas as docas ocupadas de uma vez
+      let ocupadas;
+      try {
+        const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?STATUS=eq.OCUPADO&select=DOCA,SENHA&limit=1000`;
+        const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
+        if (!resp.ok) return;
+        ocupadas = await resp.json();
+      } catch (err) {
+        console.error('[AUTO-RELEASE] Falha ao buscar docas:', err);
+        return;
+      }
+      if (!Array.isArray(ocupadas) || ocupadas.length === 0) return;
+
+      // Encontra docas a liberar
+      const paraLiberar = ocupadas.filter(d => {
+        const s = clean(d.SENHA);
+        return s && senhasPagas.has(s);
+      });
+      if (paraLiberar.length === 0) return;
+
+      // Libera cada uma
+      let liberadas = 0;
+      for (const d of paraLiberar) {
+        try {
+          await patchDock(d.DOCA, { STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null });
+          liberadas++;
+        } catch (err) {
+          console.error('[AUTO-RELEASE] Falha ao liberar', d.DOCA, err);
+        }
+      }
+
+      if (liberadas > 0) {
+        setNotice(`${liberadas} DOCA(S) LIBERADA(S) AUTOMATICAMENTE APÓS PAGAMENTO.`, 'success');
       }
     }
 
@@ -1624,34 +1410,25 @@
     async function carregarHistorico() {
       if (isLoading) return;
       isLoading = true;
-
       refreshBtn.classList.add('loading');
       refreshBtn.disabled = true;
 
       try {
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=500`;
-        const resp = await fetch(url, {
-          headers: {
-            'apikey': SUPABASE_ANON,
-            'Authorization': `Bearer ${SUPABASE_ANON}`
-          }
-        });
+        const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
 
         if (!resp.ok) {
           let detalhe = '';
           try {
             const errBody = await resp.json();
             detalhe = errBody.message || errBody.details || errBody.hint || JSON.stringify(errBody);
-          } catch (_) {
-            detalhe = await resp.text().catch(() => '');
-          }
+          } catch (_) { detalhe = await resp.text().catch(() => ''); }
           throw new Error(`${resp.status}${detalhe ? ' — ' + detalhe : ''}`);
         }
 
         let data = await resp.json();
         if (!Array.isArray(data)) data = [];
 
-        // Ordena por CHEGADA desc
         data.sort((a, b) => {
           const da = toDateObj(a[COLS.CHEGADA]);
           const db = toDateObj(b[COLS.CHEGADA]);
@@ -1664,6 +1441,9 @@
 
         allData = data;
         applyFilters();
+
+        // Liberação automática de docas pagas
+        await autoReleasePaidDocks();
 
         const agora = new Date();
         const horaFmt = `${pad2(agora.getHours())}:${pad2(agora.getMinutes())}:${pad2(agora.getSeconds())}`;
@@ -1691,22 +1471,11 @@
       }, AUTO_REFRESH_MS);
     }
 
-    function stopAutoRefresh() {
-      if (autoRefreshTimer) {
-        clearInterval(autoRefreshTimer);
-        autoRefreshTimer = null;
-      }
-    }
-
     document.addEventListener('visibilitychange', function() {
-      if (!document.hidden) {
-        carregarHistorico();
-      }
+      if (!document.hidden) carregarHistorico();
     });
 
-    refreshBtn.addEventListener('click', function() {
-      carregarHistorico();
-    });
+    refreshBtn.addEventListener('click', function() { carregarHistorico(); });
 
     // ===== INIT =====
     function init() {
