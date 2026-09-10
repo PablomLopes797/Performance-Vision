@@ -208,7 +208,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 9px;
-      min-width: 500px;
+      min-width: 640px;
     }
     .data-table th {
       background: #f7fafd;
@@ -233,6 +233,21 @@
       color: #8192a6;
       font-size: 10px;
     }
+
+    /* ===== BADGE VISUALIZADO ===== */
+    .badge-viewed {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 7px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .badge-viewed.ok   { background: #effcf5; color: #137b57; }
+    .badge-viewed.nok  { background: #fff1f2; color: #b73f52; }
+    .badge-viewed small { font-weight: 700; opacity: .8; margin-left: 2px; }
 
     /* ===== MODAL ===== */
     .modal-overlay {
@@ -346,7 +361,7 @@
       .hero { display: block; }
       .actions { margin-top: 14px; }
       .form-grid { grid-template-columns: 1fr; }
-      .data-table { min-width: 480px; }
+      .data-table { min-width: 600px; }
     }
   </style>
   <link rel="stylesheet" href="sidebar.css">
@@ -391,11 +406,12 @@
                 <th>Fornecedor</th>
                 <th>Chegada</th>
                 <th>Status</th>
+                <th>Visualizado</th>
                 <th>Acionamento</th>
               </tr>
             </thead>
             <tbody id="historicoBody">
-              <tr><td colspan="5" class="empty-table">Carregando histórico...</td></tr>
+              <tr><td colspan="6" class="empty-table">Carregando histórico...</td></tr>
             </tbody>
           </table>
         </div>
@@ -551,6 +567,23 @@
       senhaEncontrada = false;
       dadosAgenda = null;
       formState.textContent = 'Aguardando senha.';
+    }
+
+    // Formata valor de data vindo do Supabase (ISO ou já formatado) para DD/MM/AAAA HH:MM
+    function formatarDataHora(valor) {
+      if (!valor) return '';
+      const str = String(valor).trim();
+      // Se já está no formato DD/MM/AAAA HH:MM, retorna como está
+      if (/^\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}/.test(str)) return str;
+      // Tenta interpretar como ISO
+      const d = new Date(str);
+      if (isNaN(d.getTime())) return str;
+      const dia = String(d.getDate()).padStart(2, '0');
+      const mes = String(d.getMonth() + 1).padStart(2, '0');
+      const ano = d.getFullYear();
+      const horas = String(d.getHours()).padStart(2, '0');
+      const minutos = String(d.getMinutes()).padStart(2, '0');
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
     }
 
     // ===== MÁSCARAS =====
@@ -760,7 +793,6 @@
     async function registrarAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
 
-      // Desabilita o botão enquanto processa
       botao.disabled = true;
       botao.textContent = '...';
 
@@ -787,15 +819,13 @@
 
         if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
 
-        // Atualiza o botão para mostrar sucesso
         botao.textContent = '✓ Acionado';
         botao.classList.remove('btn', 'success');
         botao.classList.add('btn', 'success');
-        botao.disabled = true; // mantém desabilitado
+        botao.disabled = true;
 
         setNotice(`Acionamento registrado para a senha ${senhaValor} às ${acionamentoStr}.`, 'success');
 
-        // Recarrega o histórico para atualizar a coluna "Acionamento" (opcional, mas mantém sincronizado)
         carregarHistorico();
       } catch (err) {
         console.error(err);
@@ -808,8 +838,8 @@
     // ===== CARREGAR HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        // Seleciona também a coluna "ACIONAMENTO ENTRADA"
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS,"ACIONAMENTO ENTRADA"&order=CHEGADA.desc.nullslast&limit=20`;
+        // Seleciona também as colunas de acionamento e visualização
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS,"ACIONAMENTO ENTRADA","ACIONAMENTO VISUALIZADO"&order=CHEGADA.desc.nullslast&limit=20`;
         const resp = await fetch(url, {
           headers: {
             'apikey': SUPABASE_ANON,
@@ -819,28 +849,44 @@
         if (!resp.ok) throw new Error('Erro ao carregar histórico');
         const data = await resp.json();
         totalRegistros.textContent = data.length;
+
         if (!data.length) {
-          historicoBody.innerHTML = '<tr><td colspan="5" class="empty-table">Nenhum registro de chegada ainda.</td></tr>';
+          historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">Nenhum registro de chegada ainda.</td></tr>';
           return;
         }
 
         historicoBody.innerHTML = data.map(row => {
           const senhaVal = row.SENHA || '—';
           const acionamento = row["ACIONAMENTO ENTRADA"] || null;
-          const jaAcionado = acionamento !== null && acionamento !== '';
-          // Botão: se já acionado, mostra desabilitado com check
+          const visualizado = row["ACIONAMENTO VISUALIZADO"] || null;
+
+          const jaAcionado = acionamento !== null && String(acionamento).trim() !== '';
+          const jaVisualizado = visualizado !== null && String(visualizado).trim() !== '';
+
+          // Botão de acionamento
           let btnHtml = '';
           if (jaAcionado) {
             btnHtml = `<button class="btn success small" disabled>✓ ${acionamento}</button>`;
           } else {
             btnHtml = `<button class="btn small" data-senha="${senhaVal}">Acionar</button>`;
           }
+
+          // Badge de visualização
+          let viewedHtml = '';
+          if (jaVisualizado) {
+            const dataFmt = formatarDataHora(visualizado);
+            viewedHtml = `<span class="badge-viewed ok">✓ Visualizado <small>${dataFmt}</small></span>`;
+          } else {
+            viewedHtml = `<span class="badge-viewed nok">✕ Não visualizado</span>`;
+          }
+
           return `
             <tr>
               <td>${senhaVal}</td>
               <td>${row.FORNECEDOR || '—'}</td>
               <td>${row.CHEGADA || '—'}</td>
               <td>${row.STATUS || '—'}</td>
+              <td>${viewedHtml}</td>
               <td>${btnHtml}</td>
             </tr>
           `;
@@ -848,7 +894,7 @@
 
         // Adiciona eventos para os botões "Acionar"
         document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
-          btn.addEventListener('click', function(e) {
+          btn.addEventListener('click', function() {
             const senhaVal = this.dataset.senha;
             if (senhaVal && !this.disabled) {
               registrarAcionamento(senhaVal, this);
@@ -858,7 +904,7 @@
 
       } catch (err) {
         console.error(err);
-        historicoBody.innerHTML = '<tr><td colspan="5" class="empty-table">Erro ao carregar histórico.</td></tr>';
+        historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">Erro ao carregar histórico.</td></tr>';
       }
     }
 
