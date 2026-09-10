@@ -95,17 +95,36 @@
     }
     .step-locked::before { content: '🔒'; font-size: 10px; opacity: .55; }
 
-    .encosta-info { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+    /* ============================================================
+       ENCOSTA INFO (doca + data) — agora clicável
+       ============================================================ */
+    .encosta-info {
+      display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap;
+    }
     .doca-badge {
-      display: inline-flex; align-items: center;
+      display: inline-flex; align-items: center; gap: 4px;
       background: #e8f5ff; color: #1e6db5;
-      border-radius: 6px; padding: 3px 8px;
+      border-radius: 6px; padding: 4px 9px;
       font-size: var(--fs-2xs); font-weight: var(--fw-black);
       letter-spacing: var(--ls-wide);
-      border: 1px solid #b8daff;
+      border: 1px dashed #b8daff;
       line-height: 1;
       white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, color .15s ease, transform .08s ease;
+      user-select: none;
     }
+    .doca-badge:hover {
+      background: #d4ebff; border-color: #75a6ff; color: #1a5fa0;
+      transform: translateY(-1px);
+    }
+    .doca-badge .edit-icon {
+      font-size: 9px;
+      opacity: 0;
+      transition: opacity .15s ease;
+      line-height: 1;
+    }
+    .doca-badge:hover .edit-icon { opacity: 1; }
     .encosta-info small {
       font-weight: var(--fw-semibold);
       letter-spacing: var(--ls-wide);
@@ -113,13 +132,40 @@
       color: #3d526b;
     }
 
-    /* Célula externa (read-only, só exibe valor do Supabase) */
     .readonly-cell {
-      color: #3d526b;
-      font-variant-numeric: tabular-nums;
+      color: #3d526b; font-variant-numeric: tabular-nums;
       letter-spacing: var(--ls-wide);
     }
     .readonly-cell.empty { color: #b5c1ce; }
+
+    /* ============================================================
+       CÉLULAS EDITÁVEIS (SENHA / CARGA)
+       ============================================================ */
+    .editable-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px dashed transparent;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+      user-select: none;
+      max-width: 100%;
+    }
+    .editable-cell:hover {
+      background: #f0f7ff;
+      border-color: #a8cdf7;
+      color: #1e6db5;
+    }
+    .editable-cell .edit-icon {
+      font-size: 10px;
+      opacity: 0;
+      color: #75a6ff;
+      transition: opacity .15s ease;
+      line-height: 1;
+    }
+    .editable-cell:hover .edit-icon { opacity: 1; }
 
     .panel {
       background: #fff; border: 1px solid var(--line); border-radius: 14px;
@@ -174,14 +220,9 @@
     .hidden { display: none !important; }
 
     /* ============================================================
-       TABELA — estrutura com scrollbar ENTRE thead e tbody
+       TABELA
        ============================================================ */
-    .table-outer {
-      border: 1px solid #edf1f5;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
-    }
+    .table-outer { border: 1px solid #edf1f5; border-radius: 10px; overflow: hidden; background: #fff; }
     .table-head-wrap { overflow: hidden; background: #f7fafd; }
     .table-scrollbar {
       overflow-x: auto; overflow-y: hidden;
@@ -295,6 +336,7 @@
       max-width: 820px; width: 100%; padding: 28px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--line);
     }
     .modal-content.wide { max-width: 980px; }
+    .modal-content.narrow { max-width: 540px; }
     .modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
     .modal-title { font-size: var(--fs-2xl); font-weight: var(--fw-black); color: var(--navy); letter-spacing: var(--ls-tight); line-height: var(--lh-tight); }
     .modal-sub { font-size: var(--fs-xs); color: #8c9aab; margin-top: 6px; line-height: var(--lh-normal); }
@@ -306,6 +348,7 @@
     .modal-close:hover { border-color: #cfdbe8; }
 
     .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .form-grid.single { grid-template-columns: 1fr; }
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field label { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: #526982; letter-spacing: var(--ls-wider); line-height: var(--lh-snug); }
     .field input, .field select {
@@ -316,11 +359,38 @@
     }
     .field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
     .field input:focus, .field select:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
-    .field input:disabled { background: #f0f4f9; color: #8a9aad; cursor: not-allowed; }
+    .field input:disabled, .field select:disabled { background: #f0f4f9; color: #8a9aad; cursor: not-allowed; }
     .field small { font-size: var(--fs-2xs); color: #8998a9; line-height: var(--lh-normal); }
     .field .mask-hint { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: #9aabbf; letter-spacing: var(--ls-wide); margin-top: 2px; line-height: var(--lh-snug); }
     .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 20px; }
     .form-state { margin-right: auto; color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-medium); line-height: var(--lh-snug); }
+
+    .edit-info-box {
+      background: #f5f9ff;
+      border: 1px solid #e8f0fa;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: var(--fs-xs);
+      color: #526982;
+      line-height: var(--lh-normal);
+    }
+    .edit-info-box b { color: var(--navy); font-weight: var(--fw-black); }
+
+    /* Aviso sobre troca de doca */
+    .doca-change-warning {
+      background: #fff8e5;
+      border: 1px solid #f3e0a5;
+      color: #9e7a1a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-medium);
+      line-height: var(--lh-normal);
+      margin-top: 12px;
+      display: none;
+    }
+    .doca-change-warning.visible { display: block; }
 
     @media (max-width: 1050px) {
       #sidebar-container { width: 200px; }
@@ -378,7 +448,7 @@
         <div class="panel-head">
           <div>
             <div class="panel-title">ÚLTIMAS RECEPÇÕES</div>
-            <div class="panel-sub">INÍCIO E FIM CONF SÃO CONSULTADOS NO SUPABASE (SOMENTE LEITURA). PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA.</div>
+            <div class="panel-sub">CLIQUE NA SENHA, NA CARGA OU NA DOCA PARA AJUSTAR. INÍCIO/FIM CONF SÃO CONSULTADOS NO SUPABASE.</div>
           </div>
           <span class="pill" id="totalRegistros">0</span>
         </div>
@@ -406,9 +476,6 @@
           <span class="filter-info" id="filterInfo"></span>
         </div>
 
-        <!-- ============================================================
-             TABELA COM SCROLL ENTRE HEADER E BODY
-             ============================================================ -->
         <div class="table-outer">
           <div class="table-head-wrap" id="tableHeadWrap">
             <table class="data-table" id="headTable">
@@ -565,6 +632,51 @@
   </div>
 </div>
 
+<!-- ===== MODAL DE EDIÇÃO (SENHA / CARGA / DOCA) ===== -->
+<div class="modal-overlay hidden" id="editSCModal">
+  <div class="modal-content narrow">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="editSCTitle">AJUSTAR REGISTRO</div>
+        <div class="modal-sub" id="editSCSub">ALTERE OS VALORES E SALVE.</div>
+      </div>
+      <button class="modal-close" id="closeEditSC">FECHAR</button>
+    </div>
+
+    <div class="edit-info-box" id="editSCInfo">EDITANDO REGISTRO ATUAL: <b>—</b></div>
+
+    <form id="formEditSC">
+      <div class="form-grid single">
+        <!-- Campo DOCA — só aparece quando o registro tem doca -->
+        <div class="field hidden" id="editDocaField">
+          <label for="editDocaVal">DOCA</label>
+          <select id="editDocaVal"></select>
+          <span class="mask-hint" id="editDocaHint">SELECIONE OUTRA DOCA PARA MOVER.</span>
+          <div class="doca-change-warning" id="docaChangeWarning">
+            ⚠️ A CARGA SERÁ MOVIDA PARA A NOVA DOCA. A DOCA ATUAL SERÁ LIBERADA AUTOMATICAMENTE.
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="editSenhaVal">SENHA <span style="color:var(--red);">*</span></label>
+          <input id="editSenhaVal" type="text" required autocomplete="off" placeholder="EX.: 1234">
+          <span class="mask-hint">SOMENTE NÚMEROS</span>
+        </div>
+        <div class="field">
+          <label for="editCargaVal">CARGA <span style="color:var(--red);">*</span></label>
+          <input id="editCargaVal" type="text" required autocomplete="off" placeholder="EX.: 98765">
+          <span class="mask-hint">SOMENTE NÚMEROS</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <span class="form-state" id="editSCState">NENHUMA ALTERAÇÃO.</span>
+        <button class="btn primary" type="submit" id="btnSalvarSC">SALVAR ALTERAÇÕES</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
   (function() {
     'use strict';
@@ -642,6 +754,22 @@
     const dmOcc = $('dmOcc');
     const dmBlock = $('dmBlock');
 
+    // Edit modal
+    const editSCModal = $('editSCModal');
+    const closeEditSC = $('closeEditSC');
+    const editSCTitle = $('editSCTitle');
+    const editSCSub = $('editSCSub');
+    const editSCInfo = $('editSCInfo');
+    const formEditSC = $('formEditSC');
+    const editDocaField = $('editDocaField');
+    const editDocaVal = $('editDocaVal');
+    const editDocaHint = $('editDocaHint');
+    const docaChangeWarning = $('docaChangeWarning');
+    const editSenhaVal = $('editSenhaVal');
+    const editCargaVal = $('editCargaVal');
+    const editSCState = $('editSCState');
+    const btnSalvarSC = $('btnSalvarSC');
+
     let senhaEncontrada = false;
     let dadosAgenda = null;
     let allData = [];
@@ -653,11 +781,18 @@
     let dockAllocContext = null;
     let isLoadingDocks = false;
 
+    // Contexto da edição
+    let editSCContext = null; // { senhaOriginal, cargaOriginal, docaOriginal }
+
     // ===== UTILITÁRIOS =====
     function upper(v) { return v === null || v === undefined ? '' : String(v).toUpperCase(); }
     function clean(v) { return String(v ?? '').trim(); }
     function setNotice(msg, tipo = '') { notice.textContent = upper(msg); notice.className = 'notice ' + tipo; }
     function setDockNotice(msg, tipo = '') { dockAllocNotice.textContent = upper(msg); dockAllocNotice.className = 'notice ' + tipo; }
+    function setEditSCState(msg, tipo = '') {
+      editSCState.textContent = upper(msg);
+      editSCState.style.color = tipo === 'error' ? '#b73f52' : tipo === 'success' ? '#137b57' : 'var(--muted)';
+    }
     function pad2(n) { return String(n).padStart(2, '0'); }
     function hasValue(v) { return v !== null && v !== undefined && String(v).trim() !== ''; }
 
@@ -679,7 +814,7 @@
     }
 
     // ============================================================
-    // PARSER FLEXÍVEL DE DATA
+    // PARSER DE DATA
     // ============================================================
     function parseFlexibleDate(valor) {
       if (valor === null || valor === undefined || valor === '') return null;
@@ -796,6 +931,13 @@
       cpf.addEventListener('input', function() { const raw = this.value; const f = formatCPF(raw); if (f !== raw) this.value = f; });
       telefone.addEventListener('input', function() { const raw = this.value; const f = formatTelefone(raw); if (f !== raw) this.value = f; });
       placa.addEventListener('input', function() { const raw = this.value; const f = formatPlaca(raw); if (f !== raw) this.value = f; });
+
+      [editSenhaVal, editCargaVal].forEach(el => {
+        el.addEventListener('input', function() {
+          const onlyDigits = this.value.replace(/\D/g, '');
+          if (this.value !== onlyDigits) this.value = onlyDigits;
+        });
+      });
     }
     function setupUppercaseInputs() {
       [senha, rg, nome, nfs].forEach(el => {
@@ -951,15 +1093,27 @@
       historicoBody.innerHTML = data.map(row => {
         const s = getStepState(row);
 
-        const senhaVal    = renderText(row[COLS.SENHA], term);
+        const senhaRaw = row[COLS.SENHA] != null ? String(row[COLS.SENHA]) : '';
+        const cargaRaw = row[COLS.CARGA] != null ? String(row[COLS.CARGA]) : '';
+
+        // SENHA editável
+        const senhaVal = hasValue(row[COLS.SENHA])
+          ? `<span class="editable-cell" data-edit-senha="${escapeHtml(senhaRaw)}" data-edit-carga="${escapeHtml(cargaRaw)}" title="Clique para ajustar">
+               ${highlight(upper(senhaRaw), term)}<span class="edit-icon">✎</span>
+             </span>`
+          : '—';
+
+        // CARGA editável
+        const cargaVal = hasValue(row[COLS.CARGA])
+          ? `<span class="editable-cell" data-edit-senha="${escapeHtml(senhaRaw)}" data-edit-carga="${escapeHtml(cargaRaw)}" title="Clique para ajustar">
+               ${highlight(upper(cargaRaw), term)}<span class="edit-icon">✎</span>
+             </span>`
+          : '—';
+
         const fornecedorV = renderText(row[COLS.FORNECEDOR], term);
-        const cargaV      = renderText(row[COLS.CARGA], term);
         const statusV     = renderText(row[COLS.STATUS]);
         const agendaV     = renderDate(row[COLS.AGENDA]);
         const chegadaV    = renderDate(row[COLS.CHEGADA]);
-
-        const senhaRaw = row[COLS.SENHA] != null ? String(row[COLS.SENHA]) : '';
-        const cargaRaw = row[COLS.CARGA] != null ? String(row[COLS.CARGA]) : '';
 
         // ---------- ACIONAMENTO ADM ----------
         let acionamentoHtml = '';
@@ -975,7 +1129,7 @@
           acionamentoHtml = `<span class="step-locked">AGUARDA CHEGADA</span>`;
         }
 
-        // ---------- VISUALIZAÇÃO ACIONAMENTO ----------
+        // ---------- VISUALIZAÇÃO ----------
         let visualizacaoHtml = '';
         if (s.hasVisualizacao) {
           visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatarDataHora(row[COLS.VISUALIZACAO])}</small></span>`;
@@ -983,16 +1137,24 @@
           visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
         }
 
-        // ---------- ENCOSTA ADM (doca + data) ----------
+        // ---------- ENCOSTA ADM (doca clicável + data) ----------
         let encostaHtml = '';
         if (s.hasEncosta) {
           const dockInfo = dockBySenha.get(clean(senhaRaw));
           const dockNome = dockInfo ? upper(clean(dockInfo.DOCA)) : '';
           const dataEncosta = formatarDataHora(row[COLS.ENCOSTA]);
+
           if (dockNome) {
+            // Badge da doca é CLICÁVEL para editar
             encostaHtml = `
               <span class="encosta-info">
-                <span class="doca-badge">${escapeHtml(dockNome)}</span>
+                <span class="doca-badge"
+                      data-edit-senha="${escapeHtml(senhaRaw)}"
+                      data-edit-carga="${escapeHtml(cargaRaw)}"
+                      data-edit-doca="${escapeHtml(dockNome)}"
+                      title="Clique para trocar de doca">
+                  ${escapeHtml(dockNome)}<span class="edit-icon">✎</span>
+                </span>
                 <small>${dataEncosta}</small>
               </span>`;
           } else {
@@ -1004,23 +1166,16 @@
           encostaHtml = `<span class="step-locked">AGUARDA ACIONAMENTO</span>`;
         }
 
-        // ---------- INÍCIO CONF (SOMENTE LEITURA — vem do Supabase) ----------
-        let inicioHtml = '';
-        if (s.hasInicio) {
-          inicioHtml = `<span class="readonly-cell col-date">${formatarDataHora(row[COLS.INICIO])}</span>`;
-        } else {
-          inicioHtml = `<span class="readonly-cell empty">—</span>`;
-        }
+        // ---------- INÍCIO / FIM CONF (leitura) ----------
+        const inicioHtml = s.hasInicio
+          ? `<span class="readonly-cell col-date">${formatarDataHora(row[COLS.INICIO])}</span>`
+          : `<span class="readonly-cell empty">—</span>`;
 
-        // ---------- FIM CONF (SOMENTE LEITURA — vem do Supabase) ----------
-        let fimHtml = '';
-        if (s.hasFim) {
-          fimHtml = `<span class="readonly-cell col-date">${formatarDataHora(row[COLS.FIM])}</span>`;
-        } else {
-          fimHtml = `<span class="readonly-cell empty">—</span>`;
-        }
+        const fimHtml = s.hasFim
+          ? `<span class="readonly-cell col-date">${formatarDataHora(row[COLS.FIM])}</span>`
+          : `<span class="readonly-cell empty">—</span>`;
 
-        // ---------- TERMO (requer FIM CONF) ----------
+        // ---------- TERMO ----------
         let termoHtml = '';
         if (s.hasTermo) {
           termoHtml = `<span class="col-date">${formatarDataHora(row[COLS.TERMO])}</span>`;
@@ -1030,7 +1185,7 @@
           termoHtml = `<span class="step-locked">AGUARDA FIM</span>`;
         }
 
-        // ---------- PAGAMENTO (requer CHEGADA + ACIONAMENTO + ENCOSTA) ----------
+        // ---------- PAGAMENTO ----------
         let pagamentoHtml = '';
         if (s.hasPagamento) {
           pagamentoHtml = `<span class="col-date">${formatarDataHora(row[COLS.PAGAMENTO])}</span>`;
@@ -1048,7 +1203,7 @@
           <tr>
             <td>${senhaVal}</td>
             <td>${fornecedorV}</td>
-            <td>${cargaV}</td>
+            <td>${cargaVal}</td>
             <td>${statusV}</td>
             <td class="col-date">${agendaV}</td>
             <td class="col-date">${chegadaV}</td>
@@ -1095,23 +1250,288 @@
         });
       });
 
+      // Edição: SENHA e CARGA
+      document.querySelectorAll('#historicoBody .editable-cell[data-edit-senha]').forEach(cell => {
+        cell.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const s = this.dataset.editSenha || '';
+          const c = this.dataset.editCarga || '';
+          const d = this.dataset.editDoca || '';
+          openEditSCModal(s, c, d, 'sc');
+        });
+      });
+
+      // Edição: DOCA (badge)
+      document.querySelectorAll('#historicoBody .doca-badge[data-edit-doca]').forEach(badge => {
+        badge.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const s = this.dataset.editSenha || '';
+          const c = this.dataset.editCarga || '';
+          const d = this.dataset.editDoca || '';
+          openEditSCModal(s, c, d, 'doca');
+        });
+      });
+
       tableHeadWrap.scrollLeft = tableBodyWrap.scrollLeft;
       tableScrollbar.scrollLeft = tableBodyWrap.scrollLeft;
     }
 
     // ============================================================
-    // REGISTRO DE ETAPAS (TERMO e PAGAMENTO)
+    // MODAL DE EDIÇÃO (SENHA / CARGA / DOCA)
     // ============================================================
-    async function registrarEtapa(acao, senhaValor, botao) {
-      const colMap = {
-        termo:     COLS.TERMO,
-        pagamento: COLS.PAGAMENTO
-      };
-      const labelMap = {
-        termo: 'TERMO',
-        pagamento: 'PAGAMENTO'
+    async function loadDocksIntoSelect(docaAtual) {
+      // Popula o select de docas: todas as docas + a atual pré-selecionada
+      editDocaVal.innerHTML = '<option value="">CARREGANDO...</option>';
+      try {
+        const docks = await fetchDocks();
+
+        // Ordena por nome
+        docks.sort((a, b) => {
+          const da = upper(a.DOCA || '');
+          const db = upper(b.DOCA || '');
+          return da.localeCompare(db, undefined, { numeric: true });
+        });
+
+        let html = '';
+        for (const d of docks) {
+          const docaNome = upper(clean(d.DOCA));
+          if (!docaNome) continue;
+
+          const status = getDockStatus(d);
+          const ehAtual = docaNome === upper(docaAtual);
+
+          // Só pode selecionar: a doca atual OU disponíveis
+          const disponivel = (status === 'DISPONIVEL') || ehAtual;
+
+          let rotulo = docaNome;
+          if (ehAtual) rotulo += ' · ATUAL';
+          else if (status === 'OCUPADO') rotulo += ' · OCUPADA';
+          else if (status === 'BLOQUEADO') rotulo += ' · BLOQUEADA';
+
+          html += `<option value="${escapeHtml(docaNome)}" ${ehAtual ? 'selected' : ''} ${disponivel ? '' : 'disabled'}>${escapeHtml(rotulo)}</option>`;
+        }
+
+        if (!html) {
+          html = '<option value="">NENHUMA DOCA DISPONÍVEL</option>';
+        }
+        editDocaVal.innerHTML = html;
+      } catch (err) {
+        console.error('[DOCAS SELECT] Erro:', err);
+        editDocaVal.innerHTML = '<option value="">ERRO AO CARREGAR</option>';
+      }
+    }
+
+    async function openEditSCModal(senhaValor, cargaValor, docaValor, foco) {
+      editSCContext = {
+        senhaOriginal: clean(senhaValor),
+        cargaOriginal: clean(cargaValor),
+        docaOriginal:  clean(docaValor)
       };
 
+      // Campos
+      editSenhaVal.value = clean(senhaValor);
+      editCargaVal.value = clean(cargaValor);
+
+      // Título/subtítulo dinâmicos
+      const temDoca = !!editSCContext.docaOriginal;
+      editSCTitle.textContent = temDoca ? 'AJUSTAR SENHA / CARGA / DOCA' : 'AJUSTAR SENHA / CARGA';
+      editSCSub.textContent = temDoca
+        ? 'ALTERE OS VALORES DESEJADOS. A DOCA PODE SER TROCADA.'
+        : 'ALTERE OS VALORES E SALVE.';
+
+      // Info no topo
+      const partes = [];
+      partes.push(`<b>SENHA ${escapeHtml(upper(senhaValor))}</b>`);
+      partes.push(`<b>CARGA ${escapeHtml(upper(cargaValor || '—'))}</b>`);
+      if (temDoca) partes.push(`<b>DOCA ${escapeHtml(upper(docaValor))}</b>`);
+      editSCInfo.innerHTML = 'EDITANDO REGISTRO ATUAL: ' + partes.join(' · ');
+
+      // Campo DOCA — visível apenas se houver doca
+      if (temDoca) {
+        editDocaField.classList.remove('hidden');
+        await loadDocksIntoSelect(editSCContext.docaOriginal);
+        docaChangeWarning.classList.remove('visible');
+      } else {
+        editDocaField.classList.add('hidden');
+        editDocaVal.innerHTML = '';
+        docaChangeWarning.classList.remove('visible');
+      }
+
+      setEditSCState('NENHUMA ALTERAÇÃO.');
+      editSCModal.classList.remove('hidden');
+
+      // Foco: se abriu pelo badge da doca → foca no select; senão → foca na senha
+      setTimeout(() => {
+        if (foco === 'doca' && temDoca) {
+          editDocaVal.focus();
+        } else {
+          editSenhaVal.focus();
+        }
+      }, 50);
+    }
+
+    function closeEditSCModal() {
+      editSCModal.classList.add('hidden');
+      editSCContext = null;
+      editSenhaVal.value = '';
+      editCargaVal.value = '';
+      editDocaVal.innerHTML = '';
+      docaChangeWarning.classList.remove('visible');
+    }
+
+    // Mostra/oculta o aviso de mudança de doca conforme a seleção
+    editDocaVal.addEventListener('change', function() {
+      if (!editSCContext) return;
+      const novaDoca = clean(editDocaVal.value);
+      const mudou = novaDoca && novaDoca !== editSCContext.docaOriginal;
+      docaChangeWarning.classList.toggle('visible', mudou);
+    });
+
+    formEditSC.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (!editSCContext) return;
+
+      const novaSenha = clean(editSenhaVal.value);
+      const novaCarga = clean(editCargaVal.value);
+      const novaDoca = editDocaField.classList.contains('hidden') ? '' : clean(editDocaVal.value);
+
+      // Validações
+      if (!novaSenha || !/^\d+$/.test(novaSenha)) {
+        setEditSCState('SENHA DEVE CONTER APENAS NÚMEROS.', 'error');
+        editSenhaVal.focus();
+        return;
+      }
+      if (!novaCarga || !/^\d+$/.test(novaCarga)) {
+        setEditSCState('CARGA DEVE CONTER APENAS NÚMEROS.', 'error');
+        editCargaVal.focus();
+        return;
+      }
+
+      const mudouSenha = novaSenha !== editSCContext.senhaOriginal;
+      const mudouCarga = novaCarga !== editSCContext.cargaOriginal;
+      const mudouDoca  = novaDoca && novaDoca !== editSCContext.docaOriginal;
+
+      if (!mudouSenha && !mudouCarga && !mudouDoca) {
+        setEditSCState('NENHUMA ALTERAÇÃO PARA SALVAR.', 'error');
+        return;
+      }
+
+      btnSalvarSC.disabled = true;
+      const original = btnSalvarSC.textContent;
+      btnSalvarSC.textContent = '...';
+      setEditSCState('SALVANDO...');
+
+      try {
+        // 1) Atualiza SENHA e CARGA na AGENDA (usando a senha original como chave)
+        if (mudouSenha || mudouCarga) {
+          const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(editSCContext.senhaOriginal)}`;
+          const resp = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+              apikey: SUPABASE_ANON,
+              Authorization: `Bearer ${SUPABASE_ANON}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              [COLS.SENHA]: novaSenha,
+              [COLS.CARGA]: novaCarga
+            })
+          });
+          if (!resp.ok) {
+            let detalhe = '';
+            try {
+              const errBody = await resp.json();
+              detalhe = errBody.message || errBody.details || errBody.hint || JSON.stringify(errBody);
+            } catch (_) {}
+            throw new Error(`${resp.status}${detalhe ? ' — ' + detalhe : ''}`);
+          }
+        }
+
+        // 2) Troca de doca (se aplicável)
+        if (mudouDoca) {
+          setEditSCState('MOVENDO DOCA...');
+
+          // 2a) Buscar doca antiga (para preservar o INICIO)
+          let inicioPreservado = new Date().toISOString();
+          try {
+            const r = await fetch(
+              `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?DOCA=eq.${encodeURIComponent(editSCContext.docaOriginal)}&select=DOCA,SENHA,CARGA,INICIO`,
+              { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
+            );
+            if (r.ok) {
+              const arr = await r.json();
+              if (Array.isArray(arr) && arr[0] && arr[0].INICIO) {
+                inicioPreservado = arr[0].INICIO;
+              }
+            }
+          } catch (err) {
+            console.warn('[TROCA DOCA] Falha ao ler doca antiga:', err);
+          }
+
+          // 2b) Verificar se a nova doca está disponível
+          const r2 = await fetch(
+            `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?DOCA=eq.${encodeURIComponent(novaDoca)}&select=*`,
+            { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
+          );
+          if (!r2.ok) throw new Error('Falha ao consultar doca destino.');
+          const arr2 = await r2.json();
+          const dockDestino = Array.isArray(arr2) ? arr2[0] : null;
+
+          if (!dockDestino) {
+            throw new Error(`DOCA ${novaDoca} NÃO ENCONTRADA.`);
+          }
+          const statusDestino = getDockStatus(dockDestino);
+          if (statusDestino !== 'DISPONIVEL') {
+            throw new Error(`DOCA ${novaDoca} ESTÁ ${statusDestino}. ESCOLHA UMA DISPONÍVEL.`);
+          }
+
+          // 2c) Liberar a doca antiga
+          await patchDock(editSCContext.docaOriginal, {
+            STATUS: 'DISPONIVEL',
+            SENHA: null,
+            CARGA: null,
+            INICIO: null,
+            'MOTIVO BLOQ': null
+          });
+
+          // 2d) Ocupar a nova doca
+          await patchDock(novaDoca, {
+            STATUS: 'OCUPADO',
+            SENHA: novaSenha,
+            CARGA: novaCarga ? Number(novaCarga) : null,
+            INICIO: inicioPreservado,
+            'MOTIVO BLOQ': null
+          });
+        }
+
+        // Mensagem de sucesso
+        const msgs = [];
+        if (mudouSenha) msgs.push(`SENHA ${editSCContext.senhaOriginal} → ${novaSenha}`);
+        if (mudouCarga) msgs.push(`CARGA ${editSCContext.cargaOriginal || '—'} → ${novaCarga}`);
+        if (mudouDoca)  msgs.push(`DOCA ${editSCContext.docaOriginal} → ${novaDoca}`);
+        setNotice(`AJUSTE CONCLUÍDO: ${msgs.join(' · ')}.`, 'success');
+        setEditSCState('SALVO COM SUCESSO!', 'success');
+
+        closeEditSCModal();
+        carregarHistorico();
+      } catch (err) {
+        console.error(err);
+        setEditSCState('ERRO: ' + err.message, 'error');
+        btnSalvarSC.disabled = false;
+        btnSalvarSC.textContent = original;
+      }
+    });
+
+    closeEditSC.addEventListener('click', closeEditSCModal);
+    editSCModal.addEventListener('click', function(e) { if (e.target === this) closeEditSCModal(); });
+
+    // ============================================================
+    // REGISTRO DE ETAPAS
+    // ============================================================
+    async function registrarEtapa(acao, senhaValor, botao) {
+      const colMap = { termo: COLS.TERMO, pagamento: COLS.PAGAMENTO };
+      const labelMap = { termo: 'TERMO', pagamento: 'PAGAMENTO' };
       const col = colMap[acao];
       if (!col) return;
 
@@ -1253,7 +1673,7 @@
       }
     });
 
-    // ===== MODAL =====
+    // ===== MODAL RECEPÇÃO =====
     function openModal() { resetarModal(); modal.classList.remove('hidden'); senha.focus(); }
     function closeModal() { modal.classList.add('hidden'); resetarModal(); }
     openModalBtn.addEventListener('click', openModal);
@@ -1624,7 +2044,7 @@
       resetarModal();
       carregarHistorico();
       startAutoRefresh();
-      setNotice('INÍCIO/FIM CONF SÃO CONSULTADOS NO SUPABASE. PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA.', '');
+      setNotice('CLIQUE NA SENHA, NA CARGA OU NA DOCA PARA AJUSTAR.', '');
     }
 
     init();
