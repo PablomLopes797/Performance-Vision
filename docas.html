@@ -1,1500 +1,498 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WAREHOUSE VISION | RECEPÇÃO</title>
-  <style>
-    :root {
-      --navy:#071426; --ink:#15283f; --muted:#71849b; --line:#e4ebf3; --bg:#f3f7fb;
-      --blue:#2877ff; --cyan:#1fc4b1; --green:#1db889; --red:#e34b60; --amber:#efa83a;
-      --shadow:0 18px 55px #10254112;
-      --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-      --fs-2xs:11px; --fs-xs:12px; --fs-sm:13px; --fs-base:14px; --fs-md:15px;
-      --fs-lg:16px; --fs-xl:18px; --fs-2xl:20px; --fs-3xl:32px;
-      --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700; --fw-black:800;
-      --lh-tight:1.2; --lh-snug:1.35; --lh-normal:1.5;
-      --ls-tight:-0.01em; --ls-normal:0; --ls-wide:0.05em; --ls-wider:0.08em; --ls-widest:0.12em;
-    }
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0; background: var(--bg); color: var(--ink);
-      font-family: var(--font-sans); font-size: var(--fs-base); font-weight: var(--fw-regular);
-      line-height: var(--lh-normal); text-transform: uppercase;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    }
-    button, input, select { font-family: inherit; font-size: inherit; line-height: inherit; text-transform: inherit; }
-    button { cursor: pointer; }
-    .app { min-height: 100vh; }
-    #sidebar-container { position: fixed; inset: 0 auto 0 0; width: 236px; z-index: 10; }
-    .main { margin-left: 236px; min-height: 100vh; }
-    .topbar {
-      height: 66px; padding: 0 34px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--line); background: #ffffffdc; backdrop-filter: blur(15px);
-      position: sticky; top: 0; z-index: 5;
-    }
-    .crumb { font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: var(--ls-wider); color: #91a0b0; line-height: var(--lh-snug); }
-    .crumb strong { display: block; color: var(--ink); font-size: var(--fs-md); font-weight: var(--fw-semibold); letter-spacing: var(--ls-wide); margin-top: 4px; line-height: var(--lh-snug); }
-    .top-status { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: #70839a; letter-spacing: var(--ls-wide); line-height: var(--lh-snug); }
-    .top-status i { display: inline-block; width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; margin-right: 4px; vertical-align: middle; }
-    .content { padding: 28px 34px 50px; max-width: 100%; }
-    .hero { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 21px; flex-wrap: wrap; gap: 14px; }
-    .eyebrow { font-size: var(--fs-2xs); font-weight: var(--fw-black); letter-spacing: var(--ls-widest); color: var(--blue); line-height: var(--lh-snug); }
-    h1 { font-size: var(--fs-3xl); font-weight: var(--fw-black); letter-spacing: var(--ls-tight); line-height: var(--lh-tight); margin: 7px 0 6px; color: var(--navy); }
-    .hero p { margin: 0; color: var(--muted); font-size: var(--fs-md); line-height: var(--lh-normal); }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn {
-      border: 1px solid var(--line); background: #fff; color: #526982; border-radius: 9px;
-      padding: 10px 14px; font-size: var(--fs-xs); font-weight: var(--fw-bold);
-      letter-spacing: var(--ls-wide); text-decoration: none; display: inline-flex;
-      align-items: center; justify-content: center; gap: 6px; line-height: 1;
-      transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
-    }
-    .btn:hover { border-color: #cfdbe8; }
-    .btn.primary { border: 0; color: #fff; background: linear-gradient(135deg, #2d7bff, #16bda9); box-shadow: 0 8px 22px #347eff35; }
-    .btn.primary:hover { box-shadow: 0 10px 26px #347eff4a; }
-    .btn:active { transform: scale(.98); }
-    .btn.small { padding: 6px 11px; font-size: var(--fs-2xs); border-radius: 6px; letter-spacing: var(--ls-wide); white-space: normal; }
-    .btn.ghost { background: transparent; border-color: transparent; color: #70839a; padding: 6px 10px; }
-    .btn.ghost:hover { background: #f3f7fb; }
-    .btn.refresh { border-color: #cfe4ff; background: #f0f7ff; color: #2d6bd1; }
-    .btn.refresh:hover { background: #e3efff; border-color: #a8cdf7; }
-    .btn.success { border-color: var(--green); color: var(--green); }
-    .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
-    .btn.dock { background: #e8f5ff; border-color: #b8daff; color: #1e6db5; }
-    .btn.dock:hover { background: #d4ebff; border-color: #8fc3f5; }
-    .btn.refresh .icon-refresh { display: inline-block; font-size: 13px; line-height: 1; transition: transform .4s ease; }
-    .btn.refresh.loading .icon-refresh { animation: spin 1s linear infinite; }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-    .btn-x {
-      border: 1px solid #ffe0e4; background: #fff5f6; color: #b73f52;
-      width: 22px; height: 22px; border-radius: 6px; font-size: 11px; font-weight: var(--fw-black);
-      display: inline-flex; align-items: center; justify-content: center; line-height: 1;
-      padding: 0; flex: 0 0 auto; cursor: pointer;
-      transition: background .15s ease, border-color .15s ease, transform .08s ease;
-    }
-    .btn-x:hover { background: #ffe0e4; border-color: #ffc4cb; }
-    .btn-x:active { transform: scale(.94); }
-    .btn-x:disabled { opacity: .5; cursor: not-allowed; }
-    .acionamento-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .acionamento-cell span { flex: 1 1 auto; }
-
-    .panel {
-      background: #fff; border: 1px solid var(--line); border-radius: 14px;
-      box-shadow: var(--shadow); padding: 18px; width: 100%; margin-bottom: 17px;
-    }
-    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-    .panel-title { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--navy); letter-spacing: var(--ls-tight); line-height: var(--lh-snug); }
-    .panel-sub { font-size: var(--fs-xs); color: #8c9aab; margin-top: 4px; line-height: var(--lh-normal); }
-    .pill { display: inline-flex; align-items: center; background: #edf5ff; color: #3470dd; border-radius: 20px; padding: 5px 10px; font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); white-space: nowrap; line-height: 1; }
-
-    .search-bar { position: relative; margin-bottom: 12px; }
-    .search-bar input {
-      width: 100%; height: 44px; border: 1px solid #dfe7ef; border-radius: 10px;
-      padding: 0 40px 0 42px; background: #fff; color: #253e59;
-      font-size: var(--fs-base); font-weight: var(--fw-medium); letter-spacing: var(--ls-wide); outline: none;
-      transition: border-color .15s ease, box-shadow .15s ease;
-    }
-    .search-bar input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); letter-spacing: var(--ls-wide); }
-    .search-bar input:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
-    .search-bar .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #70839a; pointer-events: none; line-height: 1; }
-    .search-bar .search-clear {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-      border: 0; background: transparent; color: #9aabbf; font-size: 14px; font-weight: var(--fw-black);
-      width: 24px; height: 24px; border-radius: 50%; display: none; align-items: center; justify-content: center;
-      cursor: pointer; line-height: 1; padding: 0;
-    }
-    .search-bar .search-clear:hover { background: #f3f7fb; color: #526982; }
-    .search-bar.has-value .search-clear { display: inline-flex; }
-
-    .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding: 12px 14px; background: #f8fbff; border: 1px solid #e8f0fa; border-radius: 10px; margin-bottom: 14px; }
-    .filter-field { display: flex; flex-direction: column; gap: 5px; min-width: 180px; }
-    .filter-field label { font-size: var(--fs-2xs); font-weight: var(--fw-bold); color: #526982; letter-spacing: var(--ls-wider); line-height: var(--lh-snug); }
-    .filter-field input, .filter-field select {
-      height: 34px; border: 1px solid #dfe7ef; border-radius: 8px; padding: 0 10px;
-      background: #fff; color: #253e59; font-size: var(--fs-xs); font-weight: var(--fw-medium);
-      letter-spacing: var(--ls-wide); outline: none; width: 100%;
-      transition: border-color .15s ease, box-shadow .15s ease; font-variant-numeric: tabular-nums; cursor: pointer;
-    }
-    .filter-field input:focus, .filter-field select:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
-    .filter-field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
-    .filter-field select option { padding: 4px; }
-    .filter-field select optgroup { font-weight: var(--fw-black); color: #526982; }
-    .filters .btn.small { height: 34px; }
-    .filters .filter-info { margin-left: auto; font-size: var(--fs-2xs); color: #70839a; font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); padding-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-    .last-update { display: inline-flex; align-items: center; gap: 4px; color: #5a7ea8; font-variant-numeric: tabular-nums; }
-    .last-update::before { content: ''; display: inline-block; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
-
-    .notice { padding: 12px 13px; border-radius: 9px; background: #f5f9ff; color: #607691; font-size: var(--fs-sm); font-weight: var(--fw-medium); line-height: var(--lh-normal); margin-top: 16px; }
-    .notice.success { background: #effcf5; color: #137b57; }
-    .notice.error { background: #fff1f2; color: #b73f52; }
-    .notice.warning { background: #fff8e5; color: #9e7a1a; }
-    .hidden { display: none !important; }
-
-    .table-wrap { overflow: auto; border: 1px solid #edf1f5; border-radius: 10px; max-height: 70vh; }
-    .data-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); font-weight: var(--fw-regular); line-height: var(--lh-snug); min-width: 1800px; }
-    .data-table th { background: #f7fafd; color: #7c8da0; font-size: var(--fs-2xs); font-weight: var(--fw-bold); text-align: left; letter-spacing: var(--ls-wider); padding: 12px 11px; white-space: nowrap; position: sticky; top: 0; z-index: 1; }
-    .data-table td { border-top: 1px solid #edf1f5; padding: 12px 11px; color: #3d526b; font-size: var(--fs-xs); white-space: nowrap; vertical-align: top; }
-    .data-table tbody tr:hover { background: #f8fbff; }
-    .data-table .col-date { font-variant-numeric: tabular-nums; letter-spacing: var(--ls-wide); }
-    .data-table th.cell-wrap, .data-table td.cell-wrap { white-space: normal; word-break: break-word; overflow-wrap: anywhere; min-width: 150px; max-width: 200px; line-height: var(--lh-normal); }
-    .hl { background: #fff3b0; color: #6b4d00; padding: 0 2px; border-radius: 3px; font-weight: var(--fw-bold); }
-    .empty-table { padding: 42px; text-align: center; color: #8192a6; font-size: var(--fs-sm); font-weight: var(--fw-medium); }
-
-    .badge-viewed { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 20px; font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); white-space: normal; line-height: var(--lh-snug); max-width: 100%; }
-    .badge-viewed.ok { background: #effcf5; color: #137b57; }
-    .badge-viewed.nok { background: #fff1f2; color: #b73f52; }
-    .badge-viewed small { font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal); opacity: .85; font-variant-numeric: tabular-nums; }
-
-    /* ============================================================
-       DOCK MAP (para o modal de alocação)
-       ============================================================ */
-    .dock-map {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
-      gap: 8px;
-      width: 100%;
-      margin-top: 6px;
-    }
-    .dock-square {
-      aspect-ratio: 1;
-      background: var(--green);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: var(--fw-black);
-      color: #fff;
-      font-size: 12px;
-      transition: transform .15s, box-shadow .15s;
-      border: 2px solid transparent;
-      cursor: pointer;
-      position: relative;
-      padding: 3px;
-      min-height: 68px;
-      user-select: none;
-    }
-    .dock-square:hover {
-      transform: scale(1.04);
-      box-shadow: 0 6px 18px #10254125;
-      z-index: 2;
-    }
-    .dock-square.ocupado { background: var(--red); cursor: not-allowed; }
-    .dock-square.bloqueado { background: #8a8a8a; border-color: #f5c542; cursor: not-allowed; }
-    .dock-square .dock-number {
-      font-size: 18px;
-      line-height: 1.2;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-    .dock-square .dock-tempo {
-      font-size: 9px;
-      font-weight: var(--fw-semibold);
-      margin-top: 1px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-    .dock-square .tooltip {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: #071426;
-      color: #e4edf6;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 9px;
-      font-weight: var(--fw-medium);
-      white-space: nowrap;
-      z-index: 10;
-      pointer-events: none;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      text-align: left;
-      line-height: 1.6;
-    }
-    .dock-square .tooltip::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 6px solid transparent;
-      border-top-color: #071426;
-    }
-    .dock-square:hover .tooltip { display: block; }
-    .dock-square .tooltip strong { color: #fff; font-weight: var(--fw-black); }
-    .dock-square .tooltip .label { color: #8aa3c0; }
-    .dock-square .tooltip .motivo { color: #f5c542; }
-    .dock-square .tooltip .senha { color: #6fc9ff; }
-    .dock-square .tooltip .carga { color: #b7e6a0; }
-    .dock-square.sua-doca {
-      box-shadow: 0 0 0 3px #ffd700, 0 0 20px #ffd70080;
-      border-color: #ffd700;
-    }
-
-    .dock-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; color: var(--muted); font-size: var(--fs-2xs); }
-    .dock-legend span { display: inline-flex; align-items: center; gap: 5px; }
-    .dock-legend i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
-    .dock-legend .green { background: var(--green); }
-    .dock-legend .red { background: var(--red); }
-    .dock-legend .gray { background: #8a8a8a; border: 1px solid #f5c542; }
-
-    .dock-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
-    .dock-metric { background: #f8fbff; border: 1px solid #e8f0fa; border-radius: 10px; padding: 10px 12px; }
-    .dock-metric small { display: block; font-size: var(--fs-2xs); color: #71849b; font-weight: var(--fw-bold); letter-spacing: var(--ls-wide); }
-    .dock-metric b { display: block; font-size: 18px; color: var(--navy); font-weight: var(--fw-black); margin-top: 4px; letter-spacing: var(--ls-tight); }
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-      backdrop-filter: blur(3px);
-    }
-    .modal-overlay.hidden { display: none; }
-    .modal-content {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-      max-width: 820px;
-      width: 100%;
-      padding: 28px;
-      max-height: 90vh;
-      overflow-y: auto;
-      border: 1px solid var(--line);
-    }
-    .modal-content.wide { max-width: 980px; }
-    .modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
-    .modal-title { font-size: var(--fs-2xl); font-weight: var(--fw-black); color: var(--navy); letter-spacing: var(--ls-tight); line-height: var(--lh-tight); }
-    .modal-sub { font-size: var(--fs-xs); color: #8c9aab; margin-top: 6px; line-height: var(--lh-normal); }
-    .modal-close {
-      border: 1px solid var(--line); background: #fff; border-radius: 9px; padding: 7px 13px;
-      font-size: var(--fs-xs); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide);
-      color: #526982; line-height: 1; transition: border-color .15s ease;
-    }
-    .modal-close:hover { border-color: #cfdbe8; }
-
-    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    .field label { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: #526982; letter-spacing: var(--ls-wider); line-height: var(--lh-snug); }
-    .field input, .field select {
-      height: 40px; border: 1px solid #dfe7ef; border-radius: 8px; padding: 0 12px;
-      background: #fbfdff; color: #253e59; font-size: var(--fs-base);
-      font-weight: var(--fw-medium); outline: none; width: 100%;
-      letter-spacing: var(--ls-wide); transition: border-color .15s ease, box-shadow .15s ease;
-    }
-    .field input::placeholder { color: #9aabbf; font-weight: var(--fw-regular); }
-    .field input:focus, .field select:focus { border-color: #75a6ff; box-shadow: 0 0 0 3px #347eff12; }
-    .field input:disabled { background: #f0f4f9; color: #8a9aad; cursor: not-allowed; }
-    .field small { font-size: var(--fs-2xs); color: #8998a9; line-height: var(--lh-normal); }
-    .field .mask-hint { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: #9aabbf; letter-spacing: var(--ls-wide); margin-top: 2px; line-height: var(--lh-snug); }
-    .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 20px; }
-    .form-state { margin-right: auto; color: var(--muted); font-size: var(--fs-sm); font-weight: var(--fw-medium); line-height: var(--lh-snug); }
-
-    @media (max-width: 1050px) {
-      #sidebar-container { width: 200px; }
-      .main { margin-left: 200px; }
-      .content { padding: 24px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .dock-metrics { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 700px) {
-      #sidebar-container { width: 67px; }
-      .main { margin-left: 67px; }
-      .topbar { padding: 0 16px; }
-      .content { padding: 20px 12px; }
-      .hero { display: block; }
-      .actions { margin-top: 14px; }
-      .form-grid { grid-template-columns: 1fr; }
-      h1 { font-size: 26px; }
-      .filters { flex-direction: column; align-items: stretch; }
-      .filter-field { min-width: 0; }
-      .filters .filter-info { margin-left: 0; text-align: center; justify-content: center; }
-      .dock-map { grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; }
-      .dock-square { min-height: 56px; font-size: 10px; }
-      .dock-square .dock-number { font-size: 15px; }
-      .dock-metrics { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Warehouse Vision | Docas</title>
+<style>
+:root{--navy:#071426;--ink:#15283f;--muted:#71849b;--line:#e4ebf3;--bg:#f3f7fb;--blue:#2877ff;--cyan:#1fc4b1;--green:#1db889;--red:#e34b60;--amber:#efa83a;--shadow:0 18px 55px #10254112}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}.app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:236px;background:linear-gradient(180deg,#071426,#0b223c 56%,#071728);color:#dbe8f6;padding:18px 13px;display:flex;flex-direction:column;z-index:10;box-shadow:8px 0 30px #05142625;overflow:hidden}.brand{display:flex;align-items:center;justify-content:center;min-height:76px;padding:2px 6px 15px;border-bottom:1px solid #ffffff12}.brand-logo{display:block;width:210px;height:86px;object-fit:contain;filter:drop-shadow(0 8px 18px #1680ff38)}.side-heading{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#607b99;padding:23px 9px 8px}.nav{display:flex;flex-direction:column;gap:3px}.nav>a,.nav>details>summary{display:flex;align-items:center;gap:9px;min-height:42px;padding:7px 9px;border-radius:10px;color:#91a6c0;text-decoration:none;font-size:10px;cursor:pointer;list-style:none}.nav>a:hover,.nav>details[open]>summary,.nav>details>summary:hover{background:#ffffff0c;color:#eaf4ff}.nav>a.active,.subnav a.active{background:#ffffff12;color:#fff}.nav-icon{width:19px;height:19px;display:grid;place-items:center;flex:0 0 19px;color:#7998b8;font-size:16px}.nav-copy{display:flex;flex-direction:column;gap:2px;flex:1;font-weight:800}.nav-copy small{font-size:7px;color:#627b99;font-weight:500}.nav-chevron{font-size:14px;color:#6e88a4}.nav>details>summary::-webkit-details-marker{display:none}.subnav{display:flex;flex-direction:column;gap:2px;margin:1px 0 5px 28px;padding:3px 0 3px 9px;border-left:1px solid #ffffff1a}.subnav a{display:flex;flex-direction:column;gap:2px;padding:6px 8px;border-radius:7px;color:#8fa5be;text-decoration:none;font-size:8px}.subnav a:hover,.subnav a.active{background:#ffffff10;color:#fff}.subnav a span{font-weight:800}.subnav a small{font-size:7px;color:#607994}.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff10;padding:15px 5px 0}.back-link{color:#7892af;text-decoration:none;font-size:8px}.side-sign{font-size:7px;color:#5e7692;margin-top:16px;line-height:1.5}.side-sign b{display:block;color:#9ab0c6}.main{margin-left:236px;min-height:100vh}.topbar{height:66px;padding:0 34px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#ffffffdc;backdrop-filter:blur(15px);position:sticky;top:0;z-index:5}.crumb{font-size:9px;color:#91a0b0}.crumb strong{display:block;color:var(--ink);font-size:12px;margin-top:4px}.top-status{font-size:8px;color:#70839a}.top-status i{display:inline-block;width:6px;height:6px;background:var(--cyan);border-radius:50%;margin-right:4px}.content{padding:28px 34px 50px;max-width:1500px;margin:auto}.hero{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:21px}.eyebrow{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:900}h1{font-size:30px;letter-spacing:-.055em;margin:7px 0 6px;color:var(--navy)}.hero p{margin:0;color:var(--muted);font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#fff;color:#526982;border-radius:9px;padding:10px 14px;font-size:9px;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.primary{border:0;color:#fff;background:linear-gradient(135deg,#2d7bff,#16bda9);box-shadow:0 8px 22px #347eff35}.btn.danger{color:#b63d52;border-color:#f2ccd2;background:#fff7f8}.btn:active{transform:scale(.98)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:17px}.metric,.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.metric{padding:16px 18px}.metric small{font-size:8px;color:#8494a7}.metric b{display:block;font-size:23px;margin:7px 0 2px;letter-spacing:-.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric span{font-size:8px;color:#19a890;font-weight:850}.panel{padding:18px;width:100%}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.panel-title{font-size:13px;font-weight:900}.panel-sub{font-size:8px;color:#8c9aab;margin-top:4px;line-height:1.5}.pill{display:inline-flex;background:#edf5ff;color:#3470dd;border-radius:20px;padding:6px 9px;font-size:8px;font-weight:900;white-space:nowrap}
+.dock-map{display:grid;grid-template-columns:repeat(auto-fill, minmax(68px, 1fr));gap:8px;width:100%}
+.dock-square{aspect-ratio:1;background:var(--green);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:12px;transition:transform .15s,box-shadow .15s;border:2px solid transparent;cursor:pointer;position:relative;padding:3px;min-height:68px;user-select:none}
+.dock-square:hover{transform:scale(1.04);box-shadow:0 6px 18px #10254125;z-index:2}
+.dock-square.ocupado{background:var(--red)}
+.dock-square.bloqueado{background:#8a8a8a;border-color:#f5c542}
+.dock-square .dock-number{font-size:18px;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.2);display:flex;align-items:center;gap:2px}
+.dock-square .dock-tempo{font-size:9px;font-weight:600;margin-top:1px;text-shadow:0 1px 2px rgba(0,0,0,0.2)}
+.dock-square .dock-release{position:absolute;top:2px;right:3px;background:rgba(255,255,255,0.2);border:0;color:#fff;font-size:11px;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;transition:background .2s;cursor:pointer;opacity:0.7}
+.dock-square .dock-release:hover{background:rgba(255,255,255,0.4);opacity:1}
+.dock-square.overdue{animation:pulse 1.2s infinite;border-color:#ffcc00}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,204,0,0.5)}70%{box-shadow:0 0 0 8px rgba(255,204,0,0)}100%{box-shadow:0 0 0 0 rgba(255,204,0,0)}}
+.dock-square .alert-icon{display:none;font-size:16px;line-height:1;margin-left:2px;animation:blink 0.8s infinite}
+@keyframes blink{0%{opacity:1}50%{opacity:0.2}100%{opacity:1}}
+.dock-square.alerta24 .alert-icon{display:inline-block}
+.dock-square .tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#071426;color:#e4edf6;padding:8px 12px;border-radius:8px;font-size:9px;font-weight:500;white-space:nowrap;z-index:10;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,0.3);text-align:left;line-height:1.6}
+.dock-square .tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#071426}
+.dock-square:hover .tooltip{display:block}
+.dock-square .tooltip strong{color:#fff;font-weight:800}
+.dock-square .tooltip .label{color:#8aa3c0}
+.dock-square .tooltip .motivo{color:#f5c542}
+.dock-square .tooltip .fornecedor{color:#6fc9ff}
+.dock-square .tooltip .categoria{color:#b7e6a0}
+.empty{text-align:center;padding:32px;color:#8192a6;font-size:10px;grid-column:1/-1}
+.form-panel{margin-top:17px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:9px;font-weight:900;color:#526982;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{height:38px;border:1px solid #dfe7ef;border-radius:8px;padding:0 11px;background:#fbfdff;color:#253e59;font-size:11px;outline:none;width:100%}
+.field input:focus,.field select:focus{border-color:#75a6ff;box-shadow:0 0 0 3px #347eff12}
+.field small{font-size:8px;color:#8998a9;line-height:1.4}
+.form-actions{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:18px}
+.form-state{margin-right:auto;color:var(--muted);font-size:10px}
+.notice{padding:12px 13px;border-radius:9px;background:#f5f9ff;color:#607691;font-size:10px;line-height:1.5;margin-top:16px}
+.notice.success{background:#effcf5;color:#137b57}
+.notice.error{background:#fff1f2;color:#b73f52}
+.hidden{display:none!important}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.legend .green{background:var(--green)}
+.legend .red{background:var(--red)}
+.legend .gray{background:#8a8a8a;border:1px solid #f5c542}
+.legend .alert{background:#b22222;border:1px solid #ffcc00}
+.loading{color:#7b8da1;font-size:10px;padding:32px;text-align:center;grid-column:1/-1}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(3px)}
+.modal-overlay.hidden{display:none}
+.modal-content{background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,0.3);max-width:720px;width:100%;padding:28px;max-height:90vh;overflow-y:auto;border:1px solid var(--line)}
+.modal-confirm .modal-content{max-width:420px;text-align:center}
+.modal-confirm .modal-actions{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.detalhes-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.detalhes-grid .item{background:#f5f9ff;padding:10px 14px;border-radius:8px}
+.detalhes-grid .item .rotulo{font-size:8px;color:#71849b;text-transform:uppercase;letter-spacing:.05em}
+.detalhes-grid .item .valor{font-size:14px;font-weight:700;color:#071426;margin-top:2px}
+@media(max-width:1050px){.sidebar{width:200px}.main{margin-left:200px}.content{padding:24px}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.sidebar{width:67px;padding:15px 8px}.brand{min-height:58px;padding:0 0 10px}.brand-logo{width:58px;height:54px}.side-heading,.nav-copy,.sidebar-bottom{display:none}.nav>a,.nav>details>summary{justify-content:center;padding:10px 0}.subnav{margin-left:0;padding-left:0;border:0}.subnav a span,.subnav a small{display:none}.main{margin-left:67px}.topbar{padding:0 16px}.content{padding:20px 12px}.hero{display:block}.actions{margin-top:14px}.metrics{grid-template-columns:1fr 1fr;gap:9px}.form-grid{grid-template-columns:1fr}.modal-content{padding:20px;margin:10px}.dock-map{grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}.dock-square{min-height:56px;font-size:10px}.dock-square .dock-number{font-size:15px}}
+</style>
   <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
 <div class="app">
-  <div id="sidebar-container"></div>
+<div id="sidebar-container"></div>
+<main class="main">
+<header class="topbar"><div class="crumb">WAREHOUSE VISION / <strong>Gestão de docas</strong></div><div class="top-status"><i></i>Supabase conectado</div></header>
+<section class="content">
+<div class="hero"><div><div class="eyebrow">Warehouse intelligence / inbound capacity</div><h1>Gestão de docas</h1><p>Clique em qualquer doca para editar status, senha, carga ou motivo de bloqueio.</p></div><div class="actions"><button class="btn" id="registerOpen">＋ Cadastrar doca</button></div></div>
+<div class="metrics"><div class="metric"><small>Total de docas</small><b id="mTotal">—</b><span>Cadastro operacional</span></div><div class="metric"><small>Docas disponíveis</small><b id="mAvailable">—</b><span id="mAvailableCount">—</span></div><div class="metric"><small>Docas ocupadas</small><b id="mOccupied">—</b><span id="mOccupiedCount">—</span></div><div class="metric"><small>Índice de ocupação</small><b id="mIndex">—</b><span>Ocupação geral</span></div></div>
+<section class="panel"><div class="panel-head"><div><div class="panel-title">Mapa de docas</div><div class="panel-sub">Verde = disponível | Vermelho = ocupado | Cinza = bloqueado (🔒) | Passe o mouse para detalhes. ⚠️ alerta após 4h, 🚨 após 24h.</div></div><span class="pill" id="state">Consultando</span></div><div class="dock-map" id="dockMap"><div class="loading">Carregando docas...</div></div><div class="legend"><span><i class="green"></i>Disponível</span><span><i class="red"></i>Ocupado</span><span><i class="gray"></i>Bloqueado</span><span><i class="alert"></i>Alerta 4h+</span><span>🚨 Alerta 24h+</span></div></section>
 
-  <main class="main">
-    <header class="topbar">
-      <div class="crumb">WAREHOUSE VISION / <strong>RECEPÇÃO DE MOTORISTA</strong></div>
-      <div class="top-status"><i></i>SUPABASE CONECTADO</div>
-    </header>
+<section class="panel form-panel hidden" id="registerPanel"><div class="panel-head"><div><div class="panel-title">Cadastrar doca</div><div class="panel-sub">Informe apenas o identificador. O sistema criará a doca inicialmente como DISPONIVEL.</div></div><button class="btn" data-close="registerPanel">Fechar</button></div><form id="registerForm"><div class="form-grid"><div class="field"><label for="newDoca">DOCA</label><input id="newDoca" type="text" required placeholder="Ex.: D01" autocomplete="off"></div></div><div class="form-actions"><span class="form-state" id="registerState">Nenhuma alteração enviada.</span><button class="btn primary" type="submit">Cadastrar doca</button></div></form></section>
+<div class="notice" id="notice">Clique em uma doca para editar.</div>
+</section>
 
-    <section class="content">
-      <div class="hero">
-        <div>
-          <div class="eyebrow">INBOUND / DRIVER CHECK-IN</div>
-          <h1>RECEPÇÃO DE MOTORISTA</h1>
-          <p>REGISTRE A CHEGADA DO MOTORISTA E ATUALIZE A AGENDA COM OS DADOS DO VEÍCULO.</p>
-        </div>
-        <div class="actions">
-          <button class="btn refresh small" id="refreshBtn" type="button" title="Atualizar agora">
-            <span class="icon-refresh">⟳</span> ATUALIZAR
-          </button>
-          <button class="btn primary" id="openModalBtn">＋ NOVA RECEPÇÃO</button>
-        </div>
-      </div>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">ÚLTIMAS RECEPÇÕES</div>
-            <div class="panel-sub">REGISTROS MAIS RECENTES NA AGENDA.</div>
-          </div>
-          <span class="pill" id="totalRegistros">0</span>
-        </div>
-
-        <div class="search-bar" id="searchBar">
-          <span class="search-icon">🔍</span>
-          <input id="searchInput" type="text" placeholder="BUSCAR POR SENHA, FORNECEDOR OU Nº DE CARGA..." autocomplete="off" spellcheck="false">
-          <button class="search-clear" id="searchClear" type="button" title="Limpar busca">✕</button>
-        </div>
-
-        <div class="filters">
-          <div class="filter-field">
-            <label for="filterMonth">MÊS / ANO (AGENDA)</label>
-            <select id="filterMonth"><option value="">TODOS OS MESES</option></select>
-          </div>
-          <div class="filter-field">
-            <label for="filterFrom">DE</label>
-            <input id="filterFrom" type="date">
-          </div>
-          <div class="filter-field">
-            <label for="filterTo">ATÉ</label>
-            <input id="filterTo" type="date">
-          </div>
-          <button class="btn small ghost" id="clearFilters" type="button">LIMPAR FILTROS</button>
-          <span class="filter-info" id="filterInfo"></span>
-        </div>
-
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>SENHA</th>
-                <th>FORNECEDOR</th>
-                <th>CARGA</th>
-                <th>STATUS</th>
-                <th>AGENDA</th>
-                <th>CHEGADA</th>
-                <th class="cell-wrap">ACIONAMENTO ADM</th>
-                <th class="cell-wrap">VISUALIZAÇÃO ACIONAMENTO</th>
-                <th>ENCOSTA ADM</th>
-                <th>INÍCIO CONF</th>
-                <th>FIM CONF</th>
-                <th>TERMO</th>
-                <th>PAGAMENTO</th>
-              </tr>
-            </thead>
-            <tbody id="historicoBody">
-              <tr><td colspan="13" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <div class="notice" id="notice">CLIQUE EM "NOVA RECEPÇÃO" PARA INICIAR.</div>
-    </section>
-  </main>
-</div>
-
-<!-- ===== MODAL DE RECEPÇÃO ===== -->
-<div class="modal-overlay hidden" id="recepcaoModal">
+<!-- MODAL DE EDIÇÃO -->
+<div class="modal-overlay hidden" id="editModal">
   <div class="modal-content">
-    <div class="modal-head">
+    <div class="panel-head">
       <div>
-        <div class="modal-title">REGISTRAR RECEPÇÃO</div>
-        <div class="modal-sub">PREENCHA A SENHA E OS DADOS DO MOTORISTA. A CHEGADA SERÁ REGISTRADA NA AGENDA.</div>
+        <div class="panel-title" id="editModalTitle">Editar doca</div>
+        <div class="panel-sub" id="editModalSub">Altere o status, senha, carga ou motivo.</div>
       </div>
-      <button class="modal-close" id="closeModalBtn">FECHAR</button>
+      <button class="btn" id="closeEditModal">Fechar</button>
     </div>
-    <form id="formRecepcao">
+    <form id="editForm">
       <div class="form-grid">
         <div class="field">
-          <label for="senha">SENHA <span style="color:var(--red);">*</span></label>
-          <input id="senha" type="text" required placeholder="DIGITE A SENHA PARA CONSULTAR" autocomplete="off">
-          <small>PRESSIONE ENTER OU AGUARDE PARA BUSCAR NA AGENDA.</small>
-        </div>
-        <div class="field"><label for="fornecedor">FORNECEDOR</label><input id="fornecedor" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE"></div>
-        <div class="field"><label for="categoria">CATEGORIA</label><input id="categoria" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE"></div>
-        <div class="field"><label for="carga">CARGA</label><input id="carga" type="text" disabled placeholder="PREENCHIDO AUTOMATICAMENTE"></div>
-        <div class="field"><label for="rg">RG <span style="color:var(--red);">*</span></label><input id="rg" type="text" required disabled placeholder="EX.: 12.345.678-9"></div>
-        <div class="field">
-          <label for="cpf">CPF <span style="color:var(--red);">*</span></label>
-          <input id="cpf" type="text" required disabled placeholder="EX.: 123.456.789-00" maxlength="14">
-          <span class="mask-hint">FORMATO AUTOMÁTICO 000.000.000-00</span>
-        </div>
-        <div class="field"><label for="nome">NOME <span style="color:var(--red);">*</span></label><input id="nome" type="text" required disabled placeholder="NOME COMPLETO DO MOTORISTA"></div>
-        <div class="field">
-          <label for="telefone">TELEFONE <span style="color:var(--red);">*</span></label>
-          <input id="telefone" type="text" required disabled placeholder="EX.: (11) 99999-9999" maxlength="15">
-          <span class="mask-hint">FORMATO AUTOMÁTICO (XX) XXXXX-XXXX</span>
+          <label for="editDoca">DOCA</label>
+          <input id="editDoca" type="text" readonly disabled style="background:#f0f4f9;color:#526982;font-weight:700;">
         </div>
         <div class="field">
-          <label for="placa">PLACA <span style="color:var(--red);">*</span></label>
-          <input id="placa" type="text" required disabled placeholder="EX.: ABC-1234">
-          <span class="mask-hint">FORMATO AUTOMÁTICO ABC-1234 OU ABC1D23</span>
+          <label for="editStatus">STATUS</label>
+          <select id="editStatus" required>
+            <option value="DISPONIVEL">DISPONIVEL</option>
+            <option value="OCUPADO">OCUPADO</option>
+            <option value="BLOQUEADO">BLOQUEADO</option>
+          </select>
         </div>
-        <div class="field"><label for="nfs">Nº NF´S <span style="color:var(--red);">*</span></label><input id="nfs" type="text" required disabled placeholder="NÚMEROS SEPARADOS POR VÍRGULA"></div>
+        <div class="field" id="editMotivoField">
+          <label for="editMotivo">MOTIVO BLOQ</label>
+          <select id="editMotivo">
+            <option value="">Selecione um motivo (obrigatório para bloquear)</option>
+            <option value="DOCA EM MANUTENÇÃO">DOCA EM MANUTENÇÃO</option>
+            <option value="DOCA BLOQUEADA POR ESTRATEGIA OPERACIONAL">DOCA BLOQUEADA POR ESTRATEGIA OPERACIONAL</option>
+            <option value="DOCA BLOQUEADA PARA EVENTO">DOCA BLOQUEADA PARA EVENTO</option>
+            <option value="DOCA NÃO PODE SER UTILIZADA">DOCA NÃO PODE SER UTILIZADA</option>
+          </select>
+          <small>Preencher apenas se for bloquear.</small>
+        </div>
+        <div class="field">
+          <label for="editSenha">SENHA</label>
+          <input id="editSenha" type="text" inputmode="numeric" pattern="[0-9]+" autocomplete="off" placeholder="Somente números">
+          <small id="editSenhaHelp">Obrigatório para ocupar.</small>
+        </div>
+        <div class="field">
+          <label for="editCarga">CARGA</label>
+          <input id="editCarga" type="text" inputmode="numeric" pattern="[0-9]+" autocomplete="off" placeholder="Somente números">
+          <small id="editCargaHelp">Obrigatório para ocupar.</small>
+        </div>
       </div>
       <div class="form-actions">
-        <span class="form-state" id="formState">AGUARDANDO SENHA.</span>
-        <button class="btn primary" type="submit" id="btnSalvar" disabled>REGISTRAR CHEGADA</button>
+        <span class="form-state" id="editState">Nenhuma alteração.</span>
+        <button class="btn primary" type="submit">Salvar alterações</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- ===== MODAL DE ALOCAÇÃO DE DOCA ===== -->
-<div class="modal-overlay hidden" id="dockAllocModal">
-  <div class="modal-content wide">
-    <div class="modal-head">
-      <div>
-        <div class="modal-title">ALOCAR DOCA</div>
-        <div class="modal-sub" id="dockAllocSub">SELECIONE UMA DOCA VERDE PARA ALOCAR</div>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn refresh small" id="reloadDocksBtn" type="button">
-          <span class="icon-refresh">⟳</span> RECARREGAR
-        </button>
-        <button class="modal-close" id="closeDockAlloc">FECHAR</button>
+<!-- MODAL DE CONFIRMAÇÃO PARA LIBERAR -->
+<div class="modal-overlay hidden modal-confirm" id="confirmModal">
+  <div class="modal-content">
+    <div class="panel-head" style="justify-content:center;">
+      <div style="text-align:center;">
+        <div class="panel-title">Confirmar liberação</div>
+        <div class="panel-sub" id="confirmMessage">Tem certeza que deseja liberar a doca <strong id="confirmDoca"></strong>?<br>Isso apagará SENHA, CARGA, MOTIVO e tempo de início.</div>
       </div>
     </div>
-
-    <div class="dock-metrics">
-      <div class="dock-metric"><small>TOTAL</small><b id="dmTotal">—</b></div>
-      <div class="dock-metric"><small>DISPONÍVEIS</small><b id="dmAvail">—</b></div>
-      <div class="dock-metric"><small>OCUPADAS</small><b id="dmOcc">—</b></div>
-      <div class="dock-metric"><small>BLOQUEADAS</small><b id="dmBlock">—</b></div>
+    <div class="modal-actions">
+      <button class="btn" id="confirmCancel">Cancelar</button>
+      <button class="btn primary" id="confirmOk">Confirmar</button>
     </div>
-
-    <div class="dock-map" id="dockAllocMap">
-      <div class="empty-table">CARREGANDO DOCAS...</div>
-    </div>
-
-    <div class="dock-legend">
-      <span><i class="green"></i>DISPONÍVEL (CLIQUE PARA ALOCAR)</span>
-      <span><i class="red"></i>OCUPADA</span>
-      <span><i class="gray"></i>BLOQUEADA</span>
-    </div>
-
-    <div class="notice" id="dockAllocNotice">CLIQUE EM UMA DOCA DISPONÍVEL PARA ALOCAR A CARGA.</div>
   </div>
 </div>
 
+</main></div>
 <script>
-  (function() {
-    'use strict';
+const SUPABASE_URL='https://jgtisruauiajjfoesvol.supabase.co',SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ',TABLE=encodeURIComponent('DISPON. DOCAS'),AGENDA_TABLE=encodeURIComponent('AGENDA');
+const $=id=>document.getElementById(id);let rows=[],pendingRelease=null,currentEditDoca=null;
+const headers={apikey:SUPABASE_ANON,Authorization:'Bearer '+SUPABASE_ANON};
+function val(row,key){const k=Object.keys(row||{}).find(x=>x.toUpperCase()===key.toUpperCase());return k===undefined?'':row[k]}
+function clean(value){return String(value??'').trim()}
+function normDoca(value){return clean(value).toUpperCase()}
+function getStatus(row){const st=normDoca(val(row,'STATUS'));const motivo=clean(val(row,'MOTIVO BLOQ'));if(motivo && st!=='DISPONIVEL') return 'BLOQUEADO'; if(st==='OCUPADO') return 'OCUPADO'; if(st==='BLOQUEADO') return 'BLOQUEADO'; return 'DISPONIVEL';}
+function isOccupied(row){return getStatus(row)==='OCUPADO'}
+function isBlocked(row){return getStatus(row)==='BLOQUEADO'}
+function isAvailable(row){return getStatus(row)==='DISPONIVEL'}
+function esc(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function getDocaNumber(doca){const num=doca.replace(/\D/g,'');return num.padStart(2,'0')}
+function setNotice(message,type=''){const el=$('notice');el.className='notice '+type;el.textContent=message}
+function setState(id,message){$(id).textContent=message}
 
-    // ===== CONFIGURAÇÃO SUPABASE =====
-    const SUPABASE_URL = 'https://jgtisruauiajjfoesvol.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
-    const AGENDA_TABLE = encodeURIComponent('AGENDA');
-    const DOCAS_TABLE  = encodeURIComponent('DISPON. DOCAS');
+function formatarDuracao(milissegundos) {
+  if (milissegundos < 0) return '0h 0min';
+  const totalSegundos = Math.floor(milissegundos / 1000);
+  const dias = Math.floor(totalSegundos / 86400);
+  const horas = Math.floor((totalSegundos % 86400) / 3600);
+  const minutos = Math.floor((totalSegundos % 3600) / 60);
+  let partes = [];
+  if (dias > 0) partes.push(dias + 'd');
+  if (horas > 0 || dias > 0) partes.push(horas + 'h');
+  partes.push(minutos + 'min');
+  return partes.join(' ');
+}
 
-    const AUTO_REFRESH_MS = 60 * 1000;
+function calcularDuracao(inicioISO) {
+  if (!inicioISO) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
+  const inicio = new Date(inicioISO);
+  if (isNaN(inicio.getTime())) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
+  const diff = Date.now() - inicio.getTime();
+  if (diff < 0) return { diff: 0, horas: 0, minutos: 0, dias: 0, texto: '0h 0min' };
+  const totalSegundos = Math.floor(diff / 1000);
+  const dias = Math.floor(totalSegundos / 86400);
+  const horas = Math.floor((totalSegundos % 86400) / 3600);
+  const minutos = Math.floor((totalSegundos % 3600) / 60);
+  const texto = formatarDuracao(diff);
+  return { diff, horas, minutos, dias, texto };
+}
 
-    // ============================================================
-    // MAPA DE COLUNAS
-    // ============================================================
-    const COLS = {
-      SENHA:        'SENHA',
-      FORNECEDOR:   'FORNECEDOR',
-      CARGA:        'CARGA',
-      AGENDA:       'DTA HR AGENDA',
-      STATUS:       'STATUS',
-      CHEGADA:      'CHEGADA',
-      ACIONAMENTO:  'ACIONAMENTO ENTRADA',
-      VISUALIZACAO: 'ACIONAMENTO VISUALIZADO',
-      ENCOSTA:      'ENCOSTA ADM',
-      INICIO:       'INICIO CONF',
-      FIM:          'FIM CONF',
-      TERMO:        'TERMO LIBERAÇÃO',
-      PAGAMENTO:    'PAGAMENTO'
-    };
+async function getRows(){const u=`${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=DOCA.asc&limit=1000`;const r=await fetch(u,{headers});if(!r.ok)throw new Error(await r.text());return r.json()}
+function uniqueRows(){const map=new Map();for(const row of rows){const doca=normDoca(val(row,'DOCA'));if(doca&&!map.has(doca))map.set(doca,row)}return [...map.values()].sort((a,b)=>normDoca(val(a,'DOCA')).localeCompare(normDoca(val(b,'DOCA')),undefined,{numeric:true}))}
 
-    // ===== ELEMENTOS =====
-    const $ = id => document.getElementById(id);
-    const modal = $('recepcaoModal');
-    const closeModalBtn = $('closeModalBtn');
-    const openModalBtn = $('openModalBtn');
-    const form = $('formRecepcao');
-    const senha = $('senha');
-    const fornecedor = $('fornecedor');
-    const categoria = $('categoria');
-    const carga = $('carga');
-    const rg = $('rg');
-    const cpf = $('cpf');
-    const nome = $('nome');
-    const telefone = $('telefone');
-    const placa = $('placa');
-    const nfs = $('nfs');
-    const btnSalvar = $('btnSalvar');
-    const formState = $('formState');
-    const notice = $('notice');
-    const historicoBody = $('historicoBody');
-    const totalRegistros = $('totalRegistros');
-    const filterMonth = $('filterMonth');
-    const filterFrom = $('filterFrom');
-    const filterTo = $('filterTo');
-    const clearFilters = $('clearFilters');
-    const filterInfo = $('filterInfo');
-    const refreshBtn = $('refreshBtn');
-    const searchBar = $('searchBar');
-    const searchInput = $('searchInput');
-    const searchClear = $('searchClear');
-
-    // Dock allocation elements
-    const dockAllocModal = $('dockAllocModal');
-    const closeDockAlloc = $('closeDockAlloc');
-    const reloadDocksBtn = $('reloadDocksBtn');
-    const dockAllocMap = $('dockAllocMap');
-    const dockAllocSub = $('dockAllocSub');
-    const dockAllocNotice = $('dockAllocNotice');
-    const dmTotal = $('dmTotal');
-    const dmAvail = $('dmAvail');
-    const dmOcc = $('dmOcc');
-    const dmBlock = $('dmBlock');
-
-    let senhaEncontrada = false;
-    let dadosAgenda = null;
-    let allData = [];
-    let autoRefreshTimer = null;
-    let isLoading = false;
-    let currentSearch = '';
-
-    // Contexto da alocação atual: { senha, carga }
-    let dockAllocContext = null;
-    let isLoadingDocks = false;
-
-    // ===== UTILITÁRIOS =====
-    function upper(v) { return v === null || v === undefined ? '' : String(v).toUpperCase(); }
-    function clean(v) { return String(v ?? '').trim(); }
-    function setNotice(msg, tipo = '') { notice.textContent = upper(msg); notice.className = 'notice ' + tipo; }
-    function setDockNotice(msg, tipo = '') { dockAllocNotice.textContent = upper(msg); dockAllocNotice.className = 'notice ' + tipo; }
-    function pad2(n) { return String(n).padStart(2, '0'); }
-
-    function normalize(str) {
-      if (str === null || str === undefined) return '';
-      return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
-    function escapeRegex(str) { return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-
-    function highlight(text, term) {
-      const safe = escapeHtml(text);
-      if (!term) return safe;
-      const normTerm = normalize(term);
-      if (!normTerm) return safe;
-      const re = new RegExp(`(${escapeRegex(term)})`, 'gi');
-      return safe.replace(re, '<span class="hl">$1</span>');
-    }
-
-    // ============================================================
-    // PARSER FLEXÍVEL DE DATA
-    // ============================================================
-    function parseFlexibleDate(valor) {
-      if (valor === null || valor === undefined || valor === '') return null;
-      if (typeof valor === 'number' && isFinite(valor)) {
-        const d = new Date(valor);
-        if (isNaN(d.getTime())) return null;
-        return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(), hour: d.getHours(), min: d.getMinutes() };
-      }
-      const str = String(valor).trim();
-      if (!str) return null;
-      const br = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
-      if (br) {
-        let [, a, b, year, hour = '0', min = '0'] = br;
-        a = Number(a); b = Number(b); year = Number(year);
-        if (year < 100) year = 2000 + year;
-        let day, month;
-        if (a > 12 && b <= 12) { day = a; month = b; }
-        else if (b > 12 && a <= 12) { day = b; month = a; }
-        else { day = a; month = b; }
-        if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-        return { day, month, year, hour: Number(hour), min: Number(min) };
-      }
-      const iso = str.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/);
-      if (iso) {
-        const [, year, month, day, hour = '0', min = '0', , tz] = iso;
-        if (tz) {
-          const d = new Date(str);
-          if (isNaN(d.getTime())) return null;
-          return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(), hour: d.getHours(), min: d.getMinutes() };
-        }
-        return { day: Number(day), month: Number(month), year: Number(year), hour: Number(hour), min: Number(min) };
-      }
-      const d = new Date(str);
-      if (!isNaN(d.getTime())) {
-        return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear(), hour: d.getHours(), min: d.getMinutes() };
-      }
-      return null;
-    }
-
-    function formatarDataHora(valor) {
-      const p = parseFlexibleDate(valor);
-      if (!p) return valor ? String(valor) : '';
-      return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
-    }
-
-    function toDateObj(valor) {
-      const p = parseFlexibleDate(valor);
-      if (!p) return null;
-      const d = new Date(p.year, p.month - 1, p.day, p.hour, p.min);
-      return isNaN(d.getTime()) ? null : d;
-    }
-
-    function renderDate(valor) {
-      if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
-      const p = parseFlexibleDate(valor);
-      if (!p) return upper(valor);
-      return `${pad2(p.day)}/${pad2(p.month)}/${p.year} ${pad2(p.hour)}:${pad2(p.min)}`;
-    }
-
-    function renderText(valor, searchTerm) {
-      if (valor === null || valor === undefined || String(valor).trim() === '') return '—';
-      const txt = upper(valor);
-      if (searchTerm) return highlight(txt, searchTerm);
-      return escapeHtml(txt);
-    }
-
-    // ===== AUXILIARES DO FORM =====
-    function limparCamposMotorista() {
-      rg.value = ''; cpf.value = ''; nome.value = '';
-      telefone.value = ''; placa.value = ''; nfs.value = '';
-    }
-    function habilitarCampos(enable) {
-      [rg, cpf, nome, telefone, placa, nfs].forEach(campo => {
-        campo.disabled = !enable;
-        if (!enable) campo.value = '';
-      });
-      btnSalvar.disabled = !enable;
-    }
-    function preencherDadosAgenda(row) {
-      fornecedor.value = upper(row.FORNECEDOR);
-      categoria.value = upper(row.CATEGORIA);
-      carga.value = upper(row.CARGA);
-    }
-    function resetarModal() {
-      senha.value = ''; fornecedor.value = ''; categoria.value = ''; carga.value = '';
-      limparCamposMotorista(); habilitarCampos(false);
-      senhaEncontrada = false; dadosAgenda = null;
-      formState.textContent = 'AGUARDANDO SENHA.';
-    }
-
-    // ===== MÁSCARAS =====
-    function formatCPF(valor) {
-      let v = valor.replace(/\D/g, '');
-      if (v.length > 11) v = v.slice(0, 11);
-      if (v.length <= 3) return v;
-      if (v.length <= 6) return v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-      if (v.length <= 9) return v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-      return v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-    }
-    function formatTelefone(valor) {
-      let v = valor.replace(/\D/g, '');
-      if (v.length > 11) v = v.slice(0, 11);
-      if (v.length <= 2) return v;
-      if (v.length <= 6) return v.replace(/(\d{2})(\d{1,4})/, '($1) $2');
-      if (v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
-      return v.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
-    }
-    function formatPlaca(valor) {
-      let v = valor.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      if (v.length > 7) v = v.slice(0, 7);
-      if (v.length <= 3) return v;
-      if (v.length <= 4) return v.replace(/([A-Z]{3})([0-9])/, '$1-$2');
-      if (v.length <= 5) return v.replace(/([A-Z]{3})([0-9]{1,2})/, '$1-$2');
-      if (v.length <= 6) return v.replace(/([A-Z]{3})([0-9]{2})([0-9])/, '$1-$2$3');
-      return v.replace(/([A-Z]{3})([0-9]{3})([0-9])/, '$1-$2$3');
-    }
-
-    function setupMasks() {
-      cpf.addEventListener('input', function() { const raw = this.value; const f = formatCPF(raw); if (f !== raw) this.value = f; });
-      telefone.addEventListener('input', function() { const raw = this.value; const f = formatTelefone(raw); if (f !== raw) this.value = f; });
-      placa.addEventListener('input', function() { const raw = this.value; const f = formatPlaca(raw); if (f !== raw) this.value = f; });
-    }
-    function setupUppercaseInputs() {
-      [senha, rg, nome, nfs].forEach(el => {
-        el.addEventListener('input', function() {
-          const pos = this.selectionStart;
-          const up = this.value.toUpperCase();
-          if (this.value !== up) { this.value = up; try { this.setSelectionRange(pos, pos); } catch (_) {} }
-        });
-      });
-    }
-
-    // ===== BARRA DE BUSCA =====
-    function setupSearch() {
-      let debounce = null;
-      searchInput.addEventListener('input', function() {
-        const val = this.value;
-        searchBar.classList.toggle('has-value', val.length > 0);
-        clearTimeout(debounce);
-        debounce = setTimeout(() => { currentSearch = val.trim(); applyFilters(); }, 180);
-      });
-      searchClear.addEventListener('click', function() {
-        searchInput.value = ''; searchBar.classList.remove('has-value');
-        currentSearch = ''; applyFilters(); searchInput.focus();
-      });
-      searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          this.value = ''; searchBar.classList.remove('has-value');
-          currentSearch = ''; applyFilters();
-        }
-      });
-    }
-
-    // ============================================================
-    // POPULA O DROPDOWN DE MÊS/ANO
-    // ============================================================
-    function populateMonthFilter() {
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const startYear = currentYear - 2;
-      const endYear = currentYear + 2;
-      const monthNames = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
-      let html = '<option value="">TODOS OS MESES</option>';
-      for (let y = endYear; y >= startYear; y--) {
-        html += `<optgroup label="${y}">`;
-        for (let m = 12; m >= 1; m--) {
-          const val = `${pad2(m)}/${y}`;
-          html += `<option value="${val}">${monthNames[m - 1]} / ${y}</option>`;
-        }
-        html += '</optgroup>';
-      }
-      filterMonth.innerHTML = html;
-    }
-
-    // ============================================================
-    // FILTROS
-    // ============================================================
-    function applyFilters() {
-      const term = currentSearch.trim();
-      const normTerm = normalize(term);
-      const monthStr = filterMonth.value;
-      const fromStr = filterFrom.value;
-      const toStr = filterTo.value;
-
-      let monthNum = null, yearNum = null;
-      if (/^\d{2}\/\d{4}$/.test(monthStr)) {
-        monthNum = Number(monthStr.slice(0, 2)); yearNum = Number(monthStr.slice(3));
-      }
-      let fromLimit = null, toLimit = null;
-      if (fromStr) { const [y, m, d] = fromStr.split('-').map(Number); fromLimit = new Date(y, m - 1, d, 0, 0, 0); }
-      if (toStr) { const [y, m, d] = toStr.split('-').map(Number); toLimit = new Date(y, m - 1, d, 23, 59, 59); }
-
-      const filtered = allData.filter(row => {
-        if (normTerm) {
-          const a = normalize(row[COLS.SENHA]);
-          const b = normalize(row[COLS.FORNECEDOR]);
-          const c = normalize(row[COLS.CARGA]);
-          if (!a.includes(normTerm) && !b.includes(normTerm) && !c.includes(normTerm)) return false;
-        }
-        const dt = toDateObj(row[COLS.AGENDA]);
-        if (!dt) return !monthNum && !fromLimit && !toLimit;
-        if (monthNum !== null) {
-          if (dt.getMonth() + 1 !== monthNum || dt.getFullYear() !== yearNum) return false;
-        }
-        if (fromLimit && dt < fromLimit) return false;
-        if (toLimit && dt > toLimit) return false;
-        return true;
-      });
-
-      renderHistorico(filtered, term);
-
-      const total = allData.length;
-      const shown = filtered.length;
-      if (normTerm || monthNum || fromLimit || toLimit) {
-        filterInfo.innerHTML = `MOSTRANDO ${shown} DE ${total}`;
-      } else {
-        filterInfo.innerHTML = '';
-      }
-      totalRegistros.textContent = shown;
-    }
-
-    function setupFilters() {
-      filterMonth.addEventListener('change', applyFilters);
-      filterFrom.addEventListener('change', applyFilters);
-      filterTo.addEventListener('change', applyFilters);
-      clearFilters.addEventListener('click', function() {
-        filterMonth.value = ''; filterFrom.value = ''; filterTo.value = '';
-        searchInput.value = ''; searchBar.classList.remove('has-value');
-        currentSearch = ''; applyFilters();
-      });
-    }
-
-    // ============================================================
-    // RENDER DA TABELA
-    // ============================================================
-    function renderHistorico(data, term) {
-      if (!data.length) {
-        const temFiltro = currentSearch || filterMonth.value || filterFrom.value || filterTo.value;
-        historicoBody.innerHTML = temFiltro
-          ? '<tr><td colspan="13" class="empty-table">NENHUM REGISTRO ENCONTRADO COM OS FILTROS APLICADOS.</td></tr>'
-          : '<tr><td colspan="13" class="empty-table">NENHUM REGISTRO DE CHEGADA AINDA.</td></tr>';
-        return;
-      }
-
-      historicoBody.innerHTML = data.map(row => {
-        const senhaVal    = renderText(row[COLS.SENHA], term);
-        const fornecedorV = renderText(row[COLS.FORNECEDOR], term);
-        const cargaV      = renderText(row[COLS.CARGA], term);
-        const statusV     = renderText(row[COLS.STATUS]);
-        const agendaV     = renderDate(row[COLS.AGENDA]);
-        const chegadaV    = renderDate(row[COLS.CHEGADA]);
-        const encostaRaw  = row[COLS.ENCOSTA];
-        const encostaV    = renderDate(encostaRaw);
-        const inicioV     = renderDate(row[COLS.INICIO]);
-        const fimV        = renderDate(row[COLS.FIM]);
-        const termoV      = renderDate(row[COLS.TERMO]);
-        const pagamentoV  = renderDate(row[COLS.PAGAMENTO]);
-
-        const acionamentoRaw  = row[COLS.ACIONAMENTO];
-        const visualizacaoRaw = row[COLS.VISUALIZACAO];
-
-        const jaAcionado = acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
-        const jaVisualizado = visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
-        const encostaPreenchida = encostaRaw !== null && encostaRaw !== undefined && String(encostaRaw).trim() !== '';
-
-        const senhaRaw = row[COLS.SENHA] != null ? String(row[COLS.SENHA]) : '';
-        const cargaRaw = row[COLS.CARGA] != null ? String(row[COLS.CARGA]) : '';
-
-        let acionamentoHtml = '';
-        if (jaAcionado) {
-          acionamentoHtml = `
-            <div class="acionamento-cell">
-              <span>${formatarDataHora(acionamentoRaw)}</span>
-              <button class="btn-x" data-remover-senha="${escapeHtml(senhaRaw)}" title="Remover acionamento" aria-label="Remover acionamento">✕</button>
-            </div>`;
-        } else {
-          acionamentoHtml = `<button class="btn small" data-senha="${escapeHtml(senhaRaw)}">ACIONAR</button>`;
-        }
-
-        let visualizacaoHtml = '';
-        if (jaVisualizado) {
-          visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatarDataHora(visualizacaoRaw)}</small></span>`;
-        } else {
-          visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
-        }
-
-        // ENCOSTA ADM — mostra data se preenchida, senão mostra botão "ALOCAR DOCA"
-        let encostaHtml = '';
-        if (encostaPreenchida) {
-          encostaHtml = `<span class="col-date">${encostaV}</span>`;
-        } else if (senhaRaw) {
-          encostaHtml = `<button class="btn small dock" data-alocar-senha="${escapeHtml(senhaRaw)}" data-alocar-carga="${escapeHtml(cargaRaw)}">ALOCAR DOCA</button>`;
-        } else {
-          encostaHtml = '—';
-        }
-
-        return `
-          <tr>
-            <td>${senhaVal}</td>
-            <td>${fornecedorV}</td>
-            <td>${cargaV}</td>
-            <td>${statusV}</td>
-            <td class="col-date">${agendaV}</td>
-            <td class="col-date">${chegadaV}</td>
-            <td class="cell-wrap">${acionamentoHtml}</td>
-            <td class="cell-wrap">${visualizacaoHtml}</td>
-            <td>${encostaHtml}</td>
-            <td class="col-date">${inicioV}</td>
-            <td class="col-date">${fimV}</td>
-            <td class="col-date">${termoV}</td>
-            <td class="col-date">${pagamentoV}</td>
-          </tr>
-        `;
-      }).join('');
-
-      // Botões "ACIONAR"
-      document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const senhaVal = this.dataset.senha;
-          if (senhaVal && !this.disabled) registrarAcionamento(senhaVal, this);
-        });
-      });
-
-      // Botões "✕" (remover acionamento)
-      document.querySelectorAll('#historicoBody button[data-remover-senha]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const senhaVal = this.dataset.removerSenha;
-          if (senhaVal && !this.disabled) removerAcionamento(senhaVal, this);
-        });
-      });
-
-      // Botões "ALOCAR DOCA"
-      document.querySelectorAll('#historicoBody button[data-alocar-senha]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const s = this.dataset.alocarSenha;
-          const c = this.dataset.alocarCarga || '';
-          if (s) openDockAllocModal(s, c);
-        });
-      });
-    }
-
-    // ============================================================
-    // BUSCA SENHA (do modal)
-    // ============================================================
-    let timeoutBusca = null;
-
-    async function buscarSenha(senhaValor) {
-      if (!senhaValor || senhaValor.length < 2) return;
-      formState.textContent = 'BUSCANDO...';
-      try {
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}&select=*`;
-        const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
-        if (!resp.ok) throw new Error('Erro na consulta: ' + resp.status);
-        const data = await resp.json();
-
-        if (data && data.length > 0) {
-          const row = data[0];
-          dadosAgenda = row;
-          senhaEncontrada = true;
-          preencherDadosAgenda(row);
-          habilitarCampos(true);
-          formState.textContent = 'SENHA VÁLIDA. PREENCHA OS DADOS.';
-          setNotice('SENHA ENCONTRADA! PREENCHA OS DADOS DO MOTORISTA.', 'success');
-          limparCamposMotorista();
-          rg.focus();
-        } else {
-          senhaEncontrada = false; dadosAgenda = null; habilitarCampos(false); limparCamposMotorista();
-          fornecedor.value = ''; categoria.value = ''; carga.value = '';
-          formState.textContent = 'SENHA NÃO ENCONTRADA.';
-          setNotice('SENHA NÃO LOCALIZADA NA AGENDA. VERIFIQUE.', 'error');
-        }
-      } catch (err) {
-        console.error(err);
-        formState.textContent = 'ERRO NA CONSULTA.';
-        setNotice('FALHA AO CONSULTAR AGENDA: ' + err.message, 'error');
-      }
-    }
-
-    senha.addEventListener('input', function() {
-      clearTimeout(timeoutBusca);
-      const val = this.value.trim();
-      if (val.length >= 2) {
-        timeoutBusca = setTimeout(() => buscarSenha(val), 500);
-      } else {
-        senhaEncontrada = false; dadosAgenda = null; habilitarCampos(false); limparCamposMotorista();
-        fornecedor.value = ''; categoria.value = ''; carga.value = '';
-        formState.textContent = 'AGUARDANDO SENHA.';
-        setNotice('DIGITE A SENHA PARA CONSULTAR.', '');
-      }
+// Busca os dados da AGENDA para todas as senhas de uma vez
+async function buscarDadosAgenda(senhas) {
+  if (!senhas || senhas.length === 0) return new Map();
+  // Filtra senhas não vazias
+  const senhasValidas = senhas.filter(s => s && s.trim() !== '');
+  if (senhasValidas.length === 0) return new Map();
+  // Monta query com IN
+  const lista = senhasValidas.map(s => `"${encodeURIComponent(s)}"`).join(',');
+  const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=in.(${lista})&select=SENHA,FORNECEDOR,CATEGORIA`;
+  try {
+    const resp = await fetch(url, { headers });
+    if (!resp.ok) throw new Error(await resp.text());
+    const data = await resp.json();
+    const map = new Map();
+    data.forEach(item => {
+      const senha = clean(item.SENHA);
+      if (senha) map.set(senha, { fornecedor: item.FORNECEDOR || '—', categoria: item.CATEGORIA || '—' });
     });
+    return map;
+  } catch (err) {
+    console.error('Erro ao buscar AGENDA:', err);
+    return new Map();
+  }
+}
 
-    senha.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const val = this.value.trim();
-        if (val.length >= 2) { clearTimeout(timeoutBusca); buscarSenha(val); }
-      }
-    });
+// Função assíncrona de render que carrega os dados da agenda
+async function renderAsync() {
+  const list = uniqueRows();
+  const total = list.length;
+  const occ = list.filter(isOccupied).length;
+  const bloq = list.filter(isBlocked).length;
+  const avail = total - occ - bloq;
+  const pct = n => total ? (n/total*100) : 0;
+  $('mTotal').textContent = total.toLocaleString('pt-BR');
+  $('mAvailable').textContent = pct(avail).toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1})+'%';
+  $('mOccupied').textContent = pct(occ).toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1})+'%';
+  $('mAvailableCount').textContent = avail+' doca(s) livres';
+  $('mOccupiedCount').textContent = occ+' doca(s) em uso';
+  $('mIndex').textContent = pct(occ).toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1})+'%';
+  $('state').textContent = total+' doca(s) monitorada(s)';
+  const map = $('dockMap');
+  if (!list.length) {
+    map.innerHTML = '<div class="empty">Nenhuma doca cadastrada. Use “Cadastrar doca” para começar.</div>';
+    return;
+  }
 
-    // ===== SUBMISSÃO =====
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      if (!senhaEncontrada) { setNotice('VALIDE A SENHA ANTES DE SALVAR.', 'error'); return; }
-      const campos = [rg, cpf, nome, telefone, placa, nfs];
-      for (const campo of campos) {
-        if (!campo.value.trim()) {
-          setNotice(`PREENCHA O CAMPO ${campo.labels?.[0]?.textContent || campo.id.toUpperCase()}.`, 'error');
-          campo.focus(); return;
+  // Coleta todas as senhas ocupadas
+  const senhas = [];
+  list.forEach(row => {
+    if (isOccupied(row)) {
+      const senha = clean(val(row, 'SENHA'));
+      if (senha) senhas.push(senha);
+    }
+  });
+  // Busca dados da agenda
+  const agendaMap = await buscarDadosAgenda(senhas);
+
+  let html = '';
+  for (const row of list) {
+    const doca = normDoca(val(row, 'DOCA'));
+    const status = getStatus(row);
+    const isOcc = status === 'OCUPADO';
+    const isBloq = status === 'BLOQUEADO';
+    const inicio = val(row, 'INICIO');
+    let tempoHtml = '', tempoTexto = '', overdueClass = '', alerta24 = false;
+    if (isOcc && inicio) {
+      const duracao = calcularDuracao(inicio);
+      tempoTexto = duracao.texto;
+      tempoHtml = `<div class="dock-tempo">${tempoTexto}</div>`;
+      if (duracao.horas + duracao.dias*24 >= 4) overdueClass = 'overdue';
+      if (duracao.horas + duracao.dias*24 >= 24) alerta24 = true;
+    }
+    const motivo = clean(val(row, 'MOTIVO BLOQ'));
+    const senha = clean(val(row, 'SENHA'));
+    // Dados da agenda
+    let fornecedor = '—', categoria = '—';
+    if (senha && agendaMap.has(senha)) {
+      const info = agendaMap.get(senha);
+      fornecedor = info.fornecedor;
+      categoria = info.categoria;
+    }
+
+    const tooltipContent = `
+<strong>${esc(doca)}</strong><br>
+<span class="label">Status:</span> ${status}<br>
+${isBloq ? `<span class="label">Motivo:</span> <span class="motivo">${esc(motivo)}</span><br>` : ''}
+${isOcc ? `<span class="label">Senha:</span> ${esc(senha)}<br>` : ''}
+${isOcc ? `<span class="label">Carga:</span> ${esc(val(row,'CARGA'))||'—'}<br>` : ''}
+${isOcc ? `<span class="label">Tempo:</span> ${tempoTexto}<br>` : ''}
+${isOcc ? `<span class="label">Fornecedor:</span> <span class="fornecedor">${esc(fornecedor)}</span><br>` : ''}
+${isOcc ? `<span class="label">Categoria:</span> <span class="categoria">${esc(categoria)}</span>` : ''}
+`;
+
+    let extraClass = '';
+    if (isOcc) extraClass = 'ocupado';
+    else if (isBloq) extraClass = 'bloqueado';
+    if (overdueClass) extraClass += ' ' + overdueClass;
+    if (alerta24) extraClass += ' alerta24';
+
+    const releaseBtn = (isOcc || isBloq) ? `<button class="dock-release" data-release="${esc(doca)}" type="button" title="Liberar doca">✕</button>` : '';
+    const lockIcon = isBloq ? '🔒 ' : '';
+    const alertIcon = alerta24 ? '🚨' : '';
+
+    html += `<div class="dock-square ${extraClass}" data-doca="${esc(doca)}" data-status="${status}" data-inicio="${inicio||''}">
+  <div class="dock-number">${lockIcon}${esc(getDocaNumber(doca))}${alertIcon ? `<span class="alert-icon">${alertIcon}</span>` : ''}</div>
+  ${tempoHtml}
+  ${releaseBtn}
+  <div class="tooltip">${tooltipContent}</div>
+</div>`;
+  }
+  map.innerHTML = html;
+}
+
+// Wrapper para manter compatibilidade com reload()
+async function reload() {
+  rows = await getRows();
+  await renderAsync();
+}
+
+function updateTimers() {
+  document.querySelectorAll('.dock-square.ocupado[data-inicio]').forEach(square => {
+    const inicio = square.dataset.inicio;
+    if (!inicio) return;
+    const duracao = calcularDuracao(inicio);
+    const tempoEl = square.querySelector('.dock-tempo');
+    if (tempoEl) tempoEl.textContent = duracao.texto;
+    // Atualiza tooltip também (opcional, mas não necessário porque o tooltip é recriado no hover)
+    // Vamos atualizar o tooltip inline se existir
+    const tooltip = square.querySelector('.tooltip');
+    if (tooltip) {
+      const lines = tooltip.innerHTML.split('<br>');
+      // Encontra a linha que contém "Tempo:"
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('Tempo:')) {
+          lines[i] = `<span class="label">Tempo:</span> ${duracao.texto}`;
+          break;
         }
       }
-      const agora = new Date();
-      const chegadaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
-      const payload = {
-        [COLS.CHEGADA]: chegadaStr,
-        RG: upper(rg.value.trim()), CPF: cpf.value.trim(), NOME: upper(nome.value.trim()),
-        TELEFONE: telefone.value.trim(), PLACA: upper(placa.value.trim()), NF: upper(nfs.value.trim())
-      };
-      try {
-        const senhaValor = senha.value.trim();
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
-        const resp = await fetch(url, {
-          method: 'PATCH',
-          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify(payload)
-        });
-        if (!resp.ok) throw new Error('Falha ao atualizar: ' + resp.status);
-        setNotice(`CHEGADA REGISTRADA COM SUCESSO ÀS ${chegadaStr}.`, 'success');
-        formState.textContent = 'SALVO!';
-        closeModal(); resetarModal(); carregarHistorico();
-      } catch (err) {
-        console.error(err);
-        setNotice('ERRO AO SALVAR: ' + err.message, 'error');
-        formState.textContent = 'ERRO NO SALVAMENTO.';
-      }
-    });
-
-    // ===== MODAL =====
-    function openModal() { resetarModal(); modal.classList.remove('hidden'); senha.focus(); }
-    function closeModal() { modal.classList.add('hidden'); resetarModal(); }
-    openModalBtn.addEventListener('click', openModal);
-    closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-
-    // ===== ACIONAMENTO (REGISTRAR) =====
-    async function registrarAcionamento(senhaValor, botao) {
-      if (!senhaValor) return;
-      botao.disabled = true; botao.textContent = '...';
-      try {
-        const agora = new Date();
-        const acionamentoStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
-        const resp = await fetch(url, {
-          method: 'PATCH',
-          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ [COLS.ACIONAMENTO]: acionamentoStr })
-        });
-        if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
-        setNotice(`ACIONAMENTO REGISTRADO PARA A SENHA ${senhaValor} ÀS ${acionamentoStr}.`, 'success');
-        carregarHistorico();
-      } catch (err) {
-        console.error(err);
-        setNotice('ERRO AO REGISTRAR ACIONAMENTO: ' + err.message, 'error');
-        botao.textContent = 'TENTAR NOVAMENTE'; botao.disabled = false;
-      }
+      tooltip.innerHTML = lines.join('<br>');
     }
-
-    // ===== ACIONAMENTO (REMOVER) =====
-    async function removerAcionamento(senhaValor, botao) {
-      if (!senhaValor) return;
-      if (!window.confirm(`REMOVER O ACIONAMENTO DA SENHA ${senhaValor}?`)) return;
-      botao.disabled = true;
-      const original = botao.textContent;
-      botao.textContent = '…';
-      try {
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
-        const resp = await fetch(url, {
-          method: 'PATCH',
-          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ [COLS.ACIONAMENTO]: null })
-        });
-        if (!resp.ok) throw new Error('Falha ao remover acionamento: ' + resp.status);
-        setNotice(`ACIONAMENTO DA SENHA ${senhaValor} REMOVIDO.`, 'success');
-        carregarHistorico();
-      } catch (err) {
-        console.error(err);
-        setNotice('ERRO AO REMOVER ACIONAMENTO: ' + err.message, 'error');
-        botao.textContent = original; botao.disabled = false;
-      }
-    }
-
-    // ============================================================
-    // ============ ALOCAÇÃO DE DOCA ==============================
-    // ============================================================
-
-    function getDocaNumber(doca) {
-      const num = String(doca).replace(/\D/g, '');
-      return num ? num.padStart(2, '0') : String(doca);
-    }
-
-    function formatarDuracao(ms) {
-      if (ms < 0) return '0min';
-      const tot = Math.floor(ms / 1000);
-      const d = Math.floor(tot / 86400);
-      const h = Math.floor((tot % 86400) / 3600);
-      const m = Math.floor((tot % 3600) / 60);
-      const parts = [];
-      if (d > 0) parts.push(d + 'd');
-      if (h > 0 || d > 0) parts.push(h + 'h');
-      parts.push(m + 'min');
-      return parts.join(' ');
-    }
-
-    function calcularDuracao(inicioISO) {
-      if (!inicioISO) return { diff: 0, texto: '0min' };
-      const ini = new Date(inicioISO);
-      if (isNaN(ini.getTime())) return { diff: 0, texto: '0min' };
-      const diff = Date.now() - ini.getTime();
-      if (diff < 0) return { diff: 0, texto: '0min' };
-      return { diff, texto: formatarDuracao(diff) };
-    }
-
-    async function fetchDocks() {
-      const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?select=*&order=DOCA.asc&limit=1000`;
-      const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
-      if (!resp.ok) throw new Error(await resp.text());
-      return resp.json();
-    }
-
-    async function patchDock(doca, payload) {
-      const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?DOCA=eq.${encodeURIComponent(doca)}`;
-      const resp = await fetch(url, {
-        method: 'PATCH',
-        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify(payload)
-      });
-      if (!resp.ok) throw new Error(await resp.text());
-    }
-
-    async function patchAgenda(senhaValor, payload) {
-      const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
-      const resp = await fetch(url, {
-        method: 'PATCH',
-        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify(payload)
-      });
-      if (!resp.ok) throw new Error(await resp.text());
-    }
-
-    function getDockStatus(dock) {
-      const st = upper(dock.STATUS || '').trim();
-      const motivo = clean(dock['MOTIVO BLOQ']);
-      if (motivo && st !== 'DISPONIVEL') return 'BLOQUEADO';
-      if (st === 'OCUPADO') return 'OCUPADO';
-      if (st === 'BLOQUEADO') return 'BLOQUEADO';
-      return 'DISPONIVEL';
-    }
-
-    function renderDockMapInto(container, docks) {
-      if (!docks.length) {
-        container.innerHTML = '<div class="empty-table">NENHUMA DOCA CADASTRADA.</div>';
-        return;
-      }
-
-      container.innerHTML = docks.map(dock => {
-        const docaNome = upper(dock.DOCA).trim();
-        const status = getDockStatus(dock);
-        const isOcc = status === 'OCUPADO';
-        const isBloq = status === 'BLOQUEADO';
-        const motivo = clean(dock['MOTIVO BLOQ']);
-        const senhaDock = clean(dock.SENHA);
-        const cargaDock = clean(dock.CARGA);
-        const inicioDock = clean(dock.INICIO);
-
-        // Marca a doca que já pertence a esta senha
-        const suaDoca = dockAllocContext && senhaDock && senhaDock === clean(dockAllocContext.senha);
-
-        let classe = 'dock-square';
-        let tempoHtml = '';
-        if (isOcc) {
-          classe += ' ocupado';
-          if (inicioDock) {
-            const dur = calcularDuracao(inicioDock);
-            tempoHtml = `<div class="dock-tempo">${dur.texto}</div>`;
-          }
-        } else if (isBloq) {
-          classe += ' bloqueado';
-        }
-        if (suaDoca) classe += ' sua-doca';
-
-        const numDisplay = getDocaNumber(docaNome);
-        const lock = isBloq ? '🔒 ' : '';
-
-        const tooltip = `
-          <strong>${escapeHtml(docaNome)}</strong><br>
-          <span class="label">STATUS:</span> ${escapeHtml(status)}<br>
-          ${isBloq && motivo ? `<span class="label">MOTIVO:</span> <span class="motivo">${escapeHtml(motivo)}</span><br>` : ''}
-          ${isOcc && senhaDock ? `<span class="label">SENHA:</span> <span class="senha">${escapeHtml(senhaDock)}</span><br>` : ''}
-          ${isOcc && cargaDock ? `<span class="label">CARGA:</span> <span class="carga">${escapeHtml(cargaDock)}</span><br>` : ''}
-          ${isOcc && inicioDock ? `<span class="label">INÍCIO:</span> ${formatarDataHora(inicioDock)}<br>` : ''}
-          ${isOcc && inicioDock ? `<span class="label">TEMPO:</span> ${calcularDuracao(inicioDock).texto}` : ''}
-        `;
-
-        return `<div class="${classe}" data-doca="${escapeHtml(docaNome)}" data-status="${status}">
-          <div class="dock-number">${lock}${escapeHtml(numDisplay)}</div>
-          ${tempoHtml}
-          <div class="tooltip">${tooltip}</div>
-        </div>`;
-      }).join('');
-    }
-
-    function computeDockMetrics(docks) {
-      const total = docks.length;
-      let avail = 0, occ = 0, bloq = 0;
-      for (const d of docks) {
-        const st = getDockStatus(d);
-        if (st === 'DISPONIVEL') avail++;
-        else if (st === 'OCUPADO') occ++;
-        else if (st === 'BLOQUEADO') bloq++;
-      }
-      return { total, avail, occ, bloq };
-    }
-
-    async function loadDocksForAllocation() {
-      if (isLoadingDocks) return;
-      isLoadingDocks = true;
-      dockAllocMap.innerHTML = '<div class="empty-table">CARREGANDO DOCAS...</div>';
-      setDockNotice('CARREGANDO DOCAS...', '');
-
-      try {
-        const docks = await fetchDocks();
-        const metrics = computeDockMetrics(docks);
-        dmTotal.textContent = metrics.total;
-        dmAvail.textContent = metrics.avail;
-        dmOcc.textContent = metrics.occ;
-        dmBlock.textContent = metrics.bloq;
-        renderDockMapInto(dockAllocMap, docks);
-
-        if (!dockAllocContext) {
-          setDockNotice('SELECIONE UMA DOCA DISPONÍVEL PARA ALOCAR.', '');
-        } else {
-          const senhaCtx = clean(dockAllocContext.senha);
-          const jaTem = docks.find(d => clean(d.SENHA) === senhaCtx && getDockStatus(d) === 'OCUPADO');
-          if (jaTem) {
-            setDockNotice(`ESTA SENHA JÁ ESTÁ NA DOCA ${upper(jaTem.DOCA)}. CLIQUE EM OUTRA DOCA PARA MOVER, OU FECHE.`, 'warning');
-          } else {
-            setDockNotice(`SENHA ${senhaCtx} PRONTA. CLIQUE EM UMA DOCA VERDE PARA ALOCAR.`, '');
-          }
-        }
-      } catch (err) {
-        console.error('[DOCAS] Erro:', err);
-        dockAllocMap.innerHTML = `<div class="empty-table">ERRO AO CARREGAR DOCAS: ${upper(err.message)}</div>`;
-        setDockNotice('ERRO AO CARREGAR DOCAS.', 'error');
-      } finally {
-        isLoadingDocks = false;
-      }
-    }
-
-    function openDockAllocModal(senhaValor, cargaValor) {
-      dockAllocContext = { senha: clean(senhaValor), carga: clean(cargaValor) };
-      dockAllocSub.textContent = `SENHA ${dockAllocContext.senha} · CARGA ${dockAllocContext.carga || '—'}`;
-      dockAllocModal.classList.remove('hidden');
-      loadDocksForAllocation();
-    }
-
-    function closeDockAllocModal() {
-      dockAllocModal.classList.add('hidden');
-      dockAllocContext = null;
-    }
-
-    async function allocateDock(doca, senhaValor, cargaValor) {
-      const agora = new Date();
-      const encostaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
-      const inicioISO = agora.toISOString();
-      const senhaCtx = clean(senhaValor);
-
-      // 1) Libera qualquer doca que já esteja com esta senha
-      try {
-        const u = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?SENHA=eq.${encodeURIComponent(senhaCtx)}&STATUS=eq.OCUPADO`;
-        await fetch(u, {
-          method: 'PATCH',
-          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null })
-        });
-      } catch (err) {
-        console.warn('Falha ao liberar doca antiga:', err);
-      }
-
-      // 2) Ocupa a nova doca
-      const payload = {
-        STATUS: 'OCUPADO',
-        SENHA: senhaCtx,
-        CARGA: cargaValor ? Number(cargaValor) : null,
-        INICIO: inicioISO,
-        'MOTIVO BLOQ': null
-      };
-      await patchDock(doca, payload);
-
-      // 3) Atualiza AGENDA com ENCOSTA ADM
-      await patchAgenda(senhaCtx, { [COLS.ENCOSTA]: encostaStr });
-
-      setNotice(`DOCA ${doca} ALOCADA PARA A SENHA ${senhaCtx}${cargaValor ? ' / CARGA ' + cargaValor : ''}.`, 'success');
-    }
-
-    // Click handler no mapa de docas do modal
-    dockAllocMap.addEventListener('click', async function(e) {
-      const sq = e.target.closest('.dock-square');
-      if (!sq) return;
-      if (!dockAllocContext) return;
-
-      const doca = sq.dataset.doca;
-      const status = sq.dataset.status;
-      if (!doca) return;
-
-      if (status !== 'DISPONIVEL') {
-        setDockNotice(`DOCA ${doca} ESTÁ ${status}. ESCOLHA UMA DOCA DISPONÍVEL (VERDE).`, 'warning');
-        return;
-      }
-
-      const confirmMsg = `ALOCAR DOCA ${doca} PARA A SENHA ${dockAllocContext.senha}${dockAllocContext.carga ? ' / CARGA ' + dockAllocContext.carga : ''}?`;
-      if (!window.confirm(confirmMsg)) return;
-
-      sq.style.pointerEvents = 'none';
-      setDockNotice(`ALOCANDO DOCA ${doca}...`, '');
-
-      try {
-        await allocateDock(doca, dockAllocContext.senha, dockAllocContext.carga);
-        closeDockAllocModal();
-        carregarHistorico();
-      } catch (err) {
-        console.error(err);
-        setDockNotice(`ERRO AO ALOCAR: ${upper(err.message)}`, 'error');
-        sq.style.pointerEvents = '';
-      }
-    });
-
-    closeDockAlloc.addEventListener('click', closeDockAllocModal);
-    dockAllocModal.addEventListener('click', function(e) { if (e.target === this) closeDockAllocModal(); });
-    reloadDocksBtn.addEventListener('click', function() { loadDocksForAllocation(); });
-
-    // ============================================================
-    // LIBERAÇÃO AUTOMÁTICA DE DOCAS QUANDO PAGAMENTO FOR PREENCHIDO
-    // ============================================================
-    async function autoReleasePaidDocks() {
-      if (!allData.length) return;
-
-      // Coleta senhas com PAGAMENTO preenchido
-      const senhasPagas = new Set();
-      for (const row of allData) {
-        const pag = row[COLS.PAGAMENTO];
-        const pago = pag !== null && pag !== undefined && String(pag).trim() !== '';
-        if (!pago) continue;
-        const s = clean(row[COLS.SENHA]);
-        if (s) senhasPagas.add(s);
-      }
-      if (senhasPagas.size === 0) return;
-
-      // Busca todas as docas ocupadas de uma vez
-      let ocupadas;
-      try {
-        const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?STATUS=eq.OCUPADO&select=DOCA,SENHA&limit=1000`;
-        const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
-        if (!resp.ok) return;
-        ocupadas = await resp.json();
-      } catch (err) {
-        console.error('[AUTO-RELEASE] Falha ao buscar docas:', err);
-        return;
-      }
-      if (!Array.isArray(ocupadas) || ocupadas.length === 0) return;
-
-      // Encontra docas a liberar
-      const paraLiberar = ocupadas.filter(d => {
-        const s = clean(d.SENHA);
-        return s && senhasPagas.has(s);
-      });
-      if (paraLiberar.length === 0) return;
-
-      // Libera cada uma
-      let liberadas = 0;
-      for (const d of paraLiberar) {
-        try {
-          await patchDock(d.DOCA, { STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null });
-          liberadas++;
-        } catch (err) {
-          console.error('[AUTO-RELEASE] Falha ao liberar', d.DOCA, err);
+    const horasTotais = duracao.horas + duracao.dias * 24;
+    if (horasTotais >= 4) square.classList.add('overdue');
+    else square.classList.remove('overdue');
+    if (horasTotais >= 24) {
+      square.classList.add('alerta24');
+      if (!square.querySelector('.alert-icon')) {
+        const numDiv = square.querySelector('.dock-number');
+        if (numDiv) {
+          const alertSpan = document.createElement('span');
+          alertSpan.className = 'alert-icon';
+          alertSpan.textContent = '🚨';
+          numDiv.appendChild(alertSpan);
         }
       }
-
-      if (liberadas > 0) {
-        setNotice(`${liberadas} DOCA(S) LIBERADA(S) AUTOMATICAMENTE APÓS PAGAMENTO.`, 'success');
-      }
+    } else {
+      square.classList.remove('alerta24');
+      const alertSpan = square.querySelector('.alert-icon');
+      if (alertSpan) alertSpan.remove();
     }
+  });
+}
 
-    // ============================================================
-    // HISTÓRICO
-    // ============================================================
-    async function carregarHistorico() {
-      if (isLoading) return;
-      isLoading = true;
-      refreshBtn.classList.add('loading');
-      refreshBtn.disabled = true;
+let timerInterval = null;
 
-      try {
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=500`;
-        const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
+function togglePanel(id, open) { $(id).classList.toggle('hidden', !open); if (open) $(id).scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function syncEditStatus() {
+  const status = $('editStatus').value;
+  const isBloq = status === 'BLOQUEADO';
+  const isOcc = status === 'OCUPADO';
+  $('editMotivoField').style.display = isBloq ? 'flex' : 'none';
+  if (!isBloq) $('editMotivo').value = '';
+  for (const id of ['editSenha', 'editCarga']) {
+    const el = $(id);
+    if (isBloq) { el.disabled = true; el.required = false; el.value = ''; }
+    else { el.disabled = false; el.required = isOcc; if (!isOcc) el.value = ''; }
+  }
+  $('editSenhaHelp').textContent = isBloq ? 'Não necessário para bloquear.' : isOcc ? 'Obrigatório para ocupar.' : 'Não utilizado.';
+  $('editCargaHelp').textContent = isBloq ? 'Não necessário para bloquear.' : isOcc ? 'Obrigatório para ocupar.' : 'Não utilizado.';
+  $('editMotivo').required = isBloq;
+}
+async function post(payload) { const r = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(payload) }); if (!r.ok) throw new Error(await r.text()); }
+async function patchByDoca(doca, payload) { const u = `${SUPABASE_URL}/rest/v1/${TABLE}?DOCA=eq.${encodeURIComponent(doca)}`; const r = await fetch(u, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(payload) }); if (!r.ok) throw new Error(await r.text()); }
 
-        if (!resp.ok) {
-          let detalhe = '';
-          try {
-            const errBody = await resp.json();
-            detalhe = errBody.message || errBody.details || errBody.hint || JSON.stringify(errBody);
-          } catch (_) { detalhe = await resp.text().catch(() => ''); }
-          throw new Error(`${resp.status}${detalhe ? ' — ' + detalhe : ''}`);
-        }
+function openEditModal(doca) {
+  const row = uniqueRows().find(r => normDoca(val(r, 'DOCA')) === doca);
+  if (!row) { setNotice('Doca não encontrada.', 'error'); return; }
+  currentEditDoca = doca;
+  const status = getStatus(row);
+  const motivo = clean(val(row, 'MOTIVO BLOQ'));
+  const senha = clean(val(row, 'SENHA'));
+  const carga = clean(val(row, 'CARGA'));
+  $('editDoca').value = doca;
+  $('editStatus').value = status;
+  $('editMotivo').value = motivo || '';
+  $('editSenha').value = senha;
+  $('editCarga').value = carga;
+  $('editState').textContent = 'Carregado.';
+  $('editModalTitle').textContent = 'Editar doca ' + doca;
+  $('editModalSub').textContent = 'Altere os dados conforme necessário.';
+  syncEditStatus();
+  $('editModal').classList.remove('hidden');
+}
+function closeEditModal() { $('editModal').classList.add('hidden'); currentEditDoca = null; }
+function openConfirmModal(doca) { pendingRelease = doca; $('confirmDoca').textContent = doca; $('confirmModal').classList.remove('hidden'); }
+function closeConfirmModal() { $('confirmModal').classList.add('hidden'); pendingRelease = null; }
 
-        let data = await resp.json();
-        if (!Array.isArray(data)) data = [];
+// Eventos
+$('registerOpen').onclick = () => togglePanel('registerPanel', true);
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => togglePanel(b.dataset.close, false));
+$('closeEditModal').onclick = closeEditModal;
+$('editModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeEditModal(); });
+$('editStatus').onchange = syncEditStatus; syncEditStatus();
+$('confirmCancel').onclick = closeConfirmModal;
+$('confirmModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeConfirmModal(); });
+$('confirmOk').onclick = async () => {
+  if (!pendingRelease) return;
+  const doca = pendingRelease;
+  closeConfirmModal();
+  try {
+    await patchByDoca(doca, { STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null });
+    setNotice('Doca '+doca+' liberada. Todos os dados foram apagados.', 'success');
+    await reload();
+  } catch (err) { console.error(err); setNotice('Erro ao liberar: '+err.message, 'error'); }
+};
+document.getElementById('dockMap').addEventListener('click', (e) => {
+  const square = e.target.closest('.dock-square');
+  if (!square) return;
+  const doca = square.dataset.doca;
+  if (!doca) return;
+  const releaseBtn = e.target.closest('.dock-release');
+  if (releaseBtn) return;
+  openEditModal(doca);
+});
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.dock-release');
+  if (!btn) return;
+  e.stopPropagation();
+  const doca = btn.dataset.release;
+  if (doca) openConfirmModal(doca);
+});
+$('registerForm').onsubmit = async e => {
+  e.preventDefault();
+  const doca = normDoca($('newDoca').value);
+  if (!doca) return;
+  const duplicate = uniqueRows().some(r => normDoca(val(r, 'DOCA')) === doca);
+  if (duplicate) { $('registerState').textContent = 'Essa doca já está cadastrada.'; return; }
+  $('registerState').textContent = 'Enviando...';
+  try {
+    await post({ DOCA: doca, STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null });
+    $('registerState').textContent = 'Doca cadastrada como disponível.';
+    $('newDoca').value = '';
+    setNotice('Doca '+doca+' cadastrada com sucesso.', 'success');
+    await reload();
+  } catch (err) { console.error(err); $('registerState').textContent = 'Falha ao cadastrar'; setNotice('Erro: '+err.message, 'error'); }
+};
+$('editForm').onsubmit = async e => {
+  e.preventDefault();
+  const doca = normDoca($('editDoca').value);
+  if (!doca) { setNotice('Doca inválida.', 'error'); return; }
+  const status = $('editStatus').value;
+  const motivo = clean($('editMotivo').value);
+  const senha = $('editSenha').value.trim();
+  const carga = $('editCarga').value.trim();
+  if (status === 'OCUPADO' && (!/^\d+$/.test(senha) || !/^\d+$/.test(carga))) {
+    setNotice('SENHA e CARGA são obrigatórios e aceitam apenas números para ocupar.', 'error');
+    return;
+  }
+  if (status === 'BLOQUEADO' && !motivo) {
+    setNotice('Selecione um motivo para bloquear a doca.', 'error');
+    return;
+  }
+  $('editState').textContent = 'Salvando...';
+  try {
+    let payload = { STATUS: status };
+    if (status === 'DISPONIVEL') { payload.SENHA = null; payload.CARGA = null; payload.INICIO = null; payload['MOTIVO BLOQ'] = null; }
+    else if (status === 'OCUPADO') { payload.SENHA = Number(senha); payload.CARGA = Number(carga); payload.INICIO = new Date().toISOString(); payload['MOTIVO BLOQ'] = null; }
+    else if (status === 'BLOQUEADO') { payload.SENHA = null; payload.CARGA = null; payload.INICIO = null; payload['MOTIVO BLOQ'] = motivo; }
+    await patchByDoca(doca, payload);
+    setNotice('Doca atualizada com sucesso.', 'success');
+    await reload();
+    closeEditModal();
+  } catch (err) { console.error(err); $('editState').textContent = 'Erro ao salvar'; setNotice('Erro: '+err.message, 'error'); }
+};
 
-        data.sort((a, b) => {
-          const da = toDateObj(a[COLS.CHEGADA]);
-          const db = toDateObj(b[COLS.CHEGADA]);
-          if (db && da) return db - da;
-          if (db) return 1;
-          if (da) return -1;
-          return 0;
-        });
-        data = data.slice(0, 200);
-
-        allData = data;
-        applyFilters();
-
-        // Liberação automática de docas pagas
-        await autoReleasePaidDocks();
-
-        const agora = new Date();
-        const horaFmt = `${pad2(agora.getHours())}:${pad2(agora.getMinutes())}:${pad2(agora.getSeconds())}`;
-        const existingInfo = filterInfo.innerHTML || '';
-        filterInfo.innerHTML = `${existingInfo ? existingInfo + ' · ' : ''}<span class="last-update">ATUALIZADO ${horaFmt}</span>`;
-
-      } catch (err) {
-        console.error('[HISTÓRICO] Erro:', err);
-        historicoBody.innerHTML = `<tr><td colspan="13" class="empty-table">ERRO AO CARREGAR HISTÓRICO: ${upper(err.message)}</td></tr>`;
-      } finally {
-        isLoading = false;
-        refreshBtn.classList.remove('loading');
-        refreshBtn.disabled = false;
-      }
-    }
-
-    // ============================================================
-    // AUTO-REFRESH
-    // ============================================================
-    function startAutoRefresh() {
-      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-      autoRefreshTimer = setInterval(() => {
-        if (document.hidden) return;
-        carregarHistorico();
-      }, AUTO_REFRESH_MS);
-    }
-
-    document.addEventListener('visibilitychange', function() {
-      if (!document.hidden) carregarHistorico();
-    });
-
-    refreshBtn.addEventListener('click', function() { carregarHistorico(); });
-
-    // ===== INIT =====
-    function init() {
-      setupMasks();
-      setupUppercaseInputs();
-      setupSearch();
-      populateMonthFilter();
-      setupFilters();
-      resetarModal();
-      carregarHistorico();
-      startAutoRefresh();
-      setNotice('BUSQUE POR SENHA, FORNECEDOR OU Nº DE CARGA. ATUALIZAÇÃO AUTOMÁTICA A CADA 1 MINUTO.', '');
-    }
-
-    init();
-
-  })();
+// Inicialização
+(async () => {
+  try {
+    await reload();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimers, 60000);
+  } catch (err) {
+    console.error(err);
+    $('state').textContent = 'Erro de conexão';
+    $('dockMap').innerHTML = '<div class="empty">Não foi possível consultar a base.</div>';
+    setNotice('Falha ao carregar: '+err.message, 'error');
+  }
+})();
 </script>
-
-<script src="sidebar.js" defer></script>
-</body>
-</html>
+  <script src="sidebar.js" defer></script>
+</body></html>
