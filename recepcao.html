@@ -9,7 +9,6 @@
        TOKENS DE DESIGN
        ============================================================ */
     :root {
-      /* Cores */
       --navy: #071426;
       --ink: #15283f;
       --muted: #71849b;
@@ -22,10 +21,8 @@
       --amber: #efa83a;
       --shadow: 0 18px 55px #10254112;
 
-      /* Família tipográfica */
       --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-      /* Escala tipográfica */
       --fs-2xs: 11px;
       --fs-xs:  12px;
       --fs-sm:  13px;
@@ -36,20 +33,17 @@
       --fs-2xl: 20px;
       --fs-3xl: 32px;
 
-      /* Pesos */
       --fw-regular:  400;
       --fw-medium:   500;
       --fw-semibold: 600;
       --fw-bold:     700;
       --fw-black:    800;
 
-      /* Alturas de linha */
       --lh-tight:  1.2;
       --lh-snug:   1.35;
       --lh-normal: 1.5;
       --lh-relaxed:1.6;
 
-      /* Espaçamentos tipográficos */
       --ls-tight:  -0.01em;
       --ls-normal: 0;
       --ls-wide:   0.05em;
@@ -72,7 +66,6 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Tudo em maiúsculo por padrão; onde quisermos forçar minúsculo */
     .no-uppercase { text-transform: none; }
 
     button, input, select {
@@ -302,7 +295,7 @@
       font-size: var(--fs-xs);
       font-weight: var(--fw-regular);
       line-height: var(--lh-snug);
-      min-width: 680px;
+      min-width: 720px;
     }
     .data-table th {
       background: #f7fafd;
@@ -322,6 +315,10 @@
       white-space: nowrap;
     }
     .data-table tbody tr:hover { background: #f8fbff; }
+    .data-table .col-date {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--ls-wide);
+    }
     .empty-table {
       padding: 42px;
       text-align: center;
@@ -350,6 +347,7 @@
       letter-spacing: var(--ls-normal);
       opacity: .85;
       margin-left: 2px;
+      font-variant-numeric: tabular-nums;
     }
 
     /* ===== MODAL ===== */
@@ -500,7 +498,7 @@
       .hero { display: block; }
       .actions { margin-top: 14px; }
       .form-grid { grid-template-columns: 1fr; }
-      .data-table { min-width: 640px; }
+      .data-table { min-width: 680px; }
       h1 { font-size: 26px; }
     }
   </style>
@@ -662,8 +660,7 @@
     let senhaEncontrada = false;
     let dadosAgenda = null;
 
-    // ===== AUXILIARES =====
-    // Tudo que for exibido como texto é normalizado para maiúsculo
+    // ===== UTILITÁRIOS =====
     function upper(v) {
       if (v === null || v === undefined) return '';
       return String(v).toUpperCase();
@@ -674,6 +671,70 @@
       notice.className = 'notice ' + tipo;
     }
 
+    // ============================================================
+    // NORMALIZADOR DE DATA/HORA  →  SEMPRE "DD/MM/AAAA HH:MM"
+    // ============================================================
+    // Aceita:
+    //   • "DD/MM/AAAA HH:MM" (já formatado)
+    //   • "DD/MM/AAAA"       (adiciona 00:00)
+    //   • "AAAA-MM-DDTHH:MM:SSZ"       (ISO UTC → converte p/ local)
+    //   • "AAAA-MM-DDTHH:MM:SS±HH:MM"  (ISO c/ offset → converte p/ local)
+    //   • "AAAA-MM-DDTHH:MM:SS"        (ISO s/ timezone → trata como local)
+    //   • "AAAA-MM-DD HH:MM:SS"        (SQL sem T → trata como local)
+    //   • "AAAA-MM-DD"                 (adiciona 00:00)
+    //   • timestamp numérico (ms)      (converte)
+    // Qualquer outro formato → tenta Date() genérico; se falhar, devolve string.
+    // ============================================================
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    function formatarDataHora(valor) {
+      if (valor === null || valor === undefined || valor === '') return '';
+
+      // Se vier número (epoch ms)
+      if (typeof valor === 'number' && isFinite(valor)) {
+        const d = new Date(valor);
+        return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      }
+
+      const str = String(valor).trim();
+      if (!str) return '';
+
+      // 1) Já está no formato brasileiro "DD/MM/AAAA [HH:MM[:SS]]"
+      const br = str.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2})(?::\d{2})?)?/);
+      if (br) {
+        const [, dia, mes, ano, hora = '00', min = '00'] = br;
+        return `${dia}/${mes}/${ano} ${hora}:${min}`;
+      }
+
+      // 2) ISO 8601: "AAAA-MM-DD[T ]HH:MM[:SS[.sss]][Z|±HH:MM]"
+      const iso = str.match(
+        /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/
+      );
+      if (iso) {
+        const [, ano, mes, dia, hora = '00', min = '00', , tz] = iso;
+
+        // Se tem timezone (Z ou offset) → deixa o Date() converter p/ local
+        if (tz) {
+          const d = new Date(str);
+          if (!isNaN(d.getTime())) {
+            return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+          }
+        }
+        // Sem timezone → trata como horário local, não deixa o Date() reinterpretar
+        return `${dia}/${mes}/${ano} ${hora}:${min}`;
+      }
+
+      // 3) Fallback genérico
+      const d = new Date(str);
+      if (!isNaN(d.getTime())) {
+        return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      }
+
+      // 4) Não reconhecido → devolve original
+      return str;
+    }
+
+    // ===== AUXILIARES DO FORM =====
     function limparCamposMotorista() {
       rg.value = '';
       cpf.value = '';
@@ -684,8 +745,7 @@
     }
 
     function habilitarCampos(enable) {
-      const campos = [rg, cpf, nome, telefone, placa, nfs];
-      campos.forEach(campo => {
+      [rg, cpf, nome, telefone, placa, nfs].forEach(campo => {
         campo.disabled = !enable;
         if (!enable) campo.value = '';
       });
@@ -708,20 +768,6 @@
       senhaEncontrada = false;
       dadosAgenda = null;
       formState.textContent = 'AGUARDANDO SENHA.';
-    }
-
-    function formatarDataHora(valor) {
-      if (!valor) return '';
-      const str = String(valor).trim();
-      if (/^\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}/.test(str)) return str;
-      const d = new Date(str);
-      if (isNaN(d.getTime())) return str;
-      const dia = String(d.getDate()).padStart(2, '0');
-      const mes = String(d.getMonth() + 1).padStart(2, '0');
-      const ano = d.getFullYear();
-      const horas = String(d.getHours()).padStart(2, '0');
-      const minutos = String(d.getMinutes()).padStart(2, '0');
-      return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
     }
 
     // ===== MÁSCARAS =====
@@ -771,7 +817,6 @@
       });
     }
 
-    // Força todos os inputs de texto a ficarem em maiúsculo ao digitar
     function setupUppercaseInputs() {
       [senha, rg, nome, nfs].forEach(el => {
         el.addEventListener('input', function() {
@@ -879,12 +924,7 @@
       }
 
       const agora = new Date();
-      const dia = String(agora.getDate()).padStart(2, '0');
-      const mes = String(agora.getMonth() + 1).padStart(2, '0');
-      const ano = agora.getFullYear();
-      const horas = String(agora.getHours()).padStart(2, '0');
-      const minutos = String(agora.getMinutes()).padStart(2, '0');
-      const chegadaStr = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+      const chegadaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
 
       const payload = {
         CHEGADA: chegadaStr,
@@ -950,12 +990,7 @@
 
       try {
         const agora = new Date();
-        const dia = String(agora.getDate()).padStart(2, '0');
-        const mes = String(agora.getMonth() + 1).padStart(2, '0');
-        const ano = agora.getFullYear();
-        const horas = String(agora.getHours()).padStart(2, '0');
-        const minutos = String(agora.getMinutes()).padStart(2, '0');
-        const acionamentoStr = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+        const acionamentoStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
 
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
         const resp = await fetch(url, {
@@ -1007,23 +1042,27 @@
 
         historicoBody.innerHTML = data.map(row => {
           const senhaVal = upper(row.SENHA) || '—';
-          const acionamento = row["ACIONAMENTO ENTRADA"] || null;
-          const visualizado = row["ACIONAMENTO VISUALIZADO"] || null;
 
-          const jaAcionado = acionamento !== null && String(acionamento).trim() !== '';
-          const jaVisualizado = visualizado !== null && String(visualizado).trim() !== '';
+          // === Datas sempre normalizadas para "DD/MM/AAAA HH:MM" ===
+          const chegadaFmt      = formatarDataHora(row.CHEGADA) || '—';
+          const acionamentoRaw  = row["ACIONAMENTO ENTRADA"];
+          const visualizadoRaw  = row["ACIONAMENTO VISUALIZADO"];
+          const acionamentoFmt  = formatarDataHora(acionamentoRaw);
+          const visualizadoFmt  = formatarDataHora(visualizadoRaw);
+
+          const jaAcionado    = acionamentoRaw !== null && String(acionamentoRaw).trim() !== '';
+          const jaVisualizado = visualizadoRaw !== null && String(visualizadoRaw).trim() !== '';
 
           let btnHtml = '';
           if (jaAcionado) {
-            btnHtml = `<button class="btn success small" disabled>✓ ${acionamento}</button>`;
+            btnHtml = `<button class="btn success small" disabled>✓ ${acionamentoFmt}</button>`;
           } else {
             btnHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
           }
 
           let viewedHtml = '';
           if (jaVisualizado) {
-            const dataFmt = formatarDataHora(visualizado);
-            viewedHtml = `<span class="badge-viewed ok">✓ VISUALIZADO <small>${dataFmt}</small></span>`;
+            viewedHtml = `<span class="badge-viewed ok">✓ VISUALIZADO <small>${visualizadoFmt}</small></span>`;
           } else {
             viewedHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
           }
@@ -1032,7 +1071,7 @@
             <tr>
               <td>${senhaVal}</td>
               <td>${upper(row.FORNECEDOR) || '—'}</td>
-              <td>${row.CHEGADA || '—'}</td>
+              <td class="col-date">${chegadaFmt}</td>
               <td>${upper(row.STATUS) || '—'}</td>
               <td>${viewedHtml}</td>
               <td>${btnHtml}</td>
