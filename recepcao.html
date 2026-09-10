@@ -15,6 +15,7 @@
       --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700; --fw-black:800;
       --lh-tight:1.2; --lh-snug:1.35; --lh-normal:1.5;
       --ls-tight:-0.01em; --ls-normal:0; --ls-wide:0.05em; --ls-wider:0.08em; --ls-widest:0.12em;
+      --table-total-width: 1900px;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -62,7 +63,6 @@
     .btn.success { border-color: var(--green); color: var(--green); }
     .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    /* Cores das etapas */
     .btn.step-acionar   { background: #fff; color: #526982; }
     .btn.step-doca      { background: #e8f5ff; border-color: #b8daff; color: #1e6db5; }
     .btn.step-doca:hover{ background: #d4ebff; border-color: #8fc3f5; }
@@ -92,7 +92,6 @@
     .acionamento-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .acionamento-cell span { flex: 1 1 auto; }
 
-    /* Célula de etapa bloqueada (não pode agir ainda) */
     .step-locked {
       display: inline-flex; align-items: center; gap: 4px;
       color: #a8b5c4; font-size: var(--fs-2xs); font-weight: var(--fw-bold);
@@ -100,10 +99,7 @@
     }
     .step-locked::before { content: '🔒'; font-size: 10px; opacity: .55; }
 
-    /* Célula de ENCOSTA ADM com doca + data */
-    .encosta-info {
-      display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap;
-    }
+    .encosta-info { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
     .doca-badge {
       display: inline-flex; align-items: center;
       background: #e8f5ff; color: #1e6db5;
@@ -173,13 +169,95 @@
     .notice.warning { background: #fff8e5; color: #9e7a1a; }
     .hidden { display: none !important; }
 
-    .table-wrap { overflow: auto; border: 1px solid #edf1f5; border-radius: 10px; max-height: 70vh; }
-    .data-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); font-weight: var(--fw-regular); line-height: var(--lh-snug); min-width: 1800px; }
-    .data-table th { background: #f7fafd; color: #7c8da0; font-size: var(--fs-2xs); font-weight: var(--fw-bold); text-align: left; letter-spacing: var(--ls-wider); padding: 12px 11px; white-space: nowrap; position: sticky; top: 0; z-index: 1; }
-    .data-table td { border-top: 1px solid #edf1f5; padding: 12px 11px; color: #3d526b; font-size: var(--fs-xs); white-space: nowrap; vertical-align: middle; }
+    /* ============================================================
+       TABELA — estrutura com scrollbar ENTRE thead e tbody
+       ============================================================ */
+    .table-outer {
+      border: 1px solid #edf1f5;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* Cabeçalho — sem scroll próprio, mas com scrollLeft sincronizado por JS */
+    .table-head-wrap {
+      overflow: hidden;
+      background: #f7fafd;
+    }
+
+    /* Barra de scroll horizontal — fica ENTRE cabeçalho e corpo */
+    .table-scrollbar {
+      overflow-x: auto;
+      overflow-y: hidden;
+      height: 15px;
+      background: #eef2f7;
+      border-top: 1px solid #edf1f5;
+      border-bottom: 1px solid #edf1f5;
+    }
+    .table-scrollbar-inner {
+      height: 1px;
+      width: var(--table-total-width);
+    }
+    /* Barra customizada (Chrome/Safari) */
+    .table-scrollbar::-webkit-scrollbar,
+    .table-body-wrap::-webkit-scrollbar { height: 10px; width: 10px; }
+    .table-scrollbar::-webkit-scrollbar-track,
+    .table-body-wrap::-webkit-scrollbar-track { background: #eef2f7; }
+    .table-scrollbar::-webkit-scrollbar-thumb,
+    .table-body-wrap::-webkit-scrollbar-thumb { background: #b9c8d8; border-radius: 5px; }
+    .table-scrollbar::-webkit-scrollbar-thumb:hover,
+    .table-body-wrap::-webkit-scrollbar-thumb:hover { background: #93a7bc; }
+
+    /* Corpo — com scroll vertical e horizontal */
+    .table-body-wrap {
+      overflow: auto;
+      max-height: 60vh;
+    }
+
+    /* Tabela — layout fixo para alinhar thead e tbody */
+    .data-table {
+      width: var(--table-total-width);
+      min-width: var(--table-total-width);
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-regular);
+      line-height: var(--lh-snug);
+    }
+    .data-table th {
+      background: #f7fafd;
+      color: #7c8da0;
+      font-size: var(--fs-2xs);
+      font-weight: var(--fw-bold);
+      text-align: left;
+      letter-spacing: var(--ls-wider);
+      padding: 12px 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .data-table td {
+      border-top: 1px solid #edf1f5;
+      padding: 12px 11px;
+      color: #3d526b;
+      font-size: var(--fs-xs);
+      white-space: nowrap;
+      vertical-align: middle;
+      overflow: hidden;
+    }
     .data-table tbody tr:hover { background: #f8fbff; }
     .data-table .col-date { font-variant-numeric: tabular-nums; letter-spacing: var(--ls-wide); }
-    .data-table th.cell-wrap, .data-table td.cell-wrap { white-space: normal; word-break: break-word; overflow-wrap: anywhere; min-width: 150px; max-width: 200px; line-height: var(--lh-normal); }
+
+    /* Colunas com quebra de texto (sobrescreve o overflow:hidden) */
+    .data-table th.cell-wrap,
+    .data-table td.cell-wrap {
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: var(--lh-normal);
+      overflow: visible;
+    }
+
     .hl { background: #fff3b0; color: #6b4d00; padding: 0 2px; border-radius: 3px; font-weight: var(--fw-bold); }
     .empty-table { padding: 42px; text-align: center; color: #8192a6; font-size: var(--fs-sm); font-weight: var(--fw-medium); }
 
@@ -189,7 +267,7 @@
     .badge-viewed small { font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal); opacity: .85; font-variant-numeric: tabular-nums; }
 
     /* ============================================================
-       DOCK MAP (para o modal de alocação)
+       DOCK MAP (modal de alocação)
        ============================================================ */
     .dock-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 8px; width: 100%; margin-top: 6px; }
     .dock-square {
@@ -326,7 +404,7 @@
         <div class="panel-head">
           <div>
             <div class="panel-title">ÚLTIMAS RECEPÇÕES</div>
-            <div class="panel-sub">ETAPAS SEQUENCIAIS: CHEGADA → ACIONAMENTO → ENCOSTA → INÍCIO CONF → FIM CONF → TERMO → PAGAMENTO.</div>
+            <div class="panel-sub">PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA. INÍCIO/FIM CONF SÃO INDEPENDENTES.</div>
           </div>
           <span class="pill" id="totalRegistros">0</span>
         </div>
@@ -354,29 +432,74 @@
           <span class="filter-info" id="filterInfo"></span>
         </div>
 
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>SENHA</th>
-                <th>FORNECEDOR</th>
-                <th>CARGA</th>
-                <th>STATUS</th>
-                <th>AGENDA</th>
-                <th>CHEGADA</th>
-                <th class="cell-wrap">ACIONAMENTO ADM</th>
-                <th class="cell-wrap">VISUALIZAÇÃO ACIONAMENTO</th>
-                <th>ENCOSTA ADM</th>
-                <th>INÍCIO CONF</th>
-                <th>FIM CONF</th>
-                <th>TERMO</th>
-                <th>PAGAMENTO</th>
-              </tr>
-            </thead>
-            <tbody id="historicoBody">
-              <tr><td colspan="13" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
-            </tbody>
-          </table>
+        <!-- ============================================================
+             TABELA COM SCROLL ENTRE HEADER E BODY
+             ============================================================ -->
+        <div class="table-outer">
+          <div class="table-head-wrap" id="tableHeadWrap">
+            <table class="data-table" id="headTable">
+              <colgroup>
+                <col style="width: 80px;">   <!-- SENHA -->
+                <col style="width: 200px;">  <!-- FORNECEDOR -->
+                <col style="width: 100px;">  <!-- CARGA -->
+                <col style="width: 110px;">  <!-- STATUS -->
+                <col style="width: 140px;">  <!-- AGENDA -->
+                <col style="width: 140px;">  <!-- CHEGADA -->
+                <col style="width: 190px;">  <!-- ACIONAMENTO -->
+                <col style="width: 200px;">  <!-- VISUALIZAÇÃO -->
+                <col style="width: 190px;">  <!-- ENCOSTA -->
+                <col style="width: 130px;">  <!-- INÍCIO -->
+                <col style="width: 130px;">  <!-- FIM -->
+                <col style="width: 140px;">  <!-- TERMO -->
+                <col style="width: 150px;">  <!-- PAGAMENTO -->
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>SENHA</th>
+                  <th>FORNECEDOR</th>
+                  <th>CARGA</th>
+                  <th>STATUS</th>
+                  <th>AGENDA</th>
+                  <th>CHEGADA</th>
+                  <th class="cell-wrap">ACIONAMENTO ADM</th>
+                  <th class="cell-wrap">VISUALIZAÇÃO ACIONAMENTO</th>
+                  <th>ENCOSTA ADM</th>
+                  <th>INÍCIO CONF</th>
+                  <th>FIM CONF</th>
+                  <th>TERMO</th>
+                  <th>PAGAMENTO</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+
+          <!-- Barra de scroll horizontal, LOGO ABAIXO do cabeçalho -->
+          <div class="table-scrollbar" id="tableScrollbar">
+            <div class="table-scrollbar-inner"></div>
+          </div>
+
+          <div class="table-body-wrap" id="tableBodyWrap">
+            <table class="data-table" id="bodyTable">
+              <colgroup>
+                <col style="width: 80px;">
+                <col style="width: 200px;">
+                <col style="width: 100px;">
+                <col style="width: 110px;">
+                <col style="width: 140px;">
+                <col style="width: 140px;">
+                <col style="width: 190px;">
+                <col style="width: 200px;">
+                <col style="width: 190px;">
+                <col style="width: 130px;">
+                <col style="width: 130px;">
+                <col style="width: 140px;">
+                <col style="width: 150px;">
+              </colgroup>
+              <tbody id="historicoBody">
+                <tr><td colspan="13" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -531,6 +654,11 @@
     const searchInput = $('searchInput');
     const searchClear = $('searchClear');
 
+    // Scroll sync
+    const tableHeadWrap = $('tableHeadWrap');
+    const tableScrollbar = $('tableScrollbar');
+    const tableBodyWrap = $('tableBodyWrap');
+
     // Dock allocation elements
     const dockAllocModal = $('dockAllocModal');
     const closeDockAlloc = $('closeDockAlloc');
@@ -550,10 +678,7 @@
     let isLoading = false;
     let currentSearch = '';
 
-    // Mapa SENHA -> Doca (para mostrar em ENCOSTA ADM)
     let dockBySenha = new Map();
-
-    // Contexto da alocação atual: { senha, carga }
     let dockAllocContext = null;
     let isLoadingDocks = false;
 
@@ -732,8 +857,20 @@
       });
     }
 
+    // ===== SCROLL SYNC =====
+    function setupScrollSync() {
+      function sync(source) {
+        const left = source.scrollLeft;
+        if (source !== tableHeadWrap) tableHeadWrap.scrollLeft = left;
+        if (source !== tableScrollbar) tableScrollbar.scrollLeft = left;
+        if (source !== tableBodyWrap) tableBodyWrap.scrollLeft = left;
+      }
+      tableBodyWrap.addEventListener('scroll', () => sync(tableBodyWrap));
+      tableScrollbar.addEventListener('scroll', () => sync(tableScrollbar));
+    }
+
     // ============================================================
-    // POPULA O DROPDOWN DE MÊS/ANO
+    // POPULA DROPDOWN MÊS/ANO
     // ============================================================
     function populateMonthFilter() {
       const now = new Date();
@@ -812,7 +949,7 @@
     }
 
     // ============================================================
-    // HELPERS DE ETAPAS (validação sequencial)
+    // HELPERS DE ETAPAS
     // ============================================================
     function getStepState(row) {
       return {
@@ -867,7 +1004,7 @@
           acionamentoHtml = `<span class="step-locked">AGUARDA CHEGADA</span>`;
         }
 
-        // ---------- VISUALIZAÇÃO ACIONAMENTO (opcional, não bloqueia) ----------
+        // ---------- VISUALIZAÇÃO ACIONAMENTO ----------
         let visualizacaoHtml = '';
         if (s.hasVisualizacao) {
           visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatarDataHora(row[COLS.VISUALIZACAO])}</small></span>`;
@@ -896,27 +1033,27 @@
           encostaHtml = `<span class="step-locked">AGUARDA ACIONAMENTO</span>`;
         }
 
-        // ---------- INÍCIO CONF ----------
+        // ---------- INÍCIO CONF (SEM BARREIRA) ----------
         let inicioHtml = '';
         if (s.hasInicio) {
           inicioHtml = `<span class="col-date">${formatarDataHora(row[COLS.INICIO])}</span>`;
-        } else if (s.hasEncosta) {
+        } else if (s.hasSenha) {
           inicioHtml = `<button class="btn small step-iniciar" data-acao="iniciar" data-senha="${escapeHtml(senhaRaw)}">INICIAR</button>`;
         } else {
-          inicioHtml = `<span class="step-locked">AGUARDA ENCOSTA</span>`;
+          inicioHtml = '—';
         }
 
-        // ---------- FIM CONF ----------
+        // ---------- FIM CONF (SEM BARREIRA) ----------
         let fimHtml = '';
         if (s.hasFim) {
           fimHtml = `<span class="col-date">${formatarDataHora(row[COLS.FIM])}</span>`;
-        } else if (s.hasInicio) {
+        } else if (s.hasSenha) {
           fimHtml = `<button class="btn small step-finalizar" data-acao="finalizar" data-senha="${escapeHtml(senhaRaw)}">FINALIZAR</button>`;
         } else {
-          fimHtml = `<span class="step-locked">AGUARDA INÍCIO</span>`;
+          fimHtml = '—';
         }
 
-        // ---------- TERMO ----------
+        // ---------- TERMO (requer FIM) ----------
         let termoHtml = '';
         if (s.hasTermo) {
           termoHtml = `<span class="col-date">${formatarDataHora(row[COLS.TERMO])}</span>`;
@@ -926,14 +1063,18 @@
           termoHtml = `<span class="step-locked">AGUARDA FIM</span>`;
         }
 
-        // ---------- PAGAMENTO ----------
+        // ---------- PAGAMENTO (requer CHEGADA + ACIONAMENTO + ENCOSTA) ----------
         let pagamentoHtml = '';
         if (s.hasPagamento) {
           pagamentoHtml = `<span class="col-date">${formatarDataHora(row[COLS.PAGAMENTO])}</span>`;
-        } else if (s.hasTermo) {
+        } else if (s.hasChegada && s.hasAcionamento && s.hasEncosta) {
           pagamentoHtml = `<button class="btn small step-pag" data-acao="pagamento" data-senha="${escapeHtml(senhaRaw)}">REGISTRAR PAGAMENTO</button>`;
         } else {
-          pagamentoHtml = `<span class="step-locked">AGUARDA TERMO</span>`;
+          const faltam = [];
+          if (!s.hasChegada) faltam.push('CHEGADA');
+          if (!s.hasAcionamento) faltam.push('ACIONAMENTO');
+          if (!s.hasEncosta) faltam.push('ENCOSTA');
+          pagamentoHtml = `<span class="step-locked">FALTA: ${faltam.join(' + ')}</span>`;
         }
 
         return `
@@ -955,7 +1096,7 @@
         `;
       }).join('');
 
-      // Botão ACIONAR
+      // Eventos dos botões
       document.querySelectorAll('#historicoBody button[data-senha]').forEach(btn => {
         btn.addEventListener('click', function() {
           const senhaVal = this.dataset.senha;
@@ -963,7 +1104,6 @@
         });
       });
 
-      // Botão X (remover acionamento)
       document.querySelectorAll('#historicoBody button[data-remover-senha]').forEach(btn => {
         btn.addEventListener('click', function() {
           const senhaVal = this.dataset.removerSenha;
@@ -971,7 +1111,6 @@
         });
       });
 
-      // Botão ALOCAR DOCA
       document.querySelectorAll('#historicoBody button[data-alocar-senha]').forEach(btn => {
         btn.addEventListener('click', function() {
           const s = this.dataset.alocarSenha;
@@ -980,7 +1119,6 @@
         });
       });
 
-      // Botões genéricos de etapa (INICIAR, FINALIZAR, TERMO, PAGAMENTO)
       document.querySelectorAll('#historicoBody button[data-acao]').forEach(btn => {
         btn.addEventListener('click', function() {
           const acao = this.dataset.acao;
@@ -989,10 +1127,14 @@
           registrarEtapa(acao, senhaVal, this);
         });
       });
+
+      // Sincroniza o scroll horizontal (caso o usuário já esteja deslocado)
+      tableHeadWrap.scrollLeft = tableBodyWrap.scrollLeft;
+      tableScrollbar.scrollLeft = tableBodyWrap.scrollLeft;
     }
 
     // ============================================================
-    // REGISTRO DE ETAPAS (INÍCIO / FIM / TERMO / PAGAMENTO)
+    // REGISTRO DE ETAPAS
     // ============================================================
     async function registrarEtapa(acao, senhaValor, botao) {
       const colMap = {
@@ -1011,7 +1153,6 @@
       const col = colMap[acao];
       if (!col) return;
 
-      // Confirmação para o pagamento (ação final e irreversível sem reset manual)
       if (acao === 'pagamento') {
         if (!window.confirm(`REGISTRAR PAGAMENTO DA SENHA ${senhaValor}?\n\nISSO IRÁ LIBERAR A DOCA AUTOMATICAMENTE.`)) return;
       }
@@ -1027,18 +1168,17 @@
         const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
         const resp = await fetch(url, {
           method: 'PATCH',
-          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return:minimal' },
+          headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
           body: JSON.stringify({ [col]: valor })
         });
         if (!resp.ok) throw new Error('Falha ao registrar ' + labelMap[acao] + ': ' + resp.status);
 
-        // Se foi pagamento, libera a doca imediatamente
         if (acao === 'pagamento') {
           try {
             const urlDoca = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}&STATUS=eq.OCUPADO`;
             await fetch(urlDoca, {
               method: 'PATCH',
-              headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return:minimal' },
+              headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
               body: JSON.stringify({ STATUS: 'DISPONIVEL', SENHA: null, CARGA: null, INICIO: null, 'MOTIVO BLOQ': null })
             });
           } catch (err) {
@@ -1046,7 +1186,8 @@
           }
         }
 
-        setNotice(`${labelMap[acao]} REGISTRADO PARA A SENHA ${senhaValor} ÀS ${valor}.`, 'success');
+        setNotice(`${labelMap[acao]} REGISTRADO PARA A SENHA ${senhaValor} EM ${valor}.`, 'success');
+        // Recarrega do Supabase para mostrar o valor REAL gravado no banco
         carregarHistorico();
       } catch (err) {
         console.error(err);
@@ -1057,7 +1198,7 @@
     }
 
     // ============================================================
-    // BUSCA SENHA (do modal)
+    // BUSCA SENHA
     // ============================================================
     let timeoutBusca = null;
 
@@ -1114,7 +1255,7 @@
       }
     });
 
-    // ===== SUBMISSÃO =====
+    // ===== SUBMISSÃO DO MODAL =====
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       if (!senhaEncontrada) { setNotice('VALIDE A SENHA ANTES DE SALVAR.', 'error'); return; }
@@ -1158,7 +1299,7 @@
     closeModalBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-    // ===== ACIONAMENTO (REGISTRAR) =====
+    // ===== ACIONAMENTO =====
     async function registrarAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
       botao.disabled = true; botao.textContent = '...';
@@ -1181,7 +1322,6 @@
       }
     }
 
-    // ===== ACIONAMENTO (REMOVER) =====
     async function removerAcionamento(senhaValor, botao) {
       if (!senhaValor) return;
       if (!window.confirm(`REMOVER O ACIONAMENTO DA SENHA ${senhaValor}?`)) return;
@@ -1206,14 +1346,12 @@
     }
 
     // ============================================================
-    // ============ ALOCAÇÃO DE DOCA ==============================
+    // ALOCAÇÃO DE DOCA
     // ============================================================
-
     function getDocaNumber(doca) {
       const num = String(doca).replace(/\D/g, '');
       return num ? num.padStart(2, '0') : String(doca);
     }
-
     function formatarDuracao(ms) {
       if (ms < 0) return '0min';
       const tot = Math.floor(ms / 1000);
@@ -1226,7 +1364,6 @@
       parts.push(m + 'min');
       return parts.join(' ');
     }
-
     function calcularDuracao(inicioISO) {
       if (!inicioISO) return { diff: 0, texto: '0min' };
       const ini = new Date(inicioISO);
@@ -1235,14 +1372,12 @@
       if (diff < 0) return { diff: 0, texto: '0min' };
       return { diff, texto: formatarDuracao(diff) };
     }
-
     async function fetchDocks() {
       const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?select=*&order=DOCA.asc&limit=1000`;
       const resp = await fetch(url, { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } });
       if (!resp.ok) throw new Error(await resp.text());
       return resp.json();
     }
-
     async function patchDock(doca, payload) {
       const url = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?DOCA=eq.${encodeURIComponent(doca)}`;
       const resp = await fetch(url, {
@@ -1252,7 +1387,6 @@
       });
       if (!resp.ok) throw new Error(await resp.text());
     }
-
     async function patchAgenda(senhaValor, payload) {
       const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?SENHA=eq.${encodeURIComponent(senhaValor)}`;
       const resp = await fetch(url, {
@@ -1262,7 +1396,6 @@
       });
       if (!resp.ok) throw new Error(await resp.text());
     }
-
     function getDockStatus(dock) {
       const st = upper(dock.STATUS || '').trim();
       const motivo = clean(dock['MOTIVO BLOQ']);
@@ -1271,13 +1404,11 @@
       if (st === 'BLOQUEADO') return 'BLOQUEADO';
       return 'DISPONIVEL';
     }
-
     function renderDockMapInto(container, docks) {
       if (!docks.length) {
         container.innerHTML = '<div class="empty-table">NENHUMA DOCA CADASTRADA.</div>';
         return;
       }
-
       container.innerHTML = docks.map(dock => {
         const docaNome = upper(dock.DOCA).trim();
         const status = getDockStatus(dock);
@@ -1287,7 +1418,6 @@
         const senhaDock = clean(dock.SENHA);
         const cargaDock = clean(dock.CARGA);
         const inicioDock = clean(dock.INICIO);
-
         const suaDoca = dockAllocContext && senhaDock && senhaDock === clean(dockAllocContext.senha);
 
         let classe = 'dock-square';
@@ -1323,7 +1453,6 @@
         </div>`;
       }).join('');
     }
-
     function computeDockMetrics(docks) {
       const total = docks.length;
       let avail = 0, occ = 0, bloq = 0;
@@ -1335,13 +1464,11 @@
       }
       return { total, avail, occ, bloq };
     }
-
     async function loadDocksForAllocation() {
       if (isLoadingDocks) return;
       isLoadingDocks = true;
       dockAllocMap.innerHTML = '<div class="empty-table">CARREGANDO DOCAS...</div>';
       setDockNotice('CARREGANDO DOCAS...', '');
-
       try {
         const docks = await fetchDocks();
         const metrics = computeDockMetrics(docks);
@@ -1370,26 +1497,22 @@
         isLoadingDocks = false;
       }
     }
-
     function openDockAllocModal(senhaValor, cargaValor) {
       dockAllocContext = { senha: clean(senhaValor), carga: clean(cargaValor) };
       dockAllocSub.textContent = `SENHA ${dockAllocContext.senha} · CARGA ${dockAllocContext.carga || '—'}`;
       dockAllocModal.classList.remove('hidden');
       loadDocksForAllocation();
     }
-
     function closeDockAllocModal() {
       dockAllocModal.classList.add('hidden');
       dockAllocContext = null;
     }
-
     async function allocateDock(doca, senhaValor, cargaValor) {
       const agora = new Date();
       const encostaStr = `${pad2(agora.getDate())}/${pad2(agora.getMonth() + 1)}/${agora.getFullYear()} ${pad2(agora.getHours())}:${pad2(agora.getMinutes())}`;
       const inicioISO = agora.toISOString();
       const senhaCtx = clean(senhaValor);
 
-      // 1) Libera qualquer doca que já esteja com esta senha
       try {
         const u = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?SENHA=eq.${encodeURIComponent(senhaCtx)}&STATUS=eq.OCUPADO`;
         await fetch(u, {
@@ -1401,7 +1524,6 @@
         console.warn('Falha ao liberar doca antiga:', err);
       }
 
-      // 2) Ocupa a nova doca
       const payload = {
         STATUS: 'OCUPADO',
         SENHA: senhaCtx,
@@ -1410,33 +1532,25 @@
         'MOTIVO BLOQ': null
       };
       await patchDock(doca, payload);
-
-      // 3) Atualiza AGENDA com ENCOSTA ADM
       await patchAgenda(senhaCtx, { [COLS.ENCOSTA]: encostaStr });
 
       setNotice(`DOCA ${doca} ALOCADA PARA A SENHA ${senhaCtx}${cargaValor ? ' / CARGA ' + cargaValor : ''}.`, 'success');
     }
-
     dockAllocMap.addEventListener('click', async function(e) {
       const sq = e.target.closest('.dock-square');
       if (!sq) return;
       if (!dockAllocContext) return;
-
       const doca = sq.dataset.doca;
       const status = sq.dataset.status;
       if (!doca) return;
-
       if (status !== 'DISPONIVEL') {
         setDockNotice(`DOCA ${doca} ESTÁ ${status}. ESCOLHA UMA DOCA DISPONÍVEL (VERDE).`, 'warning');
         return;
       }
-
       const confirmMsg = `ALOCAR DOCA ${doca} PARA A SENHA ${dockAllocContext.senha}${dockAllocContext.carga ? ' / CARGA ' + dockAllocContext.carga : ''}?`;
       if (!window.confirm(confirmMsg)) return;
-
       sq.style.pointerEvents = 'none';
       setDockNotice(`ALOCANDO DOCA ${doca}...`, '');
-
       try {
         await allocateDock(doca, dockAllocContext.senha, dockAllocContext.carga);
         closeDockAllocModal();
@@ -1447,7 +1561,6 @@
         sq.style.pointerEvents = '';
       }
     });
-
     closeDockAlloc.addEventListener('click', closeDockAllocModal);
     dockAllocModal.addEventListener('click', function(e) { if (e.target === this) closeDockAllocModal(); });
     reloadDocksBtn.addEventListener('click', function() { loadDocksForAllocation(); });
@@ -1462,7 +1575,6 @@
       refreshBtn.disabled = true;
 
       try {
-        // Busca AGENDA e DOCAS em paralelo
         const agendaUrl = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=*&limit=500`;
         const docksUrl  = `${SUPABASE_URL}/rest/v1/${DOCAS_TABLE}?select=DOCA,SENHA,STATUS,INICIO&limit=1000`;
 
@@ -1483,14 +1595,12 @@
         let agendaData = await agendaResp.json();
         if (!Array.isArray(agendaData)) agendaData = [];
 
-        // Constrói o mapa SENHA -> Doca
         dockBySenha = new Map();
         if (docksResp.ok) {
           const docksData = await docksResp.json();
           if (Array.isArray(docksData)) {
             for (const d of docksData) {
               const s = clean(d.SENHA);
-              // Só mapeia docas ocupadas com senha
               const st = upper(d.STATUS || '').trim();
               if (s && st === 'OCUPADO') {
                 dockBySenha.set(s, d);
@@ -1499,7 +1609,6 @@
           }
         }
 
-        // Ordena por CHEGADA desc
         agendaData.sort((a, b) => {
           const da = toDateObj(a[COLS.CHEGADA]);
           const db = toDateObj(b[COLS.CHEGADA]);
@@ -1538,11 +1647,9 @@
         carregarHistorico();
       }, AUTO_REFRESH_MS);
     }
-
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) carregarHistorico();
     });
-
     refreshBtn.addEventListener('click', function() { carregarHistorico(); });
 
     // ===== INIT =====
@@ -1550,12 +1657,13 @@
       setupMasks();
       setupUppercaseInputs();
       setupSearch();
+      setupScrollSync();
       populateMonthFilter();
       setupFilters();
       resetarModal();
       carregarHistorico();
       startAutoRefresh();
-      setNotice('ETAPAS SEQUENCIAIS ATIVAS. BUSQUE POR SENHA, FORNECEDOR OU CARGA.', '');
+      setNotice('INÍCIO/FIM SÃO INDEPENDENTES. PAGAMENTO EXIGE CHEGADA + ACIONAMENTO + ENCOSTA.', '');
     }
 
     init();
