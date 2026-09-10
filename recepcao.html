@@ -770,15 +770,8 @@
 
     // ============================================================
     // PARSER FLEXÍVEL DE DATA
-    // Aceita:
-    //   "1/3/26 15:00"       → D/M/YY
-    //   "1/3/2026 15:00"     → D/M/AAAA
-    //   "13/3/26 15:00"      → D/M/YY (detecta a>12)
-    //   "1/13/26 15:00"      → M/D/YY (detecta b>12)
-    //   "15/01/2025 14:32"   → DD/MM/AAAA
-    //   "2025-01-15T14:32:00Z"
-    //   "2025-01-15 14:32:00"
-    // Retorna { day, month, year, hour, min } ou null.
+    // Aceita:  "1/3/26 15:00", "13/3/26 15:00", "1/13/26 15:00",
+    //          "15/01/2025 14:32", ISO com/sem timezone, etc.
     // ============================================================
     function parseFlexibleDate(valor) {
       if (valor === null || valor === undefined || valor === '') return null;
@@ -795,7 +788,7 @@
       const str = String(valor).trim();
       if (!str) return null;
 
-      // 1) Formato brasileiro / americano curto: D/M/YY[YY] [H:MM[:SS]]
+      // 1) Formato curto BR/US: D/M/YY[YY] [H:MM[:SS]]
       const br = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
       if (br) {
         let [, a, b, year, hour = '0', min = '0'] = br;
@@ -807,7 +800,6 @@
         else if (b > 12 && a <= 12) { day = b; month = a; }   // M/D
         else { day = a; month = b; }                          // assume D/M (pt-BR)
 
-        // Validação
         if (month < 1 || month > 12 || day < 1 || day > 31) return null;
         return { day, month, year, hour: Number(hour), min: Number(min) };
       }
@@ -851,7 +843,7 @@
     }
 
     // Retorna um objeto Date (para ordenação e comparação)
-    function toDate(valor) {
+    function toDateObj(valor) {
       const p = parseFlexibleDate(valor);
       if (!p) return null;
       const d = new Date(p.year, p.month - 1, p.day, p.hour, p.min);
@@ -971,17 +963,19 @@
       filterMonth.addEventListener('blur', function() {
         const v = this.value.trim();
         if (v && !/^\d{2}\/\d{4}$/.test(v)) {
-          // limpa se incompleto
           const digits = v.replace(/\D/g, '');
           if (digits.length !== 6) this.value = '';
         }
       });
     }
 
-    // ===== FILTROS =====
+    // ============================================================
+    // FILTROS
+    // (usa toDateObj() — não confundir com variável local)
+    // ============================================================
     function applyFilters() {
       const monthStr = filterMonth.value.trim();      // "MM/AAAA"
-      const fromStr  = filterFrom.value;              // "YYYY-MM-DD" (input nativo)
+      const fromStr  = filterFrom.value;              // "YYYY-MM-DD"
       const toStr    = filterTo.value;                // "YYYY-MM-DD"
 
       let monthNum = null, yearNum = null;
@@ -990,36 +984,34 @@
         yearNum  = Number(monthStr.slice(3));
       }
 
-      let fromDate = null, toDate = null;
+      let fromLimit = null, toLimit = null;
       if (fromStr) {
         const [y, m, d] = fromStr.split('-').map(Number);
-        fromDate = new Date(y, m - 1, d, 0, 0, 0);
+        fromLimit = new Date(y, m - 1, d, 0, 0, 0);
       }
       if (toStr) {
         const [y, m, d] = toStr.split('-').map(Number);
-        toDate = new Date(y, m - 1, d, 23, 59, 59);
+        toLimit = new Date(y, m - 1, d, 23, 59, 59);
       }
 
       const filtered = allData.filter(row => {
-        const dt = toDate(row[COLS.CHEGADA]);
+        const dt = toDateObj(row[COLS.CHEGADA]);
         if (!dt) {
-          // Se não tem data, mantém apenas quando não há filtro
-          return !monthNum && !fromDate && !toDate;
+          return !monthNum && !fromLimit && !toLimit;
         }
         if (monthNum !== null) {
           if (dt.getMonth() + 1 !== monthNum || dt.getFullYear() !== yearNum) return false;
         }
-        if (fromDate && dt < fromDate) return false;
-        if (toDate && dt > toDate) return false;
+        if (fromLimit && dt < fromLimit) return false;
+        if (toLimit   && dt > toLimit)   return false;
         return true;
       });
 
       renderHistorico(filtered);
 
-      // Info do filtro
       const total = allData.length;
       const shown = filtered.length;
-      if (monthNum || fromDate || toDate) {
+      if (monthNum || fromLimit || toLimit) {
         filterInfo.textContent = `MOSTRANDO ${shown} DE ${total}`;
       } else {
         filterInfo.textContent = '';
@@ -1313,8 +1305,8 @@
 
         // Ordena por CHEGADA desc
         data.sort((a, b) => {
-          const da = toDate(a[COLS.CHEGADA]);
-          const db = toDate(b[COLS.CHEGADA]);
+          const da = toDateObj(a[COLS.CHEGADA]);
+          const db = toDateObj(b[COLS.CHEGADA]);
           if (db && da) return db - da;
           if (db) return 1;
           if (da) return -1;
