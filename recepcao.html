@@ -42,7 +42,6 @@
       --lh-tight:  1.2;
       --lh-snug:   1.35;
       --lh-normal: 1.5;
-      --lh-relaxed:1.6;
 
       --ls-tight:  -0.01em;
       --ls-normal: 0;
@@ -86,10 +85,7 @@
     }
 
     /* ===== LAYOUT PRINCIPAL ===== */
-    .main {
-      margin-left: 236px;
-      min-height: 100vh;
-    }
+    .main { margin-left: 236px; min-height: 100vh; }
     .topbar {
       height: 66px;
       padding: 0 34px;
@@ -136,11 +132,7 @@
       vertical-align: middle;
     }
 
-    .content {
-      padding: 28px 34px 50px;
-      max-width: 1500px;
-      margin: auto;
-    }
+    .content { padding: 28px 34px 50px; max-width: 100%; }
 
     /* ===== HERO ===== */
     .hero {
@@ -170,14 +162,9 @@
       margin: 0;
       color: var(--muted);
       font-size: var(--fs-md);
-      font-weight: var(--fw-regular);
       line-height: var(--lh-normal);
     }
-    .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     /* ===== BOTÕES ===== */
     .btn {
@@ -211,15 +198,13 @@
       font-size: var(--fs-2xs);
       border-radius: 6px;
       letter-spacing: var(--ls-wide);
+      white-space: normal;
     }
     .btn.success {
       border-color: var(--green);
       color: var(--green);
     }
-    .btn.success:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    .btn.success:disabled { opacity: 0.7; cursor: not-allowed; }
 
     /* ===== PAINÉIS ===== */
     .panel {
@@ -247,7 +232,6 @@
     }
     .panel-sub {
       font-size: var(--fs-xs);
-      font-weight: var(--fw-regular);
       color: #8c9aab;
       margin-top: 4px;
       line-height: var(--lh-normal);
@@ -283,7 +267,9 @@
 
     .hidden { display: none !important; }
 
-    /* ===== TABELA ===== */
+    /* ============================================================
+       TABELA
+       ============================================================ */
     .table-wrap {
       overflow: auto;
       border: 1px solid #edf1f5;
@@ -295,7 +281,7 @@
       font-size: var(--fs-xs);
       font-weight: var(--fw-regular);
       line-height: var(--lh-snug);
-      min-width: 720px;
+      min-width: 1500px;   /* 12 colunas — scroll horizontal em telas menores */
     }
     .data-table th {
       background: #f7fafd;
@@ -306,6 +292,9 @@
       letter-spacing: var(--ls-wider);
       padding: 12px 11px;
       white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     .data-table td {
       border-top: 1px solid #edf1f5;
@@ -313,12 +302,25 @@
       color: #3d526b;
       font-size: var(--fs-xs);
       white-space: nowrap;
+      vertical-align: top;
     }
     .data-table tbody tr:hover { background: #f8fbff; }
     .data-table .col-date {
       font-variant-numeric: tabular-nums;
       letter-spacing: var(--ls-wide);
     }
+
+    /* Colunas com quebra de texto (ACIONAMENTO ADM e VISUALIZAÇÃO ACIONAMENTO) */
+    .data-table th.cell-wrap,
+    .data-table td.cell-wrap {
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      min-width: 150px;
+      max-width: 190px;
+      line-height: var(--lh-normal);
+    }
+
     .empty-table {
       padding: 42px;
       text-align: center;
@@ -337,8 +339,9 @@
       font-size: var(--fs-2xs);
       font-weight: var(--fw-bold);
       letter-spacing: var(--ls-wide);
-      white-space: nowrap;
-      line-height: 1;
+      white-space: normal;
+      line-height: var(--lh-snug);
+      max-width: 100%;
     }
     .badge-viewed.ok  { background: #effcf5; color: #137b57; }
     .badge-viewed.nok { background: #fff1f2; color: #b73f52; }
@@ -346,7 +349,6 @@
       font-weight: var(--fw-semibold);
       letter-spacing: var(--ls-normal);
       opacity: .85;
-      margin-left: 2px;
       font-variant-numeric: tabular-nums;
     }
 
@@ -390,7 +392,6 @@
     }
     .modal-sub {
       font-size: var(--fs-xs);
-      font-weight: var(--fw-regular);
       color: #8c9aab;
       margin-top: 6px;
       line-height: var(--lh-normal);
@@ -415,11 +416,7 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
     }
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
     .field label {
       font-size: var(--fs-xs);
       font-weight: var(--fw-bold);
@@ -455,7 +452,6 @@
     }
     .field small {
       font-size: var(--fs-2xs);
-      font-weight: var(--fw-regular);
       color: #8998a9;
       line-height: var(--lh-normal);
     }
@@ -498,7 +494,6 @@
       .hero { display: block; }
       .actions { margin-top: 14px; }
       .form-grid { grid-template-columns: 1fr; }
-      .data-table { min-width: 680px; }
       h1 { font-size: 26px; }
     }
   </style>
@@ -540,14 +535,20 @@
               <tr>
                 <th>SENHA</th>
                 <th>FORNECEDOR</th>
-                <th>CHEGADA</th>
+                <th>AGENDA</th>
                 <th>STATUS</th>
-                <th>VISUALIZADO</th>
-                <th>ACIONAMENTO</th>
+                <th>CHEGADA</th>
+                <th class="cell-wrap">ACIONAMENTO ADM</th>
+                <th class="cell-wrap">VISUALIZAÇÃO ACIONAMENTO</th>
+                <th>ENCOSTA ADM</th>
+                <th>INÍCIO CONF</th>
+                <th>FIM CONF</th>
+                <th>TERMO</th>
+                <th>PAGAMENTO</th>
               </tr>
             </thead>
             <tbody id="historicoBody">
-              <tr><td colspan="6" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
+              <tr><td colspan="12" class="empty-table">CARREGANDO HISTÓRICO...</td></tr>
             </tbody>
           </table>
         </div>
@@ -635,6 +636,22 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndGlzcnVhdWlhampmb2Vzdm9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTY3NjYsImV4cCI6MjEwMzE3Mjc2Nn0.yiAsD6c06UEauyAUCFYs0KQnuWBVfLAeP_oYE8yGOwQ';
     const AGENDA_TABLE = encodeURIComponent('AGENDA');
 
+    // ===== MAPA DE COLUNAS (ajuste aqui se os nomes no Supabase forem diferentes) =====
+    const COLS = {
+      SENHA:            'SENHA',
+      FORNECEDOR:       'FORNECEDOR',
+      AGENDA:           'AGENDA',
+      STATUS:           'STATUS',
+      CHEGADA:          'CHEGADA',
+      ACIONAMENTO_ADM:  'ACIONAMENTO ADM',
+      VISUALIZACAO:     'ACIONAMENTO VISUALIZADO',
+      ENCOSTA_ADM:      'ENCOSTA ADM',
+      INICIO_CONF:      'INICIO CONF',
+      FIM_CONF:         'FIM CONF',
+      TERMO:            'TERMO',
+      PAGAMENTO:        'PAGAMENTO'
+    };
+
     // ===== ELEMENTOS =====
     const $ = id => document.getElementById(id);
     const modal = $('recepcaoModal');
@@ -672,25 +689,13 @@
     }
 
     // ============================================================
-    // NORMALIZADOR DE DATA/HORA  →  SEMPRE "DD/MM/AAAA HH:MM"
-    // ============================================================
-    // Aceita:
-    //   • "DD/MM/AAAA HH:MM" (já formatado)
-    //   • "DD/MM/AAAA"       (adiciona 00:00)
-    //   • "AAAA-MM-DDTHH:MM:SSZ"       (ISO UTC → converte p/ local)
-    //   • "AAAA-MM-DDTHH:MM:SS±HH:MM"  (ISO c/ offset → converte p/ local)
-    //   • "AAAA-MM-DDTHH:MM:SS"        (ISO s/ timezone → trata como local)
-    //   • "AAAA-MM-DD HH:MM:SS"        (SQL sem T → trata como local)
-    //   • "AAAA-MM-DD"                 (adiciona 00:00)
-    //   • timestamp numérico (ms)      (converte)
-    // Qualquer outro formato → tenta Date() genérico; se falhar, devolve string.
+    // NORMALIZADOR DE DATA/HORA → SEMPRE "DD/MM/AAAA HH:MM"
     // ============================================================
     function pad2(n) { return String(n).padStart(2, '0'); }
 
     function formatarDataHora(valor) {
       if (valor === null || valor === undefined || valor === '') return '';
 
-      // Se vier número (epoch ms)
       if (typeof valor === 'number' && isFinite(valor)) {
         const d = new Date(valor);
         return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
@@ -699,49 +704,52 @@
       const str = String(valor).trim();
       if (!str) return '';
 
-      // 1) Já está no formato brasileiro "DD/MM/AAAA [HH:MM[:SS]]"
+      // Já no formato brasileiro
       const br = str.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2})(?::\d{2})?)?/);
       if (br) {
         const [, dia, mes, ano, hora = '00', min = '00'] = br;
         return `${dia}/${mes}/${ano} ${hora}:${min}`;
       }
 
-      // 2) ISO 8601: "AAAA-MM-DD[T ]HH:MM[:SS[.sss]][Z|±HH:MM]"
+      // ISO 8601
       const iso = str.match(
         /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/
       );
       if (iso) {
         const [, ano, mes, dia, hora = '00', min = '00', , tz] = iso;
-
-        // Se tem timezone (Z ou offset) → deixa o Date() converter p/ local
         if (tz) {
           const d = new Date(str);
           if (!isNaN(d.getTime())) {
             return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
           }
         }
-        // Sem timezone → trata como horário local, não deixa o Date() reinterpretar
         return `${dia}/${mes}/${ano} ${hora}:${min}`;
       }
 
-      // 3) Fallback genérico
+      // Fallback
       const d = new Date(str);
       if (!isNaN(d.getTime())) {
         return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
       }
-
-      // 4) Não reconhecido → devolve original
       return str;
+    }
+
+    // Formata apenas se parecer data; senão devolve uppercase
+    function formatCell(valor) {
+      if (valor === null || valor === undefined || valor === '') return '—';
+      const s = String(valor).trim();
+      if (!s) return '—';
+      // Detecta padrão de data (BR ou ISO)
+      if (/^\d{2}\/\d{2}\/\d{4}/.test(s) || /^\d{4}-\d{2}-\d{2}/.test(s)) {
+        return formatarDataHora(s);
+      }
+      return upper(s);
     }
 
     // ===== AUXILIARES DO FORM =====
     function limparCamposMotorista() {
-      rg.value = '';
-      cpf.value = '';
-      nome.value = '';
-      telefone.value = '';
-      placa.value = '';
-      nfs.value = '';
+      rg.value = ''; cpf.value = ''; nome.value = '';
+      telefone.value = ''; placa.value = ''; nfs.value = '';
     }
 
     function habilitarCampos(enable) {
@@ -759,10 +767,8 @@
     }
 
     function resetarModal() {
-      senha.value = '';
-      fornecedor.value = '';
-      categoria.value = '';
-      carga.value = '';
+      senha.value = ''; fornecedor.value = '';
+      categoria.value = ''; carga.value = '';
       limparCamposMotorista();
       habilitarCampos(false);
       senhaEncontrada = false;
@@ -779,7 +785,6 @@
       if (v.length <= 9) return v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
       return v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
     }
-
     function formatTelefone(valor) {
       let v = valor.replace(/\D/g, '');
       if (v.length > 11) v = v.slice(0, 11);
@@ -788,7 +793,6 @@
       if (v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
       return v.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
     }
-
     function formatPlaca(valor) {
       let v = valor.toUpperCase().replace(/[^A-Z0-9]/g, '');
       if (v.length > 7) v = v.slice(0, 7);
@@ -801,19 +805,16 @@
 
     function setupMasks() {
       cpf.addEventListener('input', function() {
-        const raw = this.value;
-        const formatted = formatCPF(raw);
-        if (formatted !== raw) this.value = formatted;
+        const raw = this.value; const f = formatCPF(raw);
+        if (f !== raw) this.value = f;
       });
       telefone.addEventListener('input', function() {
-        const raw = this.value;
-        const formatted = formatTelefone(raw);
-        if (formatted !== raw) this.value = formatted;
+        const raw = this.value; const f = formatTelefone(raw);
+        if (f !== raw) this.value = f;
       });
       placa.addEventListener('input', function() {
-        const raw = this.value;
-        const formatted = formatPlaca(raw);
-        if (formatted !== raw) this.value = formatted;
+        const raw = this.value; const f = formatPlaca(raw);
+        if (f !== raw) this.value = f;
       });
     }
 
@@ -821,9 +822,9 @@
       [senha, rg, nome, nfs].forEach(el => {
         el.addEventListener('input', function() {
           const pos = this.selectionStart;
-          const upperVal = this.value.toUpperCase();
-          if (this.value !== upperVal) {
-            this.value = upperVal;
+          const up = this.value.toUpperCase();
+          if (this.value !== up) {
+            this.value = up;
             try { this.setSelectionRange(pos, pos); } catch (_) {}
           }
         });
@@ -862,9 +863,7 @@
           dadosAgenda = null;
           habilitarCampos(false);
           limparCamposMotorista();
-          fornecedor.value = '';
-          categoria.value = '';
-          carga.value = '';
+          fornecedor.value = ''; categoria.value = ''; carga.value = '';
           formState.textContent = 'SENHA NÃO ENCONTRADA.';
           setNotice('SENHA NÃO LOCALIZADA NA AGENDA. VERIFIQUE.', 'error');
         }
@@ -875,20 +874,15 @@
       }
     }
 
-    // ===== EVENTOS DA SENHA =====
     senha.addEventListener('input', function() {
       clearTimeout(timeoutBusca);
       const val = this.value.trim();
       if (val.length >= 2) {
         timeoutBusca = setTimeout(() => buscarSenha(val), 500);
       } else {
-        senhaEncontrada = false;
-        dadosAgenda = null;
-        habilitarCampos(false);
-        limparCamposMotorista();
-        fornecedor.value = '';
-        categoria.value = '';
-        carga.value = '';
+        senhaEncontrada = false; dadosAgenda = null;
+        habilitarCampos(false); limparCamposMotorista();
+        fornecedor.value = ''; categoria.value = ''; carga.value = '';
         formState.textContent = 'AGUARDANDO SENHA.';
         setNotice('DIGITE A SENHA PARA CONSULTAR.', '');
       }
@@ -969,12 +963,10 @@
       modal.classList.remove('hidden');
       senha.focus();
     }
-
     function closeModal() {
       modal.classList.add('hidden');
       resetarModal();
     }
-
     openModalBtn.addEventListener('click', openModal);
     closeModalBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', function(e) {
@@ -1001,15 +993,11 @@
             'Content-Type': 'application/json',
             'Prefer': 'return=minimal'
           },
-          body: JSON.stringify({ "ACIONAMENTO ENTRADA": acionamentoStr })
+          // ⚠️ Ajuste o nome da coluna se no Supabase for diferente
+          body: JSON.stringify({ [COLS.ACIONAMENTO_ADM]: acionamentoStr })
         });
 
         if (!resp.ok) throw new Error('Falha ao registrar acionamento: ' + resp.status);
-
-        botao.textContent = '✓ ACIONADO';
-        botao.classList.remove('btn', 'success');
-        botao.classList.add('btn', 'success');
-        botao.disabled = true;
 
         setNotice(`ACIONAMENTO REGISTRADO PARA A SENHA ${senhaValor} ÀS ${acionamentoStr}.`, 'success');
         carregarHistorico();
@@ -1024,57 +1012,74 @@
     // ===== HISTÓRICO =====
     async function carregarHistorico() {
       try {
-        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=SENHA,FORNECEDOR,CHEGADA,STATUS,"ACIONAMENTO ENTRADA","ACIONAMENTO VISUALIZADO"&order=CHEGADA.desc.nullslast&limit=20`;
+        // Monta o select dinamicamente com todos os nomes de coluna, entre aspas quando tiver espaço
+        const quote = name => name.includes(' ') ? `"${name}"` : name;
+        const select = Object.values(COLS).map(quote).join(',');
+
+        const url = `${SUPABASE_URL}/rest/v1/${AGENDA_TABLE}?select=${encodeURIComponent(select)}&order=${quote(COLS.CHEGADA)}.desc.nullslast&limit=50`;
         const resp = await fetch(url, {
           headers: {
             'apikey': SUPABASE_ANON,
             'Authorization': `Bearer ${SUPABASE_ANON}`
           }
         });
-        if (!resp.ok) throw new Error('Erro ao carregar histórico');
+        if (!resp.ok) throw new Error('Erro ao carregar histórico: ' + resp.status);
         const data = await resp.json();
         totalRegistros.textContent = data.length;
 
         if (!data.length) {
-          historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">NENHUM REGISTRO DE CHEGADA AINDA.</td></tr>';
+          historicoBody.innerHTML = '<tr><td colspan="12" class="empty-table">NENHUM REGISTRO DE CHEGADA AINDA.</td></tr>';
           return;
         }
 
         historicoBody.innerHTML = data.map(row => {
-          const senhaVal = upper(row.SENHA) || '—';
+          const senhaVal = upper(row[COLS.SENHA]) || '—';
 
-          // === Datas sempre normalizadas para "DD/MM/AAAA HH:MM" ===
-          const chegadaFmt      = formatarDataHora(row.CHEGADA) || '—';
-          const acionamentoRaw  = row["ACIONAMENTO ENTRADA"];
-          const visualizadoRaw  = row["ACIONAMENTO VISUALIZADO"];
-          const acionamentoFmt  = formatarDataHora(acionamentoRaw);
-          const visualizadoFmt  = formatarDataHora(visualizadoRaw);
+          const agendaFmt       = formatCell(row[COLS.AGENDA]);
+          const chegadaFmt      = formatCell(row[COLS.CHEGADA]);
+          const statusVal       = upper(row[COLS.STATUS]) || '—';
+          const encostaFmt      = formatCell(row[COLS.ENCOSTA_ADM]);
+          const inicioFmt       = formatCell(row[COLS.INICIO_CONF]);
+          const fimFmt          = formatCell(row[COLS.FIM_CONF]);
+          const termoVal        = upper(row[COLS.TERMO]) || '—';
+          const pagamentoVal    = upper(row[COLS.PAGAMENTO]) || '—';
 
-          const jaAcionado    = acionamentoRaw !== null && String(acionamentoRaw).trim() !== '';
-          const jaVisualizado = visualizadoRaw !== null && String(visualizadoRaw).trim() !== '';
+          const acionamentoRaw  = row[COLS.ACIONAMENTO_ADM];
+          const visualizacaoRaw = row[COLS.VISUALIZACAO];
 
-          let btnHtml = '';
+          const jaAcionado    = acionamentoRaw !== null && acionamentoRaw !== undefined && String(acionamentoRaw).trim() !== '';
+          const jaVisualizado = visualizacaoRaw !== null && visualizacaoRaw !== undefined && String(visualizacaoRaw).trim() !== '';
+
+          // Coluna ACIONAMENTO ADM (com quebra de texto)
+          let acionamentoHtml = '';
           if (jaAcionado) {
-            btnHtml = `<button class="btn success small" disabled>✓ ${acionamentoFmt}</button>`;
+            acionamentoHtml = `<span>${formatCell(acionamentoRaw)}</span>`;
           } else {
-            btnHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
+            acionamentoHtml = `<button class="btn small" data-senha="${senhaVal}">ACIONAR</button>`;
           }
 
-          let viewedHtml = '';
+          // Coluna VISUALIZAÇÃO ACIONAMENTO (com quebra de texto)
+          let visualizacaoHtml = '';
           if (jaVisualizado) {
-            viewedHtml = `<span class="badge-viewed ok">✓ VISUALIZADO <small>${visualizadoFmt}</small></span>`;
+            visualizacaoHtml = `<span class="badge-viewed ok">✓ VISUALIZADO<br><small>${formatCell(visualizacaoRaw)}</small></span>`;
           } else {
-            viewedHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
+            visualizacaoHtml = `<span class="badge-viewed nok">✕ NÃO VISUALIZADO</span>`;
           }
 
           return `
             <tr>
               <td>${senhaVal}</td>
-              <td>${upper(row.FORNECEDOR) || '—'}</td>
+              <td>${upper(row[COLS.FORNECEDOR]) || '—'}</td>
+              <td class="col-date">${agendaFmt}</td>
+              <td>${statusVal}</td>
               <td class="col-date">${chegadaFmt}</td>
-              <td>${upper(row.STATUS) || '—'}</td>
-              <td>${viewedHtml}</td>
-              <td>${btnHtml}</td>
+              <td class="cell-wrap">${acionamentoHtml}</td>
+              <td class="cell-wrap">${visualizacaoHtml}</td>
+              <td class="col-date">${encostaFmt}</td>
+              <td class="col-date">${inicioFmt}</td>
+              <td class="col-date">${fimFmt}</td>
+              <td>${termoVal}</td>
+              <td>${pagamentoVal}</td>
             </tr>
           `;
         }).join('');
@@ -1090,7 +1095,7 @@
 
       } catch (err) {
         console.error(err);
-        historicoBody.innerHTML = '<tr><td colspan="6" class="empty-table">ERRO AO CARREGAR HISTÓRICO.</td></tr>';
+        historicoBody.innerHTML = `<tr><td colspan="12" class="empty-table">ERRO AO CARREGAR HISTÓRICO: ${upper(err.message)}</td></tr>`;
       }
     }
 
